@@ -63,7 +63,7 @@ const process = [
     step: '5',
     name: 'Implementation Support',
     description: 'Post-adoption grant application assistance, project scoping, and annual update guidance.',
-    benefit: 'Plans don't sit on shelves—they turn into funded projects.',
+    benefit: "Plans don't sit on shelves—they turn into funded projects.",
   },
 ]
 
