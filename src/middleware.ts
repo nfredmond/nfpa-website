@@ -2,23 +2,43 @@
  * Middleware for authentication and session management
  */
 
-import { updateSession } from '@/lib/supabase/middleware'
-import { type NextRequest } from 'next/server'
+import { NextResponse, type NextRequest } from 'next/server'
 
 export async function middleware(request: NextRequest) {
-  return await updateSession(request)
+  // Only handle authentication for portal and auth routes
+  // Marketing pages don't need Supabase authentication
+  const isPortalRoute = request.nextUrl.pathname.startsWith('/portal') || 
+                        request.nextUrl.pathname.startsWith('/dashboard')
+  const isAuthRoute = request.nextUrl.pathname.startsWith('/login') || 
+                     request.nextUrl.pathname.startsWith('/signup')
+  
+  // For marketing pages, just pass through
+  if (!isPortalRoute && !isAuthRoute) {
+    return NextResponse.next()
+  }
+  
+  // For portal routes, would need to check authentication
+  // For now, redirect to login (auth system not yet implemented)
+  if (isPortalRoute) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/login'
+    url.searchParams.set('redirect', request.nextUrl.pathname)
+    return NextResponse.redirect(url)
+  }
+  
+  return NextResponse.next()
 }
 
 export const config = {
   matcher: [
     /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public folder
+     * Only run middleware on portal, dashboard, and auth routes
+     * Skip static files, images, and API routes
      */
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/portal/:path*',
+    '/dashboard/:path*',
+    '/login',
+    '/signup',
   ],
 }
 
