@@ -1,0 +1,13 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Nat Ford Planning & Analysis",
+  "url": "https://www.natfordplanning.com",
+  "logo": "https://www.natfordplanning.com/assets/logo-horizontal.svg",
+  "founder": "Nathaniel Ford Redmond",
+  "sameAs": [
+    "https://www.linkedin.com/in/nfredmond"
+  ],
+  "areaServed": "Northern California, USA",
+  "description": "Urban & transportation planning, GIS, and aerial mapping with AI-enabled documentation."
+}

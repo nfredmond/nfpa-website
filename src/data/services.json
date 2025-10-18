@@ -1,0 +1,28 @@
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "Services",
+  "itemListElement": [
+    {
+      "@type": "Service",
+      "name": "Urban & Transportation Planning",
+      "areaServed": "California",
+      "serviceType": "RTP/ATP, corridor strategies, speed management, safety analysis"
+    },
+    {
+      "@type": "Service",
+      "name": "GIS & Spatial Analytics",
+      "serviceType": "PostGIS models, suitability/accessibility, custom web maps & dashboards"
+    },
+    {
+      "@type": "Service",
+      "name": "Aerial Mapping & Photogrammetry",
+      "serviceType": "Orthomosaics, DSM/DTM, point clouds/meshes, before/after visuals"
+    },
+    {
+      "@type": "Service",
+      "name": "Funding & Grants",
+      "serviceType": "ATP, HSIP, CRP, CMAQ, FTA 5339/5311/5310"
+    }
+  ]
+}

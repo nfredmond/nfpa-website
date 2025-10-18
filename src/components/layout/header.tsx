@@ -1,0 +1,129 @@
+/**
+ * Header Component
+ * Main navigation header with mobile menu
+ */
+
+'use client'
+
+import * as React from 'react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { Menu, X } from 'lucide-react'
+import { Container } from './container'
+import { Button } from '../ui/button'
+import { cn } from '@/lib/utils'
+
+const navigation = [
+  { name: 'Services', href: '/services' },
+  { name: 'Projects', href: '/projects' },
+  { name: 'Resources', href: '/resources' },
+  { name: 'About', href: '/about' },
+  { name: 'Contact', href: '/contact' },
+]
+
+export function Header() {
+  const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false)
+  const pathname = usePathname()
+  
+  return (
+    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200">
+      <a href="#main" className="skip-link">
+        Skip to main content
+      </a>
+      
+      <Container>
+        <nav className="flex items-center justify-between py-4" aria-label="Main navigation">
+          <div className="flex lg:flex-1">
+            <Link href="/" className="-m-1.5 p-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1F4E2E] rounded-md">
+              <span className="sr-only">Nat Ford Planning & Analysis</span>
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 bg-[#1F4E2E] rounded-md flex items-center justify-center">
+                  <span className="text-white font-bold text-lg">NF</span>
+                </div>
+                <div className="flex flex-col leading-none">
+                  <span className="font-bold text-[#0F172A] text-sm">Nat Ford</span>
+                  <span className="text-xs text-gray-600">Planning & Analysis</span>
+                </div>
+              </div>
+            </Link>
+          </div>
+          
+          {/* Desktop Navigation */}
+          <div className="hidden lg:flex lg:gap-x-8">
+            {navigation.map((item) => (
+              <Link
+                key={item.name}
+                href={item.href}
+                className={cn(
+                  'text-sm font-medium transition-colors duration-300',
+                  'focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1F4E2E] rounded-md px-2 py-1',
+                  pathname === item.href || pathname?.startsWith(item.href + '/')
+                    ? 'text-[#1F4E2E]'
+                    : 'text-gray-700 hover:text-[#1F4E2E]'
+                )}
+              >
+                {item.name}
+              </Link>
+            ))}
+          </div>
+          
+          {/* CTA Button */}
+          <div className="hidden lg:flex lg:flex-1 lg:justify-end">
+            <Button asChild size="sm">
+              <Link href="/contact">Get Started</Link>
+            </Button>
+          </div>
+          
+          {/* Mobile menu button */}
+          <div className="flex lg:hidden">
+            <button
+              type="button"
+              className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-expanded={mobileMenuOpen}
+              aria-label="Toggle mobile menu"
+            >
+              {mobileMenuOpen ? (
+                <X className="h-6 w-6" aria-hidden="true" />
+              ) : (
+                <Menu className="h-6 w-6" aria-hidden="true" />
+              )}
+            </button>
+          </div>
+        </nav>
+        
+        {/* Mobile menu */}
+        {mobileMenuOpen && (
+          <div className="lg:hidden pb-4 animate-in slide-in-from-top duration-300">
+            <div className="space-y-2">
+              {navigation.map((item) => (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className={cn(
+                    'block rounded-lg px-3 py-2 text-base font-semibold',
+                    'transition-colors duration-300',
+                    pathname === item.href
+                      ? 'bg-[#F1F5F9] text-[#1F4E2E]'
+                      : 'text-gray-900 hover:bg-[#F1F5F9]'
+                  )}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {item.name}
+                </Link>
+              ))}
+              <div className="pt-4">
+                <Button asChild className="w-full">
+                  <Link href="/contact" onClick={() => setMobileMenuOpen(false)}>
+                    Get Started
+                  </Link>
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+      </Container>
+    </header>
+  )
+}
+
