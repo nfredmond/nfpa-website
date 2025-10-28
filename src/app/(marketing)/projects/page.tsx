@@ -99,21 +99,21 @@ const projects = [
 export default function ProjectsPage() {
   return (
     <>
-      <Section spacing="lg" className="bg-gradient-to-b from-[#F1F5F9] to-white">
+      <Section spacing="lg" className="bg-gradient-to-b from-[#F1F5F9] to-white dark:from-gray-900 dark:to-gray-950">
         <Container>
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl font-bold text-[#0F172A] mb-6 leading-tight">
+            <h1 className="text-4xl md:text-5xl font-bold text-[#0F172A] dark:text-white mb-6 leading-tight">
               Projects & Case Studies
             </h1>
-            <p className="text-xl text-gray-700 leading-relaxed mb-6">
+            <p className="text-xl text-gray-700 dark:text-gray-300 leading-relaxed mb-6">
               Real-world planning, GIS, and grant projects across Northern California's rural counties
             </p>
-            <div className="bg-white border border-[#D4A63F] rounded-lg p-4 text-sm text-gray-700 text-left max-w-3xl mx-auto">
-              <p className="font-medium text-[#0F172A] mb-2">Attribution Policy</p>
+            <div className="bg-white dark:bg-gray-800 border border-[#D4A63F] dark:border-amber-500 rounded-lg p-4 text-sm text-gray-700 dark:text-gray-300 text-left max-w-3xl mx-auto">
+              <p className="font-medium text-[#0F172A] dark:text-white mb-2">Attribution Policy</p>
               <p>
                 Company portfolio includes work performed by Nat Ford Planning & Design. Projects completed by Nathaniel 
                 in prior employment are clearly labeled below and described in detail on the{' '}
-                <Link href="/about" className="text-[#1F4E2E] hover:underline font-medium">About page</Link>.
+                <Link href="/about" className="text-[#1F4E2E] dark:text-green-400 hover:underline font-medium">About page</Link>.
               </p>
             </div>
           </div>
@@ -123,8 +123,8 @@ export default function ProjectsPage() {
       <Section spacing="xl">
         <Container>
           <div className="mb-8">
-            <h2 className="text-2xl font-bold text-[#0F172A] mb-2">Representative Work (Prior Employment)</h2>
-            <p className="text-gray-600 mb-6">
+            <h2 className="text-2xl font-bold text-[#0F172A] dark:text-white mb-2">Representative Work (Prior Employment)</h2>
+            <p className="text-gray-700 dark:text-gray-300 mb-6">
               Projects completed by Nathaniel while employed at {projects[0].employer} (2021–2025).
               These showcase technical capabilities and planning expertise.
             </p>
@@ -183,13 +183,13 @@ export default function ProjectsPage() {
         </Container>
       </Section>
 
-      <Section spacing="lg" className="bg-[#1F4E2E] text-white">
+      <Section spacing="lg" className="bg-[#1F4E2E] dark:bg-green-900 text-white">
         <Container>
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               Ready to start your project?
             </h2>
-            <p className="text-lg text-gray-200 mb-8">
+            <p className="text-lg text-gray-200 dark:text-gray-300 mb-8">
               Schedule a free consultation to discuss your community's needs and explore how we can help.
             </p>
             <Button asChild variant="secondary" size="lg">

@@ -35,15 +35,15 @@ export function Header() {
       <Container>
         <nav className="flex items-center justify-between py-4" aria-label="Main navigation">
           <div className="flex lg:flex-1">
-            <Link href="/" className="-m-1.5 p-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1F4E2E] rounded-md">
+            <Link href="/" className="-m-1.5 p-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1F4E2E] dark:focus-visible:ring-green-400 rounded-md">
               <span className="sr-only">Nat Ford Planning & Design</span>
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-[#1F4E2E] rounded-md flex items-center justify-center">
+                <div className="w-8 h-8 bg-[#1F4E2E] dark:bg-green-500 rounded-md flex items-center justify-center">
                   <span className="text-white font-bold text-lg">NF</span>
                 </div>
                 <div className="flex flex-col leading-none">
-                  <span className="font-bold text-[#0F172A] text-sm">Nat Ford</span>
-                  <span className="text-xs text-gray-600">Planning & Design</span>
+                  <span className="font-bold text-[#0F172A] dark:text-white text-sm">Nat Ford</span>
+                  <span className="text-xs text-gray-600 dark:text-gray-400">Planning & Design</span>
                 </div>
               </div>
             </Link>
@@ -57,10 +57,10 @@ export function Header() {
                 href={item.href}
                 className={cn(
                   'text-sm font-medium transition-colors duration-300',
-                  'focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1F4E2E] rounded-md px-2 py-1',
+                  'focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1F4E2E] dark:focus-visible:ring-green-400 rounded-md px-2 py-1',
                   pathname === item.href || pathname?.startsWith(item.href + '/')
-                    ? 'text-[#1F4E2E]'
-                    : 'text-gray-700 hover:text-[#1F4E2E]'
+                    ? 'text-[#1F4E2E] dark:text-green-400'
+                    : 'text-gray-700 dark:text-gray-300 hover:text-[#1F4E2E] dark:hover:text-green-400'
                 )}
               >
                 {item.name}
@@ -107,8 +107,8 @@ export function Header() {
                     'block rounded-lg px-3 py-2 text-base font-semibold',
                     'transition-colors duration-300',
                     pathname === item.href
-                      ? 'bg-[#F1F5F9] text-[#1F4E2E]'
-                      : 'text-gray-900 hover:bg-[#F1F5F9]'
+                      ? 'bg-[#F1F5F9] dark:bg-gray-800 text-[#1F4E2E] dark:text-green-400'
+                      : 'text-gray-900 dark:text-gray-200 hover:bg-[#F1F5F9] dark:hover:bg-gray-800'
                   )}
                   onClick={() => setMobileMenuOpen(false)}
                 >

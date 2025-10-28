@@ -241,12 +241,12 @@ export default function HomePage() {
       {/* Value Proposition Section */}
       <Section spacing="xl">
         <Container>
-          <div className="bg-[#1F4E2E] text-white rounded-2xl p-8 md:p-12">
+              <div className="bg-[#1F4E2E] dark:bg-green-900 text-white rounded-2xl p-8 md:p-12">
             <div className="max-w-3xl mx-auto text-center">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
                 Grant-Funded Planning That Works
               </h2>
-              <p className="text-lg text-gray-200 mb-8">
+              <p className="text-lg text-gray-200 dark:text-gray-300 mb-8">
                 We don't just write grant applications—we integrate planning, GIS, and aerial documentation 
                 into fundable packages. From opportunity scans to shovel-ready submissions, we help small 
                 municipalities access federal and state funding.
@@ -255,7 +255,7 @@ export default function HomePage() {
                 <Button asChild variant="secondary" size="lg">
                   <Link href="/services/grants">Explore Grant Services</Link>
                 </Button>
-                <Button asChild variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-[#1F4E2E]">
+                <Button asChild variant="outline" size="lg" className="border-white dark:border-gray-300 text-white hover:bg-white dark:hover:bg-gray-200 hover:text-[#1F4E2E] dark:hover:text-gray-900">
                   <Link href="/contact">Free Funding Feasibility Review</Link>
                 </Button>
               </div>

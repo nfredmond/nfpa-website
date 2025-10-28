@@ -37,12 +37,12 @@ export function Footer() {
             {/* Company Info */}
             <div className="lg:col-span-2">
               <div className="flex items-center gap-2 mb-4">
-                <div className="w-10 h-10 bg-[#1F4E2E] rounded-md flex items-center justify-center">
+                <div className="w-10 h-10 bg-green-600 dark:bg-green-500 rounded-md flex items-center justify-center">
                   <span className="text-white font-bold text-xl">NF</span>
                 </div>
                 <div className="flex flex-col leading-none">
                   <span className="font-bold text-white text-base">Nat Ford</span>
-                  <span className="text-sm text-gray-400">Planning & Design</span>
+                  <span className="text-sm text-gray-300 dark:text-gray-400">Planning & Design</span>
                 </div>
               </div>
               <p className="text-gray-300 dark:text-gray-400 text-sm leading-relaxed max-w-md mb-4">

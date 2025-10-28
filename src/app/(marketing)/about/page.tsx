@@ -198,18 +198,18 @@ export default function AboutPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <Card>
                 <CardContent className="p-6">
-                  <h3 className="font-bold text-lg mb-2">Education</h3>
+                  <h3 className="font-bold text-lg mb-2 dark:text-white">Education</h3>
                   <div className="space-y-3">
                     <div>
-                      <div className="font-medium text-[#0F172A]">Master of Urban Planning (MUP)</div>
-                      <div className="text-sm text-gray-600">San José State University</div>
-                      <div className="text-sm text-gray-500">Concentration: Transportation Planning</div>
-                      <div className="text-xs text-[#D4A63F] mt-1">2018 Bert Muhly Scholarship Recipient</div>
-                      <div className="text-xs text-gray-500 mt-1">Led Urban Planning Coalition; Certificate in Transportation & Land Use Planning</div>
+                      <div className="font-medium text-[#0F172A] dark:text-white">Master of Urban Planning (MUP)</div>
+                      <div className="text-sm text-gray-700 dark:text-gray-300">San José State University</div>
+                      <div className="text-sm text-gray-600 dark:text-gray-400">Concentration: Transportation Planning</div>
+                      <div className="text-xs text-[#D4A63F] dark:text-amber-400 mt-1">2018 Bert Muhly Scholarship Recipient</div>
+                      <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">Led Urban Planning Coalition; Certificate in Transportation & Land Use Planning</div>
                     </div>
                     <div>
-                      <div className="font-medium text-[#0F172A]">B.A., Urban Studies & Planning</div>
-                      <div className="text-sm text-gray-600">San Francisco State University</div>
+                      <div className="font-medium text-[#0F172A] dark:text-white">B.A., Urban Studies & Planning</div>
+                      <div className="text-sm text-gray-700 dark:text-gray-300">San Francisco State University</div>
                     </div>
                   </div>
                 </CardContent>
@@ -217,26 +217,26 @@ export default function AboutPage() {
               
               <Card>
                 <CardContent className="p-6">
-                  <h3 className="font-bold text-lg mb-2">Certifications & Affiliations</h3>
-                  <div className="space-y-2 text-sm">
+                  <h3 className="font-bold text-lg mb-2 dark:text-white">Certifications & Affiliations</h3>
+                  <div className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
                     <div className="flex items-start gap-2">
-                      <Award className="w-4 h-4 text-[#D4A63F] mt-0.5 flex-shrink-0" />
+                      <Award className="w-4 h-4 text-[#D4A63F] dark:text-amber-400 mt-0.5 flex-shrink-0" />
                       <span>FAA Remote Pilot Certificate (Part 107)</span>
                     </div>
                     <div className="flex items-start gap-2">
-                      <Award className="w-4 h-4 text-[#D4A63F] mt-0.5 flex-shrink-0" />
+                      <Award className="w-4 h-4 text-[#D4A63F] dark:text-amber-400 mt-0.5 flex-shrink-0" />
                       <span>American Planning Association Member</span>
                     </div>
                     <div className="flex items-start gap-2">
-                      <Award className="w-4 h-4 text-[#D4A63F] mt-0.5 flex-shrink-0" />
+                      <Award className="w-4 h-4 text-[#D4A63F] dark:text-amber-400 mt-0.5 flex-shrink-0" />
                       <span>SVS APA Sponsorship Director</span>
                     </div>
                     <div className="flex items-start gap-2">
-                      <Award className="w-4 h-4 text-[#D4A63F] mt-0.5 flex-shrink-0" />
+                      <Award className="w-4 h-4 text-[#D4A63F] dark:text-amber-400 mt-0.5 flex-shrink-0" />
                       <span>Young Professionals in Transportation Member</span>
                     </div>
                     <div className="flex items-start gap-2">
-                      <Award className="w-4 h-4 text-[#D4A63F] mt-0.5 flex-shrink-0" />
+                      <Award className="w-4 h-4 text-[#D4A63F] dark:text-amber-400 mt-0.5 flex-shrink-0" />
                       <span>Technical Lead, SVS APA Speaker Series</span>
                     </div>
                   </div>
@@ -262,13 +262,13 @@ export default function AboutPage() {
               return (
                 <Card key={area.title}>
                   <CardContent className="p-6">
-                    <div className="w-12 h-12 bg-[#1F4E2E] rounded-lg flex items-center justify-center mb-4">
+                    <div className="w-12 h-12 bg-[#1F4E2E] dark:bg-green-600 rounded-lg flex items-center justify-center mb-4">
                       <Icon className="w-6 h-6 text-white" />
                     </div>
-                    <h3 className="text-xl font-bold text-[#0F172A] mb-3">{area.title}</h3>
+                    <h3 className="text-xl font-bold text-[#0F172A] dark:text-white mb-3">{area.title}</h3>
                     <ul className="space-y-2">
                       {area.items.map((item) => (
-                        <li key={item} className="text-sm text-gray-600">{item}</li>
+                        <li key={item} className="text-sm text-gray-700 dark:text-gray-300">{item}</li>
                       ))}
                     </ul>
                   </CardContent>
@@ -297,18 +297,18 @@ export default function AboutPage() {
                   <CardContent className="p-6">
                     <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-3">
                       <div>
-                        <h3 className="text-xl font-bold text-[#0F172A]">{role.title}</h3>
-                        <p className="text-lg text-[#1F4E2E] font-medium">{role.employer}</p>
+                        <h3 className="text-xl font-bold text-[#0F172A] dark:text-white">{role.title}</h3>
+                        <p className="text-lg text-[#1F4E2E] dark:text-green-400 font-medium">{role.employer}</p>
                       </div>
-                      <div className="text-sm text-gray-600 font-medium mt-1 md:mt-0">{role.years}</div>
+                      <div className="text-sm text-gray-700 dark:text-gray-300 font-medium mt-1 md:mt-0">{role.years}</div>
                     </div>
-                    <p className="text-gray-700 mb-4">{role.description}</p>
+                    <p className="text-gray-700 dark:text-gray-300 mb-4">{role.description}</p>
                     <div className="space-y-2">
-                      <p className="text-sm font-medium text-[#0F172A]">Key Contributions:</p>
+                      <p className="text-sm font-medium text-[#0F172A] dark:text-white">Key Contributions:</p>
                       <ul className="space-y-2">
                         {role.highlights.map((highlight) => (
-                          <li key={highlight} className="flex gap-3 items-start text-sm text-gray-700">
-                            <Award className="w-4 h-4 text-[#D4A63F] flex-shrink-0 mt-0.5" />
+                          <li key={highlight} className="flex gap-3 items-start text-sm text-gray-700 dark:text-gray-300">
+                            <Award className="w-4 h-4 text-[#D4A63F] dark:text-amber-400 flex-shrink-0 mt-0.5" />
                             <span>{highlight}</span>
                           </li>
                         ))}
@@ -320,7 +320,7 @@ export default function AboutPage() {
             </div>
             
             <div className="mt-8 text-center">
-              <p className="text-sm text-gray-600 mb-4">
+              <p className="text-sm text-gray-700 dark:text-gray-300 mb-4">
                 For detailed project case studies from prior employment, visit the Projects page.
               </p>
               <Button asChild size="lg">
@@ -357,20 +357,20 @@ export default function AboutPage() {
       </Section>
 
       {/* CTA Section */}
-      <Section spacing="lg" className="bg-[#1F4E2E] text-white">
+      <Section spacing="lg" className="bg-[#1F4E2E] dark:bg-green-900 text-white">
         <Container>
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               Let's discuss your project
             </h2>
-            <p className="text-lg text-gray-200 mb-8">
+            <p className="text-lg text-gray-200 dark:text-gray-300 mb-8">
               Free 30-minute funding feasibility review to explore opportunities and approach
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild variant="secondary" size="lg">
                 <Link href="/contact">Schedule Consultation</Link>
               </Button>
-              <Button asChild variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-[#1F4E2E]">
+              <Button asChild variant="outline" size="lg" className="border-white dark:border-gray-300 text-white hover:bg-white dark:hover:bg-gray-200 hover:text-[#1F4E2E] dark:hover:text-gray-900">
                 <a href="mailto:nfredmond@gmail.com">Send Email</a>
               </Button>
             </div>
