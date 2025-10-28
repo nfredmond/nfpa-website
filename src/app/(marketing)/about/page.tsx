@@ -95,29 +95,29 @@ export default function AboutPage() {
   return (
     <>
       {/* Hero Section */}
-      <Section spacing="lg" className="bg-gradient-to-b from-[#F1F5F9] to-white">
+      <Section spacing="lg" className="bg-gradient-to-b from-[#F1F5F9] to-white dark:from-gray-900 dark:to-gray-950">
         <Container>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
             <div className="lg:col-span-2">
-              <h1 className="text-4xl md:text-5xl font-bold text-[#0F172A] mb-6 leading-tight">
+              <h1 className="text-4xl md:text-5xl font-bold text-[#0F172A] dark:text-white mb-6 leading-tight">
                 Nathaniel "Nat" Ford Redmond
               </h1>
               <div className="prose prose-lg max-w-none">
-                <p className="text-xl text-gray-700 leading-relaxed">
+                <p className="text-xl text-gray-700 dark:text-gray-300 leading-relaxed">
                   Nathaniel "Nat" Ford Redmond is a Senior Transportation Planner with 8+ years of experience 
                   serving Northern California communities. With a Master of Urban Planning (MUP) from San Jose 
                   State University and a B.A. in Urban Studies & Planning from San Francisco State University, 
                   Nathaniel specializes in rural and small-city contexts where resourcefulness and community engagement 
                   are essential.
                 </p>
-                <p className="text-lg text-gray-700 leading-relaxed mt-4">
+                <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed mt-4">
                   His work spans Regional Transportation Plans, Active Transportation Plans, VMT and carbon 
                   reduction analysis, complete streets design, and grant applications for FTA, ATP, RAISE, and 
                   other competitive programs. Nathaniel combines technical expertise in GIS, drone photogrammetry, 
                   and data analytics with plain-English communication that helps decision-makers move from 
                   analysis to action.
                 </p>
-                <p className="text-lg text-gray-700 leading-relaxed mt-4">
+                <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed mt-4">
                   He's an FAA-certified Remote Pilot, APA member, and Sponsorship Director for the Sacramento 
                   Valley Section of APA. Based in the Sierra Foothills near Grass Valley, Nathaniel serves public 
                   agencies and mission-driven teams throughout the region with expertise built through diverse 
@@ -141,32 +141,32 @@ export default function AboutPage() {
             <div>
               <Card>
                 <CardContent className="p-6">
-                  <h3 className="font-bold text-lg mb-4">Contact</h3>
+                  <h3 className="font-bold text-lg mb-4 dark:text-white">Contact</h3>
                   <div className="space-y-3 text-sm">
                     <div className="flex items-start gap-3">
-                      <MapPin className="w-5 h-5 text-[#1F4E2E] flex-shrink-0 mt-0.5" />
+                      <MapPin className="w-5 h-5 text-[#1F4E2E] dark:text-green-400 flex-shrink-0 mt-0.5" />
                       <div>
-                        <div className="font-medium">Sierra Foothills</div>
-                        <div className="text-gray-600">Near Grass Valley, CA</div>
+                        <div className="font-medium dark:text-white">Sierra Foothills</div>
+                        <div className="text-gray-600 dark:text-gray-400">Near Grass Valley, CA</div>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
-                      <Mail className="w-5 h-5 text-[#1F4E2E] flex-shrink-0 mt-0.5" />
+                      <Mail className="w-5 h-5 text-[#1F4E2E] dark:text-green-400 flex-shrink-0 mt-0.5" />
                       <div>
-                        <a href="mailto:nfredmond@gmail.com" className="text-[#1F4E2E] hover:underline">
+                        <a href="mailto:nfredmond@gmail.com" className="text-[#1F4E2E] dark:text-green-400 hover:underline">
                           nfredmond@gmail.com
                         </a>
-                        <div className="text-sm text-gray-600 mt-1">530.492.9775</div>
+                        <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">530.492.9775</div>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
-                      <Linkedin className="w-5 h-5 text-[#1F4E2E] flex-shrink-0 mt-0.5" />
+                      <Linkedin className="w-5 h-5 text-[#1F4E2E] dark:text-green-400 flex-shrink-0 mt-0.5" />
                       <div>
                         <a 
                           href="https://linkedin.com/in/nfredmond" 
                           target="_blank" 
                           rel="noopener noreferrer"
-                          className="text-[#1F4E2E] hover:underline"
+                          className="text-[#1F4E2E] dark:text-green-400 hover:underline"
                         >
                           linkedin.com/in/nfredmond
                         </a>
@@ -174,9 +174,9 @@ export default function AboutPage() {
                     </div>
                   </div>
                   
-                  <div className="mt-6 pt-6 border-t border-gray-200">
-                    <h4 className="font-medium mb-2">Service Area</h4>
-                    <p className="text-sm text-gray-600">
+                  <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+                    <h4 className="font-medium mb-2 dark:text-white">Service Area</h4>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
                       Remote-friendly across Northern California with field capture and 
                       on-site facilitation as needed
                     </p>
@@ -189,10 +189,10 @@ export default function AboutPage() {
       </Section>
 
       {/* Education & Credentials */}
-      <Section spacing="xl" className="bg-white border-t border-gray-200">
+      <Section spacing="xl" className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
         <Container>
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#0F172A] mb-8">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#0F172A] dark:text-white mb-8">
               Education & Credentials
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -251,7 +251,7 @@ export default function AboutPage() {
       <Section spacing="xl">
         <Container>
           <div className="text-center max-w-3xl mx-auto mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#0F172A] mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#0F172A] dark:text-white mb-4">
               Core Capabilities
             </h2>
           </div>
@@ -280,13 +280,13 @@ export default function AboutPage() {
       </Section>
 
       {/* Prior Employment & Background */}
-      <Section spacing="xl" className="bg-[#F1F5F9]">
+      <Section spacing="xl" className="bg-[#F1F5F9] dark:bg-gray-900">
         <Container>
           <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#0F172A] mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#0F172A] dark:text-white mb-4">
               Background & Prior Roles
             </h2>
-            <p className="text-lg text-gray-700 mb-8">
+            <p className="text-lg text-gray-700 dark:text-gray-300 mb-8">
               Nathaniel's expertise is built through progressive roles in transportation planning, 
               coordination, and policy across Northern California and the Bay Area.
             </p>
@@ -335,10 +335,10 @@ export default function AboutPage() {
       <Section spacing="xl">
         <Container>
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#0F172A] mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#0F172A] dark:text-white mb-4">
               Northern California Counties Served
             </h2>
-            <p className="text-lg text-gray-700 mb-6">
+            <p className="text-lg text-gray-700 dark:text-gray-300 mb-6">
               Deep familiarity with Sierra Valley, I-5 corridor, coastal/forest contexts, mountain towns, 
               and interregional travel patterns across:
             </p>
@@ -346,7 +346,7 @@ export default function AboutPage() {
               {counties.map((county) => (
                 <span 
                   key={county}
-                  className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-[#F1F5F9] text-[#0F172A] border border-gray-200"
+                  className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-[#F1F5F9] dark:bg-gray-800 text-[#0F172A] dark:text-gray-200 border border-gray-200 dark:border-gray-700"
                 >
                   {county} County
                 </span>

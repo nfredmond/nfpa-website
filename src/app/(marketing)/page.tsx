@@ -78,11 +78,11 @@ const featuredProjects = [
 ]
 
 const trustedBy = [
-  { name: 'Sierra County', note: '(served by Nat in prior role)' },
-  { name: 'Del Norte County', note: '(served by Nat in prior role)' },
-  { name: 'Tehama County', note: '(served by Nat in prior role)' },
-  { name: 'Plumas County', note: '(served by Nat in prior role)' },
-  { name: 'El Dorado County Transportation Commission', note: '(served by Nat in prior role)' },
+  { name: 'Sierra County', note: '(served by Nathaniel in prior role)' },
+  { name: 'Del Norte County', note: '(served by Nathaniel in prior role)' },
+  { name: 'Tehama County', note: '(served by Nathaniel in prior role)' },
+  { name: 'Plumas County', note: '(served by Nathaniel in prior role)' },
+  { name: 'El Dorado County Transportation Commission', note: '(served by Nathaniel in prior role)' },
 ]
 
 export default function HomePage() {

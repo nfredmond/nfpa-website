@@ -111,7 +111,7 @@ export default function ProjectsPage() {
             <div className="bg-white border border-[#D4A63F] rounded-lg p-4 text-sm text-gray-700 text-left max-w-3xl mx-auto">
               <p className="font-medium text-[#0F172A] mb-2">Attribution Policy</p>
               <p>
-                Company portfolio includes work performed by Nat Ford Planning & Design. Projects completed by Nat 
+                Company portfolio includes work performed by Nat Ford Planning & Design. Projects completed by Nathaniel 
                 in prior employment are clearly labeled below and described in detail on the{' '}
                 <Link href="/about" className="text-[#1F4E2E] hover:underline font-medium">About page</Link>.
               </p>
