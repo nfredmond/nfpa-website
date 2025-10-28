@@ -114,20 +114,23 @@ export default function ServicesPage() {
               return (
                 <Card key={service.name} hover className="overflow-hidden">
                   <div className="grid grid-cols-1 lg:grid-cols-3">
-                    <div className="lg:col-span-2 p-6">
+                    <div className="lg:col-span-2 bg-[#1F4E2E] dark:bg-green-900 text-white p-6">
                       <CardHeader className="p-0 mb-4">
-                        <div className="w-12 h-12 bg-[#1F4E2E] dark:bg-green-600 rounded-lg flex items-center justify-center mb-4">
+                        <div className="w-12 h-12 bg-white/15 dark:bg-white/20 rounded-lg flex items-center justify-center mb-4">
                           <Icon className="w-6 h-6 text-white" />
                         </div>
-                        <CardTitle className="text-2xl">{service.name}</CardTitle>
-                        <CardDescription className="text-base mt-2">{service.description}</CardDescription>
+                        <CardTitle className="text-2xl text-white">{service.name}</CardTitle>
+                        <CardDescription className="text-base mt-2 text-white/85">{service.description}</CardDescription>
                       </CardHeader>
                       <CardContent className="p-0">
                         <div className="mb-4">
-                          <p className="text-sm font-medium text-[#0F172A] dark:text-white mb-2">Service Areas:</p>
+                          <p className="text-sm font-semibold text-white/75 mb-2">Service Areas:</p>
                           <div className="flex flex-wrap gap-2">
                             {service.services.map((item) => (
-                              <span key={item} className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[#F1F5F9] dark:bg-gray-700 text-[#0F172A] dark:text-gray-200">
+                              <span
+                                key={item}
+                                className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-white/15 text-white border border-white/10"
+                              >
                                 {item}
                               </span>
                             ))}
