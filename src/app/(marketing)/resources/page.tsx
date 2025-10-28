@@ -13,6 +13,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/com
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Download, FileText, Calendar, Search } from 'lucide-react'
+import Image from 'next/image'
 
 const fundingPrograms = [
   {
@@ -119,6 +120,102 @@ const resources = [
   },
 ]
 
+const brandAssets = [
+  {
+    name: 'Wordmark – Slate (Transparent)',
+    description: 'Primary horizontal logo for light backgrounds. Transparent, scalable formats included.',
+    imageSrc: '/logos/nf-wordmark-slate.svg',
+    previewBg: 'bg-white dark:bg-slate-900',
+    imageClass: 'h-12 w-auto',
+    files: [
+      { label: 'SVG', file: '/logos/nf-wordmark-slate.svg' },
+      { label: 'PNG', file: '/logos/nf-wordmark-slate.png' },
+    ],
+  },
+  {
+    name: 'Wordmark – White (Transparent)',
+    description: 'Alternate horizontal logo for dark fields with transparent background.',
+    imageSrc: '/logos/nf-wordmark-white.svg',
+    previewBg: 'bg-slate-900',
+    imageClass: 'h-12 w-auto',
+    files: [
+      { label: 'SVG', file: '/logos/nf-wordmark-white.svg' },
+      { label: 'PNG', file: '/logos/nf-wordmark-white.png' },
+    ],
+  },
+  {
+    name: 'Wordmark – Slate on White Field',
+    description: 'Ready-to-use PNG with white backdrop for documents or slide decks.',
+    imageSrc: '/logos/nf-wordmark-slate-on-white.png',
+    previewBg: 'bg-white dark:bg-slate-900',
+    imageClass: 'h-12 w-auto',
+    files: [
+      { label: 'PNG', file: '/logos/nf-wordmark-slate-on-white.png' },
+    ],
+  },
+  {
+    name: 'Wordmark – White on Black Field',
+    description: 'High-contrast wordmark set on brand black background.',
+    imageSrc: '/logos/nf-wordmark-white-on-black.png',
+    previewBg: 'bg-black',
+    imageClass: 'h-12 w-auto',
+    files: [
+      { label: 'PNG', file: '/logos/nf-wordmark-white-on-black.png' },
+    ],
+  },
+  {
+    name: 'Monogram – Outline (Slate)',
+    description: 'Iconic NF monogram for avatars and favicons on light backgrounds.',
+    imageSrc: '/logos/nf-monogram-outline-slate.svg',
+    previewBg: 'bg-white dark:bg-slate-900',
+    imageClass: 'h-16 w-auto',
+    files: [
+      { label: 'SVG', file: '/logos/nf-monogram-outline-slate.svg' },
+      { label: 'PNG', file: '/logos/nf-monogram-outline-slate.png' },
+    ],
+  },
+  {
+    name: 'Monogram – Outline (Black)',
+    description: 'High-contrast monogram for grayscale usage or stamp applications.',
+    imageSrc: '/logos/nf-monogram-outline-black.png',
+    previewBg: 'bg-white dark:bg-slate-900',
+    imageClass: 'h-16 w-auto',
+    files: [
+      { label: 'PNG', file: '/logos/nf-monogram-outline-black.png' },
+    ],
+  },
+  {
+    name: 'Monogram – Circle (Slate)',
+    description: 'Circular badge variant with slate fill for social avatars and stickers.',
+    imageSrc: '/logos/nf-monogram-circle-slate.png',
+    previewBg: 'bg-slate-800',
+    imageClass: 'h-20 w-auto',
+    files: [
+      { label: 'PNG', file: '/logos/nf-monogram-circle-slate.png' },
+    ],
+  },
+  {
+    name: 'Monogram – Circle (Black)',
+    description: 'Circle badge on black field for maximum contrast.',
+    imageSrc: '/logos/nf-monogram-circle-black.png',
+    previewBg: 'bg-black',
+    imageClass: 'h-20 w-auto',
+    files: [
+      { label: 'PNG', file: '/logos/nf-monogram-circle-black.png' },
+    ],
+  },
+  {
+    name: 'Monogram – Circle (White)',
+    description: 'Circle badge with white fill for use on dark photography or color blocks.',
+    imageSrc: '/logos/nf-monogram-circle-white.png',
+    previewBg: 'bg-white dark:bg-slate-900',
+    imageClass: 'h-20 w-auto',
+    files: [
+      { label: 'PNG', file: '/logos/nf-monogram-circle-white.png' },
+    ],
+  },
+]
+
 export default function ResourcesPage() {
   const [searchTerm, setSearchTerm] = React.useState('')
   
@@ -170,6 +267,53 @@ export default function ResourcesPage() {
                 </Card>
               )
             })}
+          </div>
+        </Container>
+      </Section>
+
+      {/* Brand Assets */}
+      <Section spacing="xl">
+        <Container>
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#0F172A] dark:text-white mb-8">
+              Brand Assets
+            </h2>
+            <p className="text-lg text-gray-700 dark:text-gray-300 mb-6">
+              Download approved Nat Ford Planning & Design logos. Use the slate wordmark on light backgrounds, and the white or circle marks on dark fields. All files are PNG with transparent backgrounds unless otherwise noted.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {brandAssets.map((asset) => (
+                <Card key={asset.name}>
+                  <CardHeader>
+                    <CardTitle>{asset.name}</CardTitle>
+                    <CardDescription>{asset.description}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className={`rounded-xl border border-gray-200 dark:border-gray-700 p-6 flex items-center justify-center ${asset.previewBg}`}>
+                      <Image
+                        src={asset.imageSrc}
+                        alt={asset.name}
+                        width={256}
+                        height={128}
+                        className={asset.imageClass}
+                      />
+                    </div>
+                  </CardContent>
+                  <CardContent className="pt-0">
+                    <div className="flex flex-wrap gap-2">
+                      {asset.files.map((file) => (
+                        <Button key={file.file} asChild size="sm" variant={file.label === 'SVG' ? 'outline' : 'ghost'}>
+                          <Link href={file.file} download>
+                            <Download className="w-4 h-4 mr-2" />
+                            {`Download ${file.label}`}
+                          </Link>
+                        </Button>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
         </Container>
       </Section>

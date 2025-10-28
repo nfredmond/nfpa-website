@@ -7,6 +7,7 @@ import * as React from 'react'
 import Link from 'next/link'
 import { Mail, Linkedin } from 'lucide-react'
 import { Container } from './container'
+import Image from 'next/image'
 
 const footerLinks = {
   services: [
@@ -36,14 +37,21 @@ export function Footer() {
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
             {/* Company Info */}
             <div className="lg:col-span-2">
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-10 h-10 bg-green-600 dark:bg-green-500 rounded-md flex items-center justify-center">
-                  <span className="text-white font-bold text-xl">NF</span>
-                </div>
-                <div className="flex flex-col leading-none">
-                  <span className="font-bold text-white text-base">Nat Ford</span>
-                  <span className="text-sm text-gray-300 dark:text-gray-400">Planning & Design</span>
-                </div>
+              <div className="mb-4">
+                <Image
+                  src="/logos/nf-wordmark-slate.svg"
+                  alt="Nat Ford Planning & Design"
+                  width={220}
+                  height={48}
+                  className="h-10 w-auto block dark:hidden"
+                />
+                <Image
+                  src="/logos/nf-wordmark-white.svg"
+                  alt="Nat Ford Planning & Design"
+                  width={220}
+                  height={48}
+                  className="h-10 w-auto hidden dark:block"
+                />
               </div>
               <p className="text-gray-300 dark:text-gray-400 text-sm leading-relaxed max-w-md mb-4">
                 Data-driven urban planning, GIS, and aerial insights for Northern California communities.

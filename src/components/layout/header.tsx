@@ -13,6 +13,7 @@ import { Container } from './container'
 import { Button } from '../ui/button'
 import { ThemeToggle } from '../ui/theme-toggle'
 import { cn } from '@/lib/utils'
+import Image from 'next/image'
 
 const navigation = [
   { name: 'Services', href: '/services' },
@@ -38,13 +39,22 @@ export function Header() {
             <Link href="/" className="-m-1.5 p-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1F4E2E] dark:focus-visible:ring-green-400 rounded-md">
               <span className="sr-only">Nat Ford Planning & Design</span>
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-[#1F4E2E] dark:bg-green-500 rounded-md flex items-center justify-center">
-                  <span className="text-white font-bold text-lg">NF</span>
-                </div>
-                <div className="flex flex-col leading-none">
-                  <span className="font-bold text-[#0F172A] dark:text-white text-sm">Nat Ford</span>
-                  <span className="text-xs text-gray-600 dark:text-gray-400">Planning & Design</span>
-                </div>
+                <Image
+                  src="/logos/nf-wordmark-slate.svg"
+                  alt="Nat Ford Planning & Design"
+                  width={220}
+                  height={48}
+                  priority
+                  className="h-10 w-auto block dark:hidden"
+                />
+                <Image
+                  src="/logos/nf-wordmark-white.svg"
+                  alt="Nat Ford Planning & Design"
+                  width={220}
+                  height={48}
+                  priority
+                  className="h-10 w-auto hidden dark:block"
+                />
               </div>
             </Link>
           </div>
