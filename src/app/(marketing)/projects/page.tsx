@@ -125,7 +125,7 @@ export default function ProjectsPage() {
           <div className="mb-8">
             <h2 className="text-2xl font-bold text-[#0F172A] mb-2">Representative Work (Prior Employment)</h2>
             <p className="text-gray-600 mb-6">
-              Projects completed by Nat while employed at {projects[0].employer} (2021–2025).
+              Projects completed by Nathaniel while employed at {projects[0].employer} (2021–2025).
               These showcase technical capabilities and planning expertise.
             </p>
           </div>

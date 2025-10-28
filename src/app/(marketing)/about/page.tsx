@@ -107,19 +107,19 @@ export default function AboutPage() {
                   Nathaniel "Nat" Ford Redmond is a Senior Transportation Planner with 8+ years of experience 
                   serving Northern California communities. With a Master of Urban Planning (MUP) from San Jose 
                   State University and a B.A. in Urban Studies & Planning from San Francisco State University, 
-                  Nat specializes in rural and small-city contexts where resourcefulness and community engagement 
+                  Nathaniel specializes in rural and small-city contexts where resourcefulness and community engagement 
                   are essential.
                 </p>
                 <p className="text-lg text-gray-700 leading-relaxed mt-4">
                   His work spans Regional Transportation Plans, Active Transportation Plans, VMT and carbon 
                   reduction analysis, complete streets design, and grant applications for FTA, ATP, RAISE, and 
-                  other competitive programs. Nat combines technical expertise in GIS, drone photogrammetry, 
+                  other competitive programs. Nathaniel combines technical expertise in GIS, drone photogrammetry, 
                   and data analytics with plain-English communication that helps decision-makers move from 
                   analysis to action.
                 </p>
                 <p className="text-lg text-gray-700 leading-relaxed mt-4">
                   He's an FAA-certified Remote Pilot, APA member, and Sponsorship Director for the Sacramento 
-                  Valley Section of APA. Based in the Sierra Foothills near Grass Valley, Nat serves public 
+                  Valley Section of APA. Based in the Sierra Foothills near Grass Valley, Nathaniel serves public 
                   agencies and mission-driven teams throughout the region with expertise built through diverse 
                   roles spanning rural planning, Bay Area transportation coordination, and San Francisco policy work.
                 </p>
@@ -287,7 +287,7 @@ export default function AboutPage() {
               Background & Prior Roles
             </h2>
             <p className="text-lg text-gray-700 mb-8">
-              Nat's expertise is built through progressive roles in transportation planning, 
+              Nathaniel's expertise is built through progressive roles in transportation planning, 
               coordination, and policy across Northern California and the Bay Area.
             </p>
             

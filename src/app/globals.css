@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #F1F5F9;
+  --background: #ffffff;
   --foreground: #0F172A;
   
   /* NFPA Brand Colors */
@@ -10,6 +10,11 @@
   --slate: #0F172A;
   --cloud: #F1F5F9;
   --sky: #4C84F7;
+}
+
+.dark {
+  --background: #030712;
+  --foreground: #F9FAFB;
 }
 
 @theme inline {
@@ -46,11 +51,9 @@
   --breakpoint-2xl: 1536px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0F172A;
-    --foreground: #F1F5F9;
-  }
+/* Dark mode focus indicators */
+.dark :focus-visible {
+  outline-color: #4ADE80;
 }
 
 /* Base Styles */

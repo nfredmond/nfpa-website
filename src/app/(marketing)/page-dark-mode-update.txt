@@ -1,0 +1,16 @@
+Dark mode updates to apply:
+
+HOMEPAGE (page.tsx):
+1. Hero Section: bg-gradient-to-b from-[#F1F5F9] to-white → from-[#F1F5F9] to-white dark:from-gray-900 dark:to-gray-950
+2. Hero h1: text-[#0F172A] → text-[#0F172A] dark:text-white
+3. Hero p: text-gray-700 → text-gray-700 dark:text-gray-300
+4. Trusted By section: bg-white border-y border-gray-200 → bg-white dark:bg-gray-900 border-y border-gray-200 dark:border-gray-800
+5. Trusted By heading: text-gray-600 → text-gray-700 dark:text-gray-300
+6. Trusted By items: text-gray-500 → text-gray-600 dark:text-gray-400 and text-gray-400 → text-gray-500 dark:text-gray-500
+7. Trusted By disclaimer: text-gray-500 → text-gray-600 dark:text-gray-400
+8. Section headings throughout: text-[#0F172A] → text-[#0F172A] dark:text-white
+9. Section descriptions: text-gray-700 → text-gray-700 dark:text-gray-300
+10. Featured Projects section: bg-[#F1F5F9] → bg-[#F1F5F9] dark:bg-gray-900
+11. Value Prop section (green): bg-[#1F4E2E] → bg-[#1F4E2E] dark:bg-green-950
+12. CTA section: bg-white border-t border-gray-200 → bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800
+

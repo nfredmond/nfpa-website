@@ -11,6 +11,7 @@ import { usePathname } from 'next/navigation'
 import { Menu, X } from 'lucide-react'
 import { Container } from './container'
 import { Button } from '../ui/button'
+import { ThemeToggle } from '../ui/theme-toggle'
 import { cn } from '@/lib/utils'
 
 const navigation = [
@@ -26,7 +27,7 @@ export function Header() {
   const pathname = usePathname()
   
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200">
+    <header className="sticky top-0 z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800">
       <a href="#main" className="skip-link">
         Skip to main content
       </a>
@@ -67,18 +68,20 @@ export function Header() {
             ))}
           </div>
           
-          {/* CTA Button */}
-          <div className="hidden lg:flex lg:flex-1 lg:justify-end">
+          {/* Theme Toggle & CTA Button */}
+          <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-2 lg:items-center">
+            <ThemeToggle />
             <Button asChild size="sm">
               <Link href="/contact">Get Started</Link>
             </Button>
           </div>
           
-          {/* Mobile menu button */}
-          <div className="flex lg:hidden">
+          {/* Mobile menu button & theme toggle */}
+          <div className="flex lg:hidden gap-2 items-center">
+            <ThemeToggle />
             <button
               type="button"
-              className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+              className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700 dark:text-gray-300"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-expanded={mobileMenuOpen}
               aria-label="Toggle mobile menu"

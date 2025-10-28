@@ -30,7 +30,7 @@ export function Footer() {
   const currentYear = new Date().getFullYear()
   
   return (
-    <footer className="bg-[#0F172A] text-white">
+    <footer className="bg-[#0F172A] dark:bg-gray-950 text-white border-t border-gray-800">
       <Container>
         <div className="py-12 md:py-16">
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
@@ -45,13 +45,13 @@ export function Footer() {
                   <span className="text-sm text-gray-400">Planning & Design</span>
                 </div>
               </div>
-              <p className="text-gray-400 text-sm leading-relaxed max-w-md mb-4">
+              <p className="text-gray-300 dark:text-gray-400 text-sm leading-relaxed max-w-md mb-4">
                 Data-driven urban planning, GIS, and aerial insights for Northern California communities.
               </p>
               <div className="flex gap-4">
                 <a
                   href="mailto:nfredmond@gmail.com"
-                  className="text-gray-400 hover:text-[#D4A63F] transition-colors duration-300"
+                  className="text-gray-300 dark:text-gray-400 hover:text-[#D4A63F] transition-colors duration-300"
                   aria-label="Email Nat Ford"
                 >
                   <Mail className="h-5 w-5" />
@@ -60,7 +60,7 @@ export function Footer() {
                   href="https://linkedin.com/in/nfredmond"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-[#D4A63F] transition-colors duration-300"
+                  className="text-gray-300 dark:text-gray-400 hover:text-[#D4A63F] transition-colors duration-300"
                   aria-label="LinkedIn Profile"
                 >
                   <Linkedin className="h-5 w-5" />
@@ -76,7 +76,7 @@ export function Footer() {
                   <li key={link.name}>
                     <Link
                       href={link.href}
-                      className="text-sm text-gray-400 hover:text-white transition-colors duration-300"
+                      className="text-sm text-gray-300 dark:text-gray-400 hover:text-white transition-colors duration-300"
                     >
                       {link.name}
                     </Link>
@@ -93,7 +93,7 @@ export function Footer() {
                   <li key={link.name}>
                     <Link
                       href={link.href}
-                      className="text-sm text-gray-400 hover:text-white transition-colors duration-300"
+                      className="text-sm text-gray-300 dark:text-gray-400 hover:text-white transition-colors duration-300"
                     >
                       {link.name}
                     </Link>
@@ -106,19 +106,19 @@ export function Footer() {
           {/* Bottom Bar */}
           <div className="mt-12 pt-8 border-t border-gray-800">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-gray-300 dark:text-gray-400">
                 © {currentYear} Nat Ford Planning & Design. All rights reserved.
               </p>
               <div className="flex gap-6">
                 <Link
                   href="/privacy"
-                  className="text-sm text-gray-400 hover:text-white transition-colors duration-300"
+                  className="text-sm text-gray-300 dark:text-gray-400 hover:text-white transition-colors duration-300"
                 >
                   Privacy
                 </Link>
                 <Link
                   href="/terms"
-                  className="text-sm text-gray-400 hover:text-white transition-colors duration-300"
+                  className="text-sm text-gray-300 dark:text-gray-400 hover:text-white transition-colors duration-300"
                 >
                   Terms
                 </Link>

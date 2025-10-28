@@ -93,13 +93,13 @@ export default function HomePage() {
       <JsonLd data={projectsData} />
       
       {/* Hero Section */}
-      <Section spacing="xl" className="bg-gradient-to-b from-[#F1F5F9] to-white">
+      <Section spacing="xl" className="bg-gradient-to-b from-[#F1F5F9] to-white dark:from-gray-900 dark:to-gray-950">
         <Container size="lg">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#0F172A] mb-6 leading-tight">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#0F172A] dark:text-white mb-6 leading-tight">
               Planning clarity from street to skyline
             </h1>
-            <p className="text-lg md:text-xl text-gray-700 mb-8 leading-relaxed">
+            <p className="text-lg md:text-xl text-gray-700 dark:text-gray-300 mb-8 leading-relaxed">
               Data-driven urban planning, GIS, and aerial insights for Northern California communities. 
               Expert transportation planning, grant writing, and spatial analysis.
             </p>
@@ -116,20 +116,20 @@ export default function HomePage() {
       </Section>
 
       {/* Trusted By Section */}
-      <Section spacing="md" className="bg-white border-y border-gray-200">
+      <Section spacing="md" className="bg-white dark:bg-gray-900 border-y border-gray-200 dark:border-gray-800">
         <Container>
-          <p className="text-center text-sm text-gray-600 mb-6 uppercase tracking-wide">
-            Agencies Served by Nat
+          <p className="text-center text-sm text-gray-700 dark:text-gray-300 mb-6 uppercase tracking-wide">
+            Agencies Served by Nathaniel
           </p>
           <div className="flex flex-wrap justify-center items-center gap-x-8 gap-y-4">
             {trustedBy.map((client) => (
-              <div key={client.name} className="text-sm text-gray-500 font-medium">
-                {client.name} <span className="text-xs text-gray-400">{client.note}</span>
+              <div key={client.name} className="text-sm text-gray-600 dark:text-gray-400 font-medium">
+                {client.name} <span className="text-xs text-gray-500 dark:text-gray-500">{client.note}</span>
               </div>
             ))}
           </div>
-          <p className="text-center text-xs text-gray-500 mt-4 max-w-3xl mx-auto">
-            Projects for these agencies were completed while Nat was employed at Green DOT Transportation Solutions (2021–2025). 
+          <p className="text-center text-xs text-gray-600 dark:text-gray-400 mt-4 max-w-3xl mx-auto">
+            Projects for these agencies were completed while Nathaniel was employed at Green DOT Transportation Solutions (2021–2025). 
             See the About page for full employment history.
           </p>
         </Container>
@@ -139,10 +139,10 @@ export default function HomePage() {
       <Section spacing="xl">
         <Container>
           <div className="text-center max-w-3xl mx-auto mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#0F172A] mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#0F172A] dark:text-white mb-4">
               Comprehensive Planning Services
             </h2>
-            <p className="text-lg text-gray-700">
+            <p className="text-lg text-gray-700 dark:text-gray-300">
               From regional planning to field-level precision, we integrate technical analysis 
               with plain-English communication for clear, fundable outcomes.
             </p>
@@ -185,14 +185,14 @@ export default function HomePage() {
       </Section>
 
       {/* Featured Projects Section */}
-      <Section spacing="xl" className="bg-[#F1F5F9]">
+      <Section spacing="xl" className="bg-[#F1F5F9] dark:bg-gray-900">
         <Container>
           <div className="text-center max-w-3xl mx-auto mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#0F172A] mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#0F172A] dark:text-white mb-4">
               Representative Work
             </h2>
-            <p className="text-lg text-gray-700">
-              Examples of planning and analysis work performed by Nat in prior roles
+            <p className="text-lg text-gray-700 dark:text-gray-300">
+              Examples of planning and analysis work performed by Nathaniel in prior roles
             </p>
           </div>
           
@@ -265,13 +265,13 @@ export default function HomePage() {
       </Section>
 
       {/* CTA Section */}
-      <Section spacing="lg" className="bg-white border-t border-gray-200">
+      <Section spacing="lg" className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
         <Container>
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-2xl md:text-3xl font-bold text-[#0F172A] mb-4">
+            <h2 className="text-2xl md:text-3xl font-bold text-[#0F172A] dark:text-white mb-4">
               Ready to move from analysis to action?
             </h2>
-            <p className="text-lg text-gray-700 mb-8">
+            <p className="text-lg text-gray-700 dark:text-gray-300 mb-8">
               Schedule a free 30-minute consultation to discuss your planning needs, 
               funding opportunities, and how we can help.
             </p>
