@@ -35,14 +35,14 @@ export function Header() {
         <nav className="flex items-center justify-between py-4" aria-label="Main navigation">
           <div className="flex lg:flex-1">
             <Link href="/" className="-m-1.5 p-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1F4E2E] rounded-md">
-              <span className="sr-only">Nat Ford Planning & Analysis</span>
+              <span className="sr-only">Nat Ford Planning & Design</span>
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-[#1F4E2E] rounded-md flex items-center justify-center">
                   <span className="text-white font-bold text-lg">NF</span>
                 </div>
                 <div className="flex flex-col leading-none">
                   <span className="font-bold text-[#0F172A] text-sm">Nat Ford</span>
-                  <span className="text-xs text-gray-600">Planning & Analysis</span>
+                  <span className="text-xs text-gray-600">Planning & Design</span>
                 </div>
               </div>
             </Link>

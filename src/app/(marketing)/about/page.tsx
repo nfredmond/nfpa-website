@@ -34,19 +34,55 @@ const expertise = [
   },
 ]
 
-const selectedProjects = [
-  'Sierra County RTP – targets, funding roadmap, cross-agency coordination',
-  'Tehama County VMT Analysis – carbon reduction implementation and CIP integration',
-  'Del Norte RTP & ATP – coastal corridors and grant-ready project development',
-  'Plumas County RTP – multi-year regional transportation plan update',
-  'El Dorado Next Gen Mobility – transit investments and TDM strategy',
-  'Placer County MIAS – multimodal infrastructure and access study',
-  'Chester SR-36 Complete Streets – context-sensitive streetscape plan',
-  'Calaveras County ATP & RTP – active transportation and trails planning',
-  'Blue Lake Rancheria LRTP – long range transportation planning',
-  'Lake Street Complete Streets – City of Mt. Shasta corridor design',
-  'Tehama County Safety & Evacuation – secondary access and emergency routing',
-  'Multiple Grant Applications – ATP Cycles 5-6, RAISE, TIRCP, PROTECT',
+const priorEmployment = [
+  {
+    title: 'Senior Transportation Planner',
+    employer: 'Green DOT Transportation Solutions',
+    years: '2021–2025',
+    description: 'Led and contributed to RTPs, ATPs, VMT/CIP integration, and complete streets planning across Sierra, Plumas, Tehama, Del Norte, Calaveras, Alpine, and other Northern California counties.',
+    highlights: [
+      'Sierra County RTP – performance targets and fiscally constrained roadmap',
+      'Tehama County VMT & CIP – carbon reduction implementation',
+      'Del Norte ATP – coastal corridors and grant-ready applications',
+      'Plumas Transit FTA 5339 – operations hub and fleet transition',
+      'Multiple grant applications (ATP Cycles 5-6, RAISE, TIRCP, PROTECT)',
+    ]
+  },
+  {
+    title: 'Transportation Coordinator',
+    employer: 'gRide (Genentech commuter program)',
+    years: '2018–2021',
+    description: 'Managed Bay Area commuter programs including first-wave electric buses, ferry service, car/vanpool coordination, coalition meetings, and BART shuttle connectors.',
+    highlights: [
+      'Coordinated electric bus pilot program deployment',
+      'Managed multi-modal transportation network serving thousands',
+      'Developed GIS-based commute mapping and analysis',
+      'Facilitated regional transportation coalition meetings',
+    ]
+  },
+  {
+    title: 'Planning Intern',
+    employer: 'San Francisco County Transportation Authority',
+    years: '2017–2018',
+    description: 'Supported research, report writing, survey design, traffic counts, community workshops, and contributions to ConnectSF and Vision Zero initiatives.',
+    highlights: [
+      'Contributed to ConnectSF comprehensive planning initiative',
+      'Conducted community outreach and workshop facilitation',
+      'Performed traffic counts and survey analysis',
+      'Supported Vision Zero safety analysis',
+    ]
+  },
+  {
+    title: 'Legislative Intern',
+    employer: 'Office of Supervisor Jane Kim (District 6, SF)',
+    years: '2016–2017',
+    description: 'Provided constituent communications, calendar management, meeting support, and event coordination for San Francisco Board of Supervisors office.',
+    highlights: [
+      'Managed constituent communications and inquiries',
+      'Coordinated community meetings and events',
+      'Supported policy research and legislative analysis',
+    ]
+  },
 ]
 
 const counties = [
@@ -82,11 +118,10 @@ export default function AboutPage() {
                   analysis to action.
                 </p>
                 <p className="text-lg text-gray-700 leading-relaxed mt-4">
-                  As a former Senior Planner at Green DOT Transportation Solutions (2021–2025), Nat led and 
-                  contributed to plans across Sierra, Plumas, Tehama, Del Norte, Calaveras, Alpine, and many 
-                  other Northern California counties. He's an FAA-certified Remote Pilot, APA member, and 
-                  Sponsorship Director for the Sacramento Valley Section of APA. Based in the Sierra Foothills 
-                  near Grass Valley, Nat serves public agencies and mission-driven teams throughout the region.
+                  He's an FAA-certified Remote Pilot, APA member, and Sponsorship Director for the Sacramento 
+                  Valley Section of APA. Based in the Sierra Foothills near Grass Valley, Nat serves public 
+                  agencies and mission-driven teams throughout the region with expertise built through diverse 
+                  roles spanning rural planning, Bay Area transportation coordination, and San Francisco policy work.
                 </p>
               </div>
               
@@ -167,8 +202,10 @@ export default function AboutPage() {
                   <div className="space-y-3">
                     <div>
                       <div className="font-medium text-[#0F172A]">Master of Urban Planning (MUP)</div>
-                      <div className="text-sm text-gray-600">San Jose State University</div>
+                      <div className="text-sm text-gray-600">San José State University</div>
                       <div className="text-sm text-gray-500">Concentration: Transportation Planning</div>
+                      <div className="text-xs text-[#D4A63F] mt-1">2018 Bert Muhly Scholarship Recipient</div>
+                      <div className="text-xs text-gray-500 mt-1">Led Urban Planning Coalition; Certificate in Transportation & Land Use Planning</div>
                     </div>
                     <div>
                       <div className="font-medium text-[#0F172A]">B.A., Urban Studies & Planning</div>
@@ -242,25 +279,52 @@ export default function AboutPage() {
         </Container>
       </Section>
 
-      {/* Selected Projects */}
+      {/* Prior Employment & Background */}
       <Section spacing="xl" className="bg-[#F1F5F9]">
         <Container>
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#0F172A] mb-8">
-              Selected Projects & Deliverables
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#0F172A] mb-4">
+              Background & Prior Roles
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {selectedProjects.map((project) => (
-                <div key={project} className="flex gap-3 items-start">
-                  <Award className="w-5 h-5 text-[#D4A63F] flex-shrink-0 mt-1" />
-                  <span className="text-gray-700">{project}</span>
-                </div>
+            <p className="text-lg text-gray-700 mb-8">
+              Nat's expertise is built through progressive roles in transportation planning, 
+              coordination, and policy across Northern California and the Bay Area.
+            </p>
+            
+            <div className="space-y-6">
+              {priorEmployment.map((role) => (
+                <Card key={role.employer}>
+                  <CardContent className="p-6">
+                    <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-3">
+                      <div>
+                        <h3 className="text-xl font-bold text-[#0F172A]">{role.title}</h3>
+                        <p className="text-lg text-[#1F4E2E] font-medium">{role.employer}</p>
+                      </div>
+                      <div className="text-sm text-gray-600 font-medium mt-1 md:mt-0">{role.years}</div>
+                    </div>
+                    <p className="text-gray-700 mb-4">{role.description}</p>
+                    <div className="space-y-2">
+                      <p className="text-sm font-medium text-[#0F172A]">Key Contributions:</p>
+                      <ul className="space-y-2">
+                        {role.highlights.map((highlight) => (
+                          <li key={highlight} className="flex gap-3 items-start text-sm text-gray-700">
+                            <Award className="w-4 h-4 text-[#D4A63F] flex-shrink-0 mt-0.5" />
+                            <span>{highlight}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </CardContent>
+                </Card>
               ))}
             </div>
             
-            <div className="mt-8">
+            <div className="mt-8 text-center">
+              <p className="text-sm text-gray-600 mb-4">
+                For detailed project case studies from prior employment, visit the Projects page.
+              </p>
               <Button asChild size="lg">
-                <Link href="/projects">View All Projects</Link>
+                <Link href="/projects">View Projects</Link>
               </Button>
             </div>
           </div>

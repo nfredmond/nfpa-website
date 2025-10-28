@@ -19,38 +19,73 @@ export const metadata: Metadata = {
 const services = [
   {
     name: 'Urban & Transportation Planning',
-    description: 'Regional Transportation Plans, Active Transportation Plans, VMT analysis, and carbon reduction programs.',
+    description: 'Regional Transportation Plans, Active Transportation Plans, VMT analysis, and carbon reduction programs that boards adopt and funders support.',
     icon: MapPin,
     href: '/services/planning',
-    services: ['RTPs & ATPs', 'VMT & Carbon Reduction', 'Complete Streets', 'Speed & Safety Management']
+    services: ['RTPs & ATPs', 'VMT & Carbon Reduction', 'Complete Streets', 'Speed & Safety Management'],
+    deliverables: [
+      'RTP/ATP chapters with fiscally constrained project lists',
+      'Performance target tables (safety, pavement, accessibility)',
+      'Before/after concept visualizations & cross-sections',
+      'Interactive web maps with project filters',
+      'Grant application support packages'
+    ]
   },
   {
     name: 'GIS & Spatial Analysis',
-    description: 'PostGIS databases, interactive web mapping, and data-driven decision support tools.',
+    description: 'PostGIS databases, interactive web mapping, and spatial analytics that turn data into actionable insights for transportation and community planning.',
     icon: Database,
     href: '/services/gis',
-    services: ['PostGIS Development', 'Interactive Maps', 'Suitability Analysis', 'Custom Dashboards']
+    services: ['PostGIS Development', 'Interactive Maps', 'Suitability Analysis', 'Custom Dashboards'],
+    deliverables: [
+      'PostGIS database schemas with documented queries',
+      'Interactive Mapbox/Leaflet web applications',
+      'Safety hotspot & accessibility analysis maps',
+      'Automated data pipelines & refresh workflows',
+      'Export-ready figures & presentation materials'
+    ]
   },
   {
     name: 'Aerial Mapping & Photogrammetry',
-    description: 'Professional drone capture for orthomosaics, DEMs, 3D models, and site documentation.',
+    description: 'FAA Part 107 certified drone operations delivering orthomosaics, digital elevation models, 3D meshes, and progress documentation for sites and corridors.',
     icon: Plane,
     href: '/services/aerial',
-    services: ['Orthomosaic Imagery', 'Digital Elevation Models', '3D Meshes', 'Progress Tracking']
+    services: ['Orthomosaic Imagery', 'Digital Elevation Models', '3D Meshes', 'Progress Tracking'],
+    deliverables: [
+      'GeoTIFF orthomosaics (sub-inch accuracy)',
+      'Digital Elevation Models (DEMs) for drainage/grading',
+      'Textured 3D meshes for visualization',
+      'Time-series progress photography',
+      'Deliverables in GIS-ready formats (GeoTIFF, LAS, OBJ)'
+    ]
   },
   {
     name: 'Funding & Grant Services',
-    description: 'Grant identification, narrative development, and application assembly for FTA, ATP, CRP, and more.',
+    description: 'Opportunity scanning, compelling narratives, benefit-cost analysis, and full application assembly for FTA, ATP, HSIP, CRP, RAISE, TIRCP, and Clean California programs.',
     icon: FileText,
     href: '/services/grants',
-    services: ['Opportunity Scans', 'Narrative Development', 'Benefit-Cost Analysis', 'Application Assembly']
+    services: ['Opportunity Scans', 'Narrative Development', 'Benefit-Cost Analysis', 'Application Assembly'],
+    deliverables: [
+      'Funding opportunity calendars & eligibility matrices',
+      'Project narratives tied to scoring criteria',
+      'Benefit-cost worksheets & economic justification',
+      'Application assembly with exhibits & attachments',
+      'Post-award compliance & reporting support'
+    ]
   },
   {
     name: 'AI-Enabled Documentation',
-    description: 'Automated report builds, figure/table pipelines, and citation management for faster delivery.',
+    description: 'Automated report generation, figure/table pipelines, citation management, and document QA/QC using AI workflows that reduce production time without sacrificing accuracy.',
     icon: Sparkles,
     href: '/services/ai',
-    services: ['Automated Reports', 'Figure/Table Generation', 'Literature Reviews', 'Document QA/QC']
+    services: ['Automated Reports', 'Figure/Table Generation', 'Literature Reviews', 'Document QA/QC'],
+    deliverables: [
+      'Automated figure & table generation pipelines',
+      'Citation-managed literature reviews',
+      'Template-based report assembly workflows',
+      'Batch document QA/QC (cross-references, formatting)',
+      'Reproducible documentation for audits & updates'
+    ]
   },
 ]
 
@@ -73,39 +108,56 @@ export default function ServicesPage() {
 
       <Section spacing="xl">
         <Container>
-          <Grid cols={{ default: 1, md: 2, lg: 3 }} gap="lg">
+          <div className="space-y-8">
             {services.map((service) => {
               const Icon = service.icon
               return (
-                <Card key={service.name} hover>
-                  <CardHeader>
-                    <div className="w-12 h-12 bg-[#1F4E2E] rounded-lg flex items-center justify-center mb-4">
-                      <Icon className="w-6 h-6 text-white" />
+                <Card key={service.name} hover className="overflow-hidden">
+                  <div className="grid grid-cols-1 lg:grid-cols-3">
+                    <div className="lg:col-span-2 p-6">
+                      <CardHeader className="p-0 mb-4">
+                        <div className="w-12 h-12 bg-[#1F4E2E] rounded-lg flex items-center justify-center mb-4">
+                          <Icon className="w-6 h-6 text-white" />
+                        </div>
+                        <CardTitle className="text-2xl">{service.name}</CardTitle>
+                        <CardDescription className="text-base mt-2">{service.description}</CardDescription>
+                      </CardHeader>
+                      <CardContent className="p-0">
+                        <div className="mb-4">
+                          <p className="text-sm font-medium text-[#0F172A] mb-2">Service Areas:</p>
+                          <div className="flex flex-wrap gap-2">
+                            {service.services.map((item) => (
+                              <span key={item} className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[#F1F5F9] text-[#0F172A]">
+                                {item}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </CardContent>
                     </div>
-                    <CardTitle>{service.name}</CardTitle>
-                    <CardDescription>{service.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <ul className="space-y-2">
-                      {service.services.map((item) => (
-                        <li key={item} className="flex items-start gap-2 text-sm text-gray-600">
-                          <ArrowRight className="w-4 h-4 text-[#D4A63F] mt-0.5 flex-shrink-0" />
-                          <span>{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                  <CardFooter>
-                    <Button asChild variant="ghost" size="sm">
-                      <Link href={service.href}>
-                        Learn more <ArrowRight className="ml-2 w-4 h-4" />
-                      </Link>
-                    </Button>
-                  </CardFooter>
+                    <div className="bg-[#F1F5F9] p-6 lg:border-l border-gray-200">
+                      <p className="text-sm font-medium text-[#0F172A] mb-3">Typical Deliverables:</p>
+                      <ul className="space-y-2">
+                        {service.deliverables.map((deliverable) => (
+                          <li key={deliverable} className="flex items-start gap-2 text-xs text-gray-700">
+                            <ArrowRight className="w-3 h-3 text-[#D4A63F] mt-0.5 flex-shrink-0" />
+                            <span>{deliverable}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <div className="mt-4">
+                        <Button asChild variant="ghost" size="sm" className="text-xs">
+                          <Link href={service.href}>
+                            Learn more <ArrowRight className="ml-2 w-3 h-3" />
+                          </Link>
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
                 </Card>
               )
             })}
-          </Grid>
+          </div>
         </Container>
       </Section>
 

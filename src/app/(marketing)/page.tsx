@@ -1,6 +1,6 @@
 /**
  * Homepage
- * Main landing page for Nat Ford Planning & Analysis
+ * Main landing page for Nat Ford Planning & Design
  */
 
 import Link from 'next/link'
@@ -78,12 +78,11 @@ const featuredProjects = [
 ]
 
 const trustedBy = [
-  'Sierra County',
-  'Del Norte County',
-  'Tehama County',
-  'Plumas County',
-  'El Dorado County Transportation Commission',
-  'Green DOT Transportation Solutions',
+  { name: 'Sierra County', note: '(served by Nat in prior role)' },
+  { name: 'Del Norte County', note: '(served by Nat in prior role)' },
+  { name: 'Tehama County', note: '(served by Nat in prior role)' },
+  { name: 'Plumas County', note: '(served by Nat in prior role)' },
+  { name: 'El Dorado County Transportation Commission', note: '(served by Nat in prior role)' },
 ]
 
 export default function HomePage() {
@@ -120,15 +119,19 @@ export default function HomePage() {
       <Section spacing="md" className="bg-white border-y border-gray-200">
         <Container>
           <p className="text-center text-sm text-gray-600 mb-6 uppercase tracking-wide">
-            Trusted by Northern California Communities
+            Agencies Served by Nat
           </p>
           <div className="flex flex-wrap justify-center items-center gap-x-8 gap-y-4">
             {trustedBy.map((client) => (
-              <div key={client} className="text-sm text-gray-500 font-medium">
-                {client}
+              <div key={client.name} className="text-sm text-gray-500 font-medium">
+                {client.name} <span className="text-xs text-gray-400">{client.note}</span>
               </div>
             ))}
           </div>
+          <p className="text-center text-xs text-gray-500 mt-4 max-w-3xl mx-auto">
+            Projects for these agencies were completed while Nat was employed at Green DOT Transportation Solutions (2021–2025). 
+            See the About page for full employment history.
+          </p>
         </Container>
       </Section>
 
@@ -186,10 +189,10 @@ export default function HomePage() {
         <Container>
           <div className="text-center max-w-3xl mx-auto mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-[#0F172A] mb-4">
-              Recent Projects
+              Representative Work
             </h2>
             <p className="text-lg text-gray-700">
-              Real-world planning and analysis for rural Northern California counties
+              Examples of planning and analysis work performed by Nat in prior roles
             </p>
           </div>
           
@@ -197,7 +200,10 @@ export default function HomePage() {
             {featuredProjects.map((project) => (
               <Card key={project.title} hover>
                 <CardHeader>
-                  <div className="text-sm text-[#D4A63F] font-medium mb-2">{project.county}</div>
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="text-sm text-[#D4A63F] font-medium">{project.county}</div>
+                    <div className="text-xs text-gray-500 italic">(Prior role)</div>
+                  </div>
                   <CardTitle>{project.title}</CardTitle>
                   <CardDescription>{project.description}</CardDescription>
                 </CardHeader>

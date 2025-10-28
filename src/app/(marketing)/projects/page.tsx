@@ -22,63 +22,77 @@ const projects = [
     slug: 'sierra-rtp',
     county: 'Sierra County, CA',
     year: '2024',
+    employer: 'Green DOT Transportation Solutions',
     services: ['Transportation Planning', 'GIS Analysis', 'Funding Strategy'],
     description: 'Data-driven performance targets and fiscally constrained investment roadmap for a high-elevation rural county.',
     metrics: ['10-year roadmap', 'Grant-ready projects', 'Cross-agency coordination'],
+    priorRole: true,
   },
   {
     title: 'Del Norte County ATP',
     slug: 'del-norte-atp',
     county: 'Del Norte County, CA',
     year: '2024',
+    employer: 'Green DOT Transportation Solutions',
     services: ['Active Transportation', 'Safe Routes', 'Grant Writing'],
     description: 'Converted coastal network gaps into competitive, phaseable ATP applications with community support.',
     metrics: ['Multi-cycle applications', 'School access focus', 'Coastal trail segments'],
+    priorRole: true,
   },
   {
     title: 'Tehama County VMT & CIP',
     slug: 'tehama-vmt',
     county: 'Tehama County, CA',
     year: '2025',
+    employer: 'Green DOT Transportation Solutions',
     services: ['Carbon Reduction', 'VMT Analysis', 'CIP Development'],
     description: 'Connected VMT-reducing strategies to a realistic Capital Improvement Program with measurable outcomes.',
     metrics: ['Countywide VMT screens', 'Prioritized CIP', 'Board-ready tables'],
+    priorRole: true,
   },
   {
     title: 'Plumas Transit FTA 5339',
     slug: 'plumas-transit',
     county: 'Plumas County, CA',
     year: '2024',
+    employer: 'Green DOT Transportation Solutions',
     services: ['Grant Writing', 'Transit Planning', 'Site Concepting'],
     description: 'Built compelling 5339 narrative connecting site feasibility, fleet transition, and community benefits.',
     metrics: ['Operations hub concept', 'EV charging strategy', 'Competitive submission'],
+    priorRole: true,
   },
   {
     title: 'Placer County MIAS',
     slug: 'placer-mias',
     county: 'Placer County, CA',
     year: '2024',
+    employer: 'Green DOT Transportation Solutions',
     services: ['Complete Streets', 'GIS Analysis', 'Project Prioritization'],
     description: 'Multimodal Infrastructure & Access Study screening corridors countywide with planning-level cost bands.',
     metrics: ['Multimodal corridors screened', 'Priority projects packaged', 'Data-driven treatments'],
+    priorRole: true,
   },
   {
     title: 'El Dorado Next Gen Mobility',
     slug: 'el-dorado-nextgen',
     county: 'El Dorado County, CA',
     year: '2024',
+    employer: 'Green DOT Transportation Solutions',
     services: ['Mobility Strategy', 'Transit & TDM', 'Data Storytelling'],
     description: 'Menu of near-term mobility programs with measurable outcomes and phasing tied to funding cycles.',
     metrics: ['Program menu developed', 'KPI framework', 'Phased implementation'],
+    priorRole: true,
   },
   {
     title: 'Tehama County EVAC Routing',
     slug: 'tehama-evac',
     county: 'Tehama County, CA',
     year: '2024',
+    employer: 'Green DOT Transportation Solutions',
     services: ['Emergency Planning', 'GIS Routing', 'Public Communication'],
     description: 'Evacuation zones and routing logic for wildfire and flood scenarios with public-facing graphics.',
     metrics: ['Zone maps developed', 'Scenario routing', 'Public playbooks'],
+    priorRole: true,
   },
 ]
 
@@ -91,15 +105,31 @@ export default function ProjectsPage() {
             <h1 className="text-4xl md:text-5xl font-bold text-[#0F172A] mb-6 leading-tight">
               Projects & Case Studies
             </h1>
-            <p className="text-xl text-gray-700 leading-relaxed">
+            <p className="text-xl text-gray-700 leading-relaxed mb-6">
               Real-world planning, GIS, and grant projects across Northern California's rural counties
             </p>
+            <div className="bg-white border border-[#D4A63F] rounded-lg p-4 text-sm text-gray-700 text-left max-w-3xl mx-auto">
+              <p className="font-medium text-[#0F172A] mb-2">Attribution Policy</p>
+              <p>
+                Company portfolio includes work performed by Nat Ford Planning & Design. Projects completed by Nat 
+                in prior employment are clearly labeled below and described in detail on the{' '}
+                <Link href="/about" className="text-[#1F4E2E] hover:underline font-medium">About page</Link>.
+              </p>
+            </div>
           </div>
         </Container>
       </Section>
 
       <Section spacing="xl">
         <Container>
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold text-[#0F172A] mb-2">Representative Work (Prior Employment)</h2>
+            <p className="text-gray-600 mb-6">
+              Projects completed by Nat while employed at {projects[0].employer} (2021–2025).
+              These showcase technical capabilities and planning expertise.
+            </p>
+          </div>
+          
           <Grid cols={{ default: 1, md: 2, lg: 3 }} gap="lg">
             {projects.map((project) => (
               <Card key={project.slug} hover>
@@ -108,6 +138,11 @@ export default function ProjectsPage() {
                     <div className="text-sm text-[#D4A63F] font-medium">{project.county}</div>
                     <div className="text-sm text-gray-500">{project.year}</div>
                   </div>
+                  {project.priorRole && (
+                    <div className="mb-2 inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-700 border border-gray-300">
+                      Prior role: {project.employer}
+                    </div>
+                  )}
                   <CardTitle>{project.title}</CardTitle>
                   <CardDescription>{project.description}</CardDescription>
                 </CardHeader>

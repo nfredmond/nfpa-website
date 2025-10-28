@@ -1,6 +1,6 @@
-# Nat Ford Planning & Analysis Website
+# Nat Ford Planning & Design Website
 
-A modern Next.js 15 website with marketing site and client portal for Nat Ford Planning & Analysis.
+A modern Next.js 15 website with marketing site and client portal for Nat Ford Planning & Design.
 
 ## Tech Stack
 
@@ -61,7 +61,7 @@ NEXT_PUBLIC_MAPBOX_TOKEN=your_mapbox_token_here
 
 # Site Configuration
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
-NEXT_PUBLIC_SITE_NAME=Nat Ford Planning & Analysis
+NEXT_PUBLIC_SITE_NAME=Nat Ford Planning & Design
 ```
 
 See `ENV_SETUP.md` for detailed instructions on getting your Mapbox token.
@@ -192,11 +192,12 @@ The following phases are outlined in the plan but not yet implemented:
 ## Content
 
 All content is based on Nat Ford's real professional experience:
-- 10+ years in rural Northern California planning
-- Former Senior Planner at Green DOT Transportation Solutions
+- 8+ years in Northern California planning
+- Former Senior Planner at Green DOT Transportation Solutions (2021-2025)
+- Prior roles: gRide/Genentech Transportation Coordinator, SFCTA Planning Intern, Legislative Intern for Supervisor Jane Kim
 - Expertise in RTPs, ATPs, VMT analysis, grant writing
 - GIS specialist with PostGIS, Mapbox, and web mapping
-- Drone photogrammetry for planning applications
+- FAA Part 107 certified drone pilot for aerial mapping and photogrammetry
 - AI-enabled documentation workflows
 
 ## Contact

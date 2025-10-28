@@ -42,7 +42,7 @@ export function Footer() {
                 </div>
                 <div className="flex flex-col leading-none">
                   <span className="font-bold text-white text-base">Nat Ford</span>
-                  <span className="text-sm text-gray-400">Planning & Analysis</span>
+                  <span className="text-sm text-gray-400">Planning & Design</span>
                 </div>
               </div>
               <p className="text-gray-400 text-sm leading-relaxed max-w-md mb-4">
@@ -107,7 +107,7 @@ export function Footer() {
           <div className="mt-12 pt-8 border-t border-gray-800">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
               <p className="text-sm text-gray-400">
-                © {currentYear} Nat Ford Planning & Analysis. All rights reserved.
+                © {currentYear} Nat Ford Planning & Design. All rights reserved.
               </p>
               <div className="flex gap-6">
                 <Link
