@@ -2,7 +2,7 @@
 
 **Non-negotiables**
 
-* **Attribution wall:** Do **not** list work performed while employed at **Green DOT Transportation Solutions** as Nat Ford Planning & Design portfolio work. Those items belong under **About → Background & Prior Roles** with clear labels like “Role: Senior Transportation Planner, Green DOT (2021–2025)” and “Contributions while at employer.” Keep case-study-style detail, but do not imply these were firm projects of the new company. [Nat Ford Planning & Analysis](https://www.natfordplanning.com/about)
+* **Attribution wall:** Do **not** list work performed while employed at **Green DOT Transportation Solutions** as Nat Ford Planning & Analysis portfolio work. Those items belong under **About → Background & Prior Roles** with clear labels like “Role: Senior Transportation Planner, Green DOT (2021–2025)” and “Contributions while at employer.” Keep case-study-style detail, but do not imply these were firm projects of the new company. [Nat Ford Planning & Analysis](https://www.natfordplanning.com/about)
 
 * **Add prior roles:** Include: Transportation Coordinator for **gRide (Genentech’s commuter program)**; Planning Intern at **San Francisco County Transportation Authority**; Legislative Intern for **Supervisor Jane Kim (District 6, SF)**. Summarize responsibilities and notable achievements succinctly in the About/Resumé area.
 
@@ -17,7 +17,7 @@
 
 * **Services:** Planning; GIS & Spatial Analysis; Aerial Mapping/Photogrammetry (Part 107); Grant & Funding Services; AI-enabled Documentation. (Write crisp 2–3 sentence blurbs each; end with typical deliverables.) [Nat Ford Planning & Analysis](https://www.natfordplanning.com/)
 
-* **Projects / Case Studies (Company Portfolio):** Only projects delivered under **Nat Ford Planning & Design**. If none yet, create “Starter Portfolio” with **method demos**, anonymized templates, and “Representative Work (performed by Nat at prior employers)” as a **separate** clearly labeled subsection—not counted as company portfolio. [Nat Ford Planning & Analysis](https://www.natfordplanning.com/projects)
+* **Projects / Case Studies (Company Portfolio):** Only projects delivered under **Nat Ford Planning & Analysis**. If none yet, create “Starter Portfolio” with **method demos**, anonymized templates, and “Representative Work (performed by Nat at prior employers)” as a **separate** clearly labeled subsection—not counted as company portfolio. [Nat Ford Planning & Analysis](https://www.natfordplanning.com/projects)
 
 * **About:** Bio, credentials, awards, affiliations, **Prior Employment Experience** (Green DOT, gRide/Genentech, SFCTA, Office of Jane Kim) with bullet highlights and links. [Nat Ford Planning & Analysis](https://www.natfordplanning.com/about)
 
@@ -48,11 +48,11 @@
 
 * When listing prior-employment projects, prefix the line with **“(Prior role)”** and include the employer name; do not use company portfolio badges on these cards.
 
-* Add a one-sentence **“Attribution Policy”** at the top of Projects: “Company portfolio includes work performed by Nat Ford Planning & Design. Projects completed by Nat in prior roles are clearly labeled and described in the About section.”
+* Add a one-sentence **“Attribution Policy”** at the top of Projects: “Company portfolio includes work performed by Nat Ford Planning & Analysis. Projects completed by Nat in prior roles are clearly labeled and described in the About section.”
 
 **Quality checks before publishing**
 
-* No remaining “Analysis” strings in titles/footers/meta; all say **Planning & Design**. [Nat Ford Planning & Analysis](https://www.natfordplanning.com/)
+* No remaining “Analysis” strings in titles/footers/meta; all say **Planning & Analysis**. [Nat Ford Planning & Analysis](https://www.natfordplanning.com/)
 
 * No project card implies firm-level delivery where work was performed in prior employment.
 
@@ -65,7 +65,7 @@
 # **“About Nat” cheat sheet (for reuse across pages)**
 
 **Full name / firm**  
- Nathaniel “Nat” Ford Redmond — **Nat Ford Planning & Design** (owner).
+ Nathaniel “Nat” Ford Redmond — **Nat Ford Planning & Analysis** (owner).
 
 **Location / service area**  
  Sierra Foothills (near Grass Valley, CA); serves Northern California; remote-friendly with on-site field capture as needed. [Nat Ford Planning & Analysis](https://www.natfordplanning.com/about)

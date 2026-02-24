@@ -1,6 +1,6 @@
 /**
  * Homepage
- * Main landing page for Nat Ford Planning & Design
+ * Main landing page for Nat Ford Planning & Analysis
  */
 
 import Link from 'next/link'

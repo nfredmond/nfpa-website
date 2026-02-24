@@ -279,7 +279,7 @@ export default function ResourcesPage() {
               Brand Assets
             </h2>
             <p className="text-lg text-gray-700 dark:text-gray-300 mb-6">
-              Download approved Nat Ford Planning & Design logos. Use the slate wordmark on light backgrounds, and the white or circle marks on dark fields. All files are PNG with transparent backgrounds unless otherwise noted.
+              Download approved Nat Ford Planning & Analysis logos. Use the slate wordmark on light backgrounds, and the white or circle marks on dark fields. All files are PNG with transparent backgrounds unless otherwise noted.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {brandAssets.map((asset) => (

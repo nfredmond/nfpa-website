@@ -37,11 +37,11 @@ export function Header() {
         <nav className="flex items-center justify-between py-4" aria-label="Main navigation">
           <div className="flex lg:flex-1">
             <Link href="/" className="-m-1.5 p-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1F4E2E] dark:focus-visible:ring-green-400 rounded-md">
-              <span className="sr-only">Nat Ford Planning & Design</span>
+              <span className="sr-only">Nat Ford Planning & Analysis</span>
               <div className="flex items-center gap-2">
                 <Image
                   src="/logos/nf-wordmark-slate.svg"
-                  alt="Nat Ford Planning & Design"
+                  alt="Nat Ford Planning & Analysis"
                   width={220}
                   height={48}
                   priority
@@ -49,7 +49,7 @@ export function Header() {
                 />
                 <Image
                   src="/logos/nf-wordmark-white.svg"
-                  alt="Nat Ford Planning & Design"
+                  alt="Nat Ford Planning & Analysis"
                   width={220}
                   height={48}
                   priority

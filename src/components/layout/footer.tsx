@@ -40,14 +40,14 @@ export function Footer() {
               <div className="mb-4">
                 <Image
                   src="/logos/nf-wordmark-slate.svg"
-                  alt="Nat Ford Planning & Design"
+                  alt="Nat Ford Planning & Analysis"
                   width={220}
                   height={48}
                   className="h-10 w-auto block dark:hidden"
                 />
                 <Image
                   src="/logos/nf-wordmark-white.svg"
-                  alt="Nat Ford Planning & Design"
+                  alt="Nat Ford Planning & Analysis"
                   width={220}
                   height={48}
                   className="h-10 w-auto hidden dark:block"
@@ -115,7 +115,7 @@ export function Footer() {
           <div className="mt-12 pt-8 border-t border-gray-800">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
               <p className="text-sm text-gray-300 dark:text-gray-400">
-                © {currentYear} Nat Ford Planning & Design. All rights reserved.
+                © {currentYear} Nat Ford Planning & Analysis. All rights reserved.
               </p>
               <div className="flex gap-6">
                 <Link

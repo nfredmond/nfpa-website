@@ -12,7 +12,7 @@ Successfully implemented dark mode toggle with proper contrast and updated all n
 ## Changes Completed
 
 ### 1. Narrative Name Updates ✅
-**Changed "Nat" to "Nathaniel" in all narrative contexts** while keeping "Nat Ford Planning & Design" as company name:
+**Changed "Nat" to "Nathaniel" in all narrative contexts** while keeping "Nat Ford Planning & Analysis" as company name:
 
 **Files Updated:**
 - `src/app/(marketing)/about/page.tsx` - 4 instances updated
@@ -270,7 +270,7 @@ All modern browsers support:
 
 Your website now:
 1. Refers to you as **Nathaniel** in all narrative contexts
-2. Keeps **Nat Ford Planning & Design** as the company name
+2. Keeps **Nat Ford Planning & Analysis** as the company name
 3. Has a fully functional **dark mode toggle**
 4. Provides **excellent contrast** in both light and dark modes
 5. Persists theme preference across visits

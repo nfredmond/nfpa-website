@@ -19,7 +19,7 @@ Comprehensive contrast improvements across all pages to ensure text is readable 
 - **Header logo:** `bg-[#1F4E2E]` → `dark:bg-green-500` (brighter green in dark mode)
 - **Footer logo:** `bg-[#1F4E2E]` → `bg-green-600 dark:bg-green-500` (brighter in both modes)
 - **"Nat Ford" text:** Added `dark:text-white`
-- **"Planning & Design" text:** `text-gray-600` → `dark:text-gray-400`
+- **"Planning & Analysis" text:** `text-gray-600` → `dark:text-gray-400`
 
 ### 2. **Navigation Links** ✅
 
@@ -272,7 +272,7 @@ Comprehensive contrast improvements across all pages to ensure text is readable 
 **Latest Commit:** 2a3cb1d
 
 **Recent Commits:**
-1. `e4d10aa` - Rebrand to Nat Ford Planning & Design
+1. `e4d10aa` - Rebrand to Nat Ford Planning & Analysis
 2. `6c2e98c` - Update narrative to Nathaniel & add dark mode toggle
 3. `265bd10` - Fix remaining contrast issues
 4. `e882c9a` - Fix Tailwind v4 dark mode configuration

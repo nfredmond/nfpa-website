@@ -1,6 +1,6 @@
-# Nat Ford Planning & Design Website
+# Nat Ford Planning & Analysis Website
 
-A modern Next.js 15 website with marketing site and client portal for Nat Ford Planning & Design.
+A modern Next.js 15 website with marketing site and client portal for Nat Ford Planning & Analysis.
 
 ## Tech Stack
 
@@ -61,7 +61,7 @@ NEXT_PUBLIC_MAPBOX_TOKEN=your_mapbox_token_here
 
 # Site Configuration
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
-NEXT_PUBLIC_SITE_NAME=Nat Ford Planning & Design
+NEXT_PUBLIC_SITE_NAME=Nat Ford Planning & Analysis
 ```
 
 See `ENV_SETUP.md` for detailed instructions on getting your Mapbox token.

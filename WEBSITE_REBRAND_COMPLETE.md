@@ -1,11 +1,11 @@
 # Website Rebrand & Attribution Update - Complete
 
 **Date:** October 28, 2025  
-**Project:** Nat Ford Planning & Design Website Refactoring
+**Project:** Nat Ford Planning & Analysis Website Refactoring
 
 ## Summary
 
-Successfully completed comprehensive website rebrand from "Nat Ford Planning & Analysis" to "Nat Ford Planning & Design" with proper attribution of prior employment work and expansion of biographical content.
+Successfully completed comprehensive website rebrand from "Nat Ford Planning & Analysis" to "Nat Ford Planning & Analysis" with proper attribution of prior employment work and expansion of biographical content.
 
 ---
 
@@ -13,7 +13,7 @@ Successfully completed comprehensive website rebrand from "Nat Ford Planning & A
 
 ### 1. Brand Name Update ✅
 **From:** "Nat Ford Planning & Analysis"  
-**To:** "Nat Ford Planning & Design"
+**To:** "Nat Ford Planning & Analysis"
 
 **Files Updated:**
 - `src/components/layout/header.tsx` - Logo and screen reader text
@@ -34,7 +34,7 @@ Successfully completed comprehensive website rebrand from "Nat Ford Planning & A
 - ✅ Updated section description to clarify these are prior employment projects (2021-2025)
 
 **Attribution Policy Text:**
-> "Company portfolio includes work performed by Nat Ford Planning & Design. Projects completed by Nat in prior employment are clearly labeled below and described in detail on the About page."
+> "Company portfolio includes work performed by Nat Ford Planning & Analysis. Projects completed by Nat in prior employment are clearly labeled below and described in detail on the About page."
 
 ### 3. About Page Expansion ✅
 **File:** `src/app/(marketing)/about/page.tsx`
@@ -143,7 +143,7 @@ Successfully completed comprehensive website rebrand from "Nat Ford Planning & A
 1. Clearly labeled with employer attribution
 2. Marked as "Prior role" or "Prior employment"
 3. Referenced with full context on About page
-4. Not counted as Nat Ford Planning & Design company portfolio
+4. Not counted as Nat Ford Planning & Analysis company portfolio
 
 ### Visual Indicators
 - Gray badge on project cards: "Prior role: Green DOT Transportation Solutions"
@@ -270,7 +270,7 @@ The following items were noted but not required for this rebrand:
 2. Individual service detail pages for GIS, Aerial, Grants, AI (directories exist, need pages)
 3. Resources/Process/FAQ pages (exist, may need content review later)
 4. Client portal and authentication (future phase)
-5. Actual company portfolio projects (as Nat Ford Planning & Design completes new work)
+5. Actual company portfolio projects (as Nat Ford Planning & Analysis completes new work)
 
 ---
 
@@ -331,7 +331,7 @@ Before deployment, perform these checks:
 
 ## Conclusion
 
-The Nat Ford Planning & Design website has been successfully rebranded with complete attribution transparency. All prior employment work is clearly labeled and contextualized, while the new firm name is consistently applied across all pages, metadata, and structured data. The enhanced content provides detailed deliverables for each service and comprehensive biographical information across four distinct career roles.
+The Nat Ford Planning & Analysis website has been successfully rebranded with complete attribution transparency. All prior employment work is clearly labeled and contextualized, while the new firm name is consistently applied across all pages, metadata, and structured data. The enhanced content provides detailed deliverables for each service and comprehensive biographical information across four distinct career roles.
 
 **Status:** ✅ COMPLETE - Ready for review and deployment.
 
