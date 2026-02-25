@@ -11,6 +11,12 @@ type LeadPayload = {
   description: string
   website?: string // honeypot
   sourcePath?: string
+  turnstileToken?: string
+}
+
+type TurnstileResponse = {
+  success: boolean
+  ['error-codes']?: string[]
 }
 
 function badRequest(message: string, status = 400) {
@@ -38,6 +44,7 @@ export async function POST(req: NextRequest) {
     const timeline = normalize(payload.timeline)
     const description = normalize(payload.description)
     const sourcePath = normalize(payload.sourcePath) || '/contact'
+    const turnstileToken = normalize(payload.turnstileToken)
 
     if (!firstName || !lastName || !email || !organization || !inquiryType || !timeline || !description) {
       return badRequest('Please complete all required fields.')
@@ -63,6 +70,74 @@ export async function POST(req: NextRequest) {
     const forwardedFor = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || null
     const userAgent = req.headers.get('user-agent') || null
 
+    // Optional Turnstile verification (enable by setting TURNSTILE_SECRET_KEY)
+    const turnstileSecret = process.env.TURNSTILE_SECRET_KEY || ''
+
+    if (turnstileSecret) {
+      if (!turnstileToken) {
+        return badRequest('Please complete the anti-spam verification.')
+      }
+
+      const verifyBody = new URLSearchParams({
+        secret: turnstileSecret,
+        response: turnstileToken,
+      })
+
+      if (forwardedFor) verifyBody.set('remoteip', forwardedFor)
+
+      const verifyRes = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+        method: 'POST',
+        body: verifyBody,
+      })
+
+      if (!verifyRes.ok) {
+        return badRequest('Could not verify anti-spam challenge. Please try again.')
+      }
+
+      const verification = (await verifyRes.json()) as TurnstileResponse
+
+      if (!verification.success) {
+        return badRequest('Anti-spam verification failed. Please try again.')
+      }
+    }
+
+    // Rate limiting + duplicate dampening
+    const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString()
+    const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000).toISOString()
+
+    const { count: emailCount } = await supabase
+      .from('leads')
+      .select('id', { count: 'exact', head: true })
+      .eq('email', email)
+      .gte('created_at', oneHourAgo)
+
+    if ((emailCount || 0) >= 3) {
+      return badRequest('Too many submissions from this email in a short period. Please try again later.', 429)
+    }
+
+    if (forwardedFor) {
+      const { count: ipCount } = await supabase
+        .from('leads')
+        .select('id', { count: 'exact', head: true })
+        .eq('ip_address', forwardedFor)
+        .gte('created_at', oneHourAgo)
+
+      if ((ipCount || 0) >= 10) {
+        return badRequest('Too many submissions from this network in a short period. Please try again later.', 429)
+      }
+    }
+
+    const { count: duplicateCount } = await supabase
+      .from('leads')
+      .select('id', { count: 'exact', head: true })
+      .eq('email', email)
+      .eq('description', description)
+      .gte('created_at', tenMinutesAgo)
+
+    if ((duplicateCount || 0) > 0) {
+      return NextResponse.json({ ok: true, duplicate: true })
+    }
+
     const { error } = await supabase.from('leads').insert({
       first_name: firstName,
       last_name: lastName,
@@ -72,6 +147,7 @@ export async function POST(req: NextRequest) {
       timeline,
       description,
       source_path: sourcePath,
+      ip_address: forwardedFor,
       meta: {
         ip: forwardedFor,
         user_agent: userAgent,

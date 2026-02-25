@@ -4,8 +4,6 @@ import { LEAD_INBOX_COOKIE, isLeadInboxAuthorized } from '@/lib/security/lead-in
 
 export const runtime = 'nodejs'
 
-const VALID_STATUS = new Set(['new', 'reviewing', 'qualified', 'closed'])
-
 function safeRedirect(req: NextRequest, returnTo: string, updateCode: string) {
   const target = returnTo.startsWith('/lead-inbox') ? returnTo : '/lead-inbox'
   const url = new URL(target, req.url)
@@ -25,10 +23,11 @@ export async function POST(req: NextRequest) {
   }
 
   const leadId = String(form.get('leadId') || '').trim()
-  const status = String(form.get('status') || '').trim()
+  const ownerName = String(form.get('ownerName') || '').trim().slice(0, 120)
+  const notes = String(form.get('notes') || '').trim().slice(0, 8000)
 
-  if (!leadId || !VALID_STATUS.has(status)) {
-    return safeRedirect(req, returnTo, 'invalid')
+  if (!leadId) {
+    return safeRedirect(req, returnTo, 'crm-invalid')
   }
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -40,11 +39,17 @@ export async function POST(req: NextRequest) {
 
   const supabase = createClient(supabaseUrl, serviceKey)
 
-  const { error } = await supabase.from('leads').update({ status }).eq('id', leadId)
+  const { error } = await supabase
+    .from('leads')
+    .update({
+      owner_name: ownerName || null,
+      notes: notes || null,
+    })
+    .eq('id', leadId)
 
   if (error) {
-    return safeRedirect(req, returnTo, 'error')
+    return safeRedirect(req, returnTo, 'crm-error')
   }
 
-  return safeRedirect(req, returnTo, 'ok')
+  return safeRedirect(req, returnTo, 'crm-ok')
 }

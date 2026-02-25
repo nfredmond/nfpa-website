@@ -10,6 +10,8 @@ import { LEAD_INBOX_COOKIE, isLeadInboxAuthorized } from '@/lib/security/lead-in
 
 export const dynamic = 'force-dynamic'
 
+type LeadStatus = 'new' | 'reviewing' | 'qualified' | 'closed'
+
 type Lead = {
   id: string
   first_name: string
@@ -19,10 +21,24 @@ type Lead = {
   inquiry_type: string
   timeline: string
   description: string
-  status: 'new' | 'reviewing' | 'qualified' | 'closed'
+  status: LeadStatus
+  owner_name: string | null
+  notes: string | null
   source_path: string | null
   created_at: string
 }
+
+const STATUS_OPTIONS: Array<LeadStatus | 'all'> = ['all', 'new', 'reviewing', 'qualified', 'closed']
+const DAYS_OPTIONS = ['all', '7', '30', '90'] as const
+const INQUIRY_TYPE_OPTIONS = [
+  'all',
+  'Planning support',
+  'GIS / mapping',
+  'Grant strategy',
+  'OpenPlan product',
+  'Ads automation product',
+  'General inquiry',
+] as const
 
 function formatDate(input: string) {
   try {
@@ -36,7 +52,7 @@ function formatDate(input: string) {
   }
 }
 
-function statusClass(status: Lead['status']) {
+function statusClass(status: LeadStatus) {
   switch (status) {
     case 'qualified':
       return 'bg-emerald-100 text-emerald-800 border-emerald-200'
@@ -53,12 +69,16 @@ function updateMessage(code?: string) {
   switch (code) {
     case 'ok':
       return { kind: 'ok' as const, text: 'Lead status updated.' }
+    case 'crm-ok':
+      return { kind: 'ok' as const, text: 'Lead owner/notes saved.' }
     case 'invalid':
+    case 'crm-invalid':
       return { kind: 'error' as const, text: 'Invalid update request.' }
     case 'config':
       return { kind: 'error' as const, text: 'Supabase env vars missing for update action.' }
     case 'error':
-      return { kind: 'error' as const, text: 'Could not update lead status.' }
+    case 'crm-error':
+      return { kind: 'error' as const, text: 'Could not update lead right now.' }
     default:
       return null
   }
@@ -109,7 +129,7 @@ function LoginPanel({ showError }: { showError: boolean }) {
 export default async function LeadInboxPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string; update?: string }>
+  searchParams: Promise<{ error?: string; update?: string; q?: string; status?: string; type?: string; days?: string }>
 }) {
   const params = await searchParams
   const secret = process.env.LEAD_INBOX_PASSWORD || ''
@@ -121,6 +141,26 @@ export default async function LeadInboxPage({
   if (!isAuthorized) {
     return <LoginPanel showError={params.error === '1'} />
   }
+
+  const q = (params.q || '').trim()
+  const statusFilter: LeadStatus | 'all' = STATUS_OPTIONS.includes((params.status || 'all') as LeadStatus | 'all')
+    ? ((params.status || 'all') as LeadStatus | 'all')
+    : 'all'
+
+  const typeFilter = INQUIRY_TYPE_OPTIONS.includes((params.type || 'all') as (typeof INQUIRY_TYPE_OPTIONS)[number])
+    ? ((params.type || 'all') as (typeof INQUIRY_TYPE_OPTIONS)[number])
+    : 'all'
+
+  const daysFilter = DAYS_OPTIONS.includes((params.days || 'all') as (typeof DAYS_OPTIONS)[number])
+    ? ((params.days || 'all') as (typeof DAYS_OPTIONS)[number])
+    : 'all'
+
+  const returnParams = new URLSearchParams()
+  if (q) returnParams.set('q', q)
+  if (statusFilter !== 'all') returnParams.set('status', statusFilter)
+  if (typeFilter !== 'all') returnParams.set('type', typeFilter)
+  if (daysFilter !== 'all') returnParams.set('days', daysFilter)
+  const returnTo = `/lead-inbox${returnParams.toString() ? `?${returnParams.toString()}` : ''}`
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -143,11 +183,36 @@ export default async function LeadInboxPage({
   }
 
   const supabase = createClient(supabaseUrl, serviceKey)
-  const { data, error } = await supabase
+
+  let query = supabase
     .from('leads')
-    .select('id, first_name, last_name, email, organization, inquiry_type, timeline, description, status, source_path, created_at')
+    .select(
+      'id, first_name, last_name, email, organization, inquiry_type, timeline, description, status, owner_name, notes, source_path, created_at'
+    )
     .order('created_at', { ascending: false })
     .limit(200)
+
+  if (statusFilter !== 'all') query = query.eq('status', statusFilter)
+  if (typeFilter !== 'all') query = query.eq('inquiry_type', typeFilter)
+
+  if (daysFilter !== 'all') {
+    const days = Number(daysFilter)
+    if (Number.isFinite(days) && days > 0) {
+      const cutoff = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString()
+      query = query.gte('created_at', cutoff)
+    }
+  }
+
+  if (q) {
+    const cleaned = q.replace(/[%]/g, '').replace(/,/g, ' ').trim()
+    if (cleaned) {
+      query = query.or(
+        `first_name.ilike.%${cleaned}%,last_name.ilike.%${cleaned}%,email.ilike.%${cleaned}%,organization.ilike.%${cleaned}%,description.ilike.%${cleaned}%,notes.ilike.%${cleaned}%`
+      )
+    }
+  }
+
+  const { data, error } = await query
 
   const leads = (data || []) as Lead[]
   const update = updateMessage(params.update)
@@ -156,31 +221,82 @@ export default async function LeadInboxPage({
     <>
       <Section spacing="md" className="border-b border-[color:var(--line)] bg-[color:var(--background)]/85">
         <Container>
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-              <p className="pill">Internal</p>
-              <h1 className="section-title mt-3 text-4xl text-[color:var(--ink)]">Lead Inbox</h1>
-              <p className="mt-2 text-sm text-[color:var(--foreground)]/75">
-                {leads.length} recent submissions from natfordplanning.com
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <Button asChild variant="outline">
-                <a href="/api/lead-inbox/export">
-                  <Download className="mr-2 h-4 w-4" />
-                  Export CSV
-                </a>
-              </Button>
-              <Button asChild variant="outline">
-                <Link href="/contact">Contact page</Link>
-              </Button>
-              <form action="/api/lead-inbox/auth" method="post">
-                <input type="hidden" name="action" value="logout" />
-                <Button type="submit" variant="outline">
-                  Log out
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div>
+                <p className="pill">Internal</p>
+                <h1 className="section-title mt-3 text-4xl text-[color:var(--ink)]">Lead Inbox</h1>
+                <p className="mt-2 text-sm text-[color:var(--foreground)]/75">
+                  {leads.length} matching submissions from natfordplanning.com
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <Button asChild variant="outline">
+                  <a href="/api/lead-inbox/export">
+                    <Download className="mr-2 h-4 w-4" />
+                    Export CSV
+                  </a>
                 </Button>
-              </form>
+                <Button asChild variant="outline">
+                  <Link href="/contact">Contact page</Link>
+                </Button>
+                <form action="/api/lead-inbox/auth" method="post">
+                  <input type="hidden" name="action" value="logout" />
+                  <Button type="submit" variant="outline">
+                    Log out
+                  </Button>
+                </form>
+              </div>
             </div>
+
+            <form method="get" action="/lead-inbox" className="grid grid-cols-1 md:grid-cols-4 gap-3">
+              <input
+                name="q"
+                defaultValue={q}
+                placeholder="Search name, org, email, notes"
+                className="h-10 rounded-xl border border-[color:var(--line)] bg-[color:var(--background)] px-3 text-sm"
+              />
+              <select
+                name="status"
+                defaultValue={statusFilter}
+                className="h-10 rounded-xl border border-[color:var(--line)] bg-[color:var(--background)] px-3 text-sm"
+              >
+                {STATUS_OPTIONS.map((status) => (
+                  <option key={status} value={status}>
+                    Status: {status}
+                  </option>
+                ))}
+              </select>
+              <select
+                name="type"
+                defaultValue={typeFilter}
+                className="h-10 rounded-xl border border-[color:var(--line)] bg-[color:var(--background)] px-3 text-sm"
+              >
+                {INQUIRY_TYPE_OPTIONS.map((opt) => (
+                  <option key={opt} value={opt}>
+                    Type: {opt}
+                  </option>
+                ))}
+              </select>
+              <select
+                name="days"
+                defaultValue={daysFilter}
+                className="h-10 rounded-xl border border-[color:var(--line)] bg-[color:var(--background)] px-3 text-sm"
+              >
+                <option value="all">Any date</option>
+                <option value="7">Last 7 days</option>
+                <option value="30">Last 30 days</option>
+                <option value="90">Last 90 days</option>
+              </select>
+              <div className="md:col-span-4 flex gap-2">
+                <Button type="submit" size="sm">
+                  Apply filters
+                </Button>
+                <Button asChild type="button" size="sm" variant="outline">
+                  <Link href="/lead-inbox">Reset</Link>
+                </Button>
+              </div>
+            </form>
           </div>
         </Container>
       </Section>
@@ -208,7 +324,7 @@ export default async function LeadInboxPage({
           <div className="space-y-4">
             {leads.length === 0 ? (
               <Card>
-                <CardContent className="p-6 text-sm text-[color:var(--foreground)]/75">No leads yet.</CardContent>
+                <CardContent className="p-6 text-sm text-[color:var(--foreground)]/75">No leads match the current filters.</CardContent>
               </Card>
             ) : (
               leads.map((lead) => (
@@ -256,9 +372,7 @@ export default async function LeadInboxPage({
 
                     <div className="mt-4 flex flex-wrap gap-2">
                       <Button asChild size="sm" variant="outline">
-                        <a
-                          href={`mailto:${encodeURIComponent(lead.email)}?subject=${encodeURIComponent('Nat Ford follow-up')}`}
-                        >
+                        <a href={`mailto:${encodeURIComponent(lead.email)}?subject=${encodeURIComponent('Nat Ford follow-up')}`}>
                           <Mail className="mr-1.5 h-4 w-4" />
                           Email
                         </a>
@@ -268,12 +382,40 @@ export default async function LeadInboxPage({
                         <form key={status} action="/api/lead-inbox/status" method="post">
                           <input type="hidden" name="leadId" value={lead.id} />
                           <input type="hidden" name="status" value={status} />
+                          <input type="hidden" name="returnTo" value={returnTo} />
                           <Button type="submit" size="sm" variant={lead.status === status ? 'secondary' : 'outline'}>
                             Mark {status}
                           </Button>
                         </form>
                       ))}
                     </div>
+
+                    <form action="/api/lead-inbox/update" method="post" className="mt-4 grid grid-cols-1 md:grid-cols-[0.25fr_0.75fr_auto] gap-3 items-end">
+                      <input type="hidden" name="leadId" value={lead.id} />
+                      <input type="hidden" name="returnTo" value={returnTo} />
+                      <div>
+                        <label className="mb-1 block text-xs uppercase tracking-[0.12em] text-[color:var(--foreground)]/55">Owner</label>
+                        <input
+                          name="ownerName"
+                          defaultValue={lead.owner_name || ''}
+                          placeholder="e.g. Nathaniel"
+                          className="h-10 w-full rounded-xl border border-[color:var(--line)] bg-[color:var(--background)] px-3 text-sm"
+                        />
+                      </div>
+                      <div>
+                        <label className="mb-1 block text-xs uppercase tracking-[0.12em] text-[color:var(--foreground)]/55">Notes</label>
+                        <textarea
+                          name="notes"
+                          defaultValue={lead.notes || ''}
+                          rows={2}
+                          placeholder="CRM notes, follow-up summary, next step"
+                          className="w-full rounded-xl border border-[color:var(--line)] bg-[color:var(--background)] px-3 py-2 text-sm"
+                        />
+                      </div>
+                      <Button type="submit" size="sm">
+                        Save CRM
+                      </Button>
+                    </form>
                   </CardContent>
                 </Card>
               ))

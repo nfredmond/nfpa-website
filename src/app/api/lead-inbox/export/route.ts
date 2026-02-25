@@ -13,7 +13,10 @@ type LeadRow = {
   inquiry_type: string
   timeline: string
   status: string
+  owner_name: string | null
   source_path: string | null
+  ip_address: string | null
+  notes: string | null
   description: string
 }
 
@@ -42,7 +45,7 @@ export async function GET(req: NextRequest) {
 
   const { data, error } = await supabase
     .from('leads')
-    .select('created_at, first_name, last_name, email, organization, inquiry_type, timeline, status, source_path, description')
+    .select('created_at, first_name, last_name, email, organization, inquiry_type, timeline, status, owner_name, source_path, ip_address, notes, description')
     .order('created_at', { ascending: false })
     .limit(5000)
 
@@ -61,7 +64,10 @@ export async function GET(req: NextRequest) {
     'inquiry_type',
     'timeline',
     'status',
+    'owner_name',
     'source_path',
+    'ip_address',
+    'notes',
     'description',
   ]
 
@@ -77,7 +83,10 @@ export async function GET(req: NextRequest) {
         row.inquiry_type,
         row.timeline,
         row.status,
+        row.owner_name || '',
         row.source_path || '',
+        row.ip_address || '',
+        row.notes || '',
         row.description,
       ]
         .map(csvCell)

@@ -1,6 +1,7 @@
 'use client'
 
 import * as React from 'react'
+import Script from 'next/script'
 import { Clock, Linkedin, Mail, MapPin, Send } from 'lucide-react'
 import { Container } from '@/components/layout/container'
 import { Section } from '@/components/layout/section'
@@ -8,6 +9,14 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
+
+declare global {
+  interface Window {
+    onTurnstileSuccess?: (token: string) => void
+    onTurnstileExpired?: () => void
+    onTurnstileError?: () => void
+  }
+}
 
 const inquiryTypes = [
   'Planning support',
@@ -20,15 +29,38 @@ const inquiryTypes = [
 
 const timelines = ['Immediate (0-30 days)', 'Near-term (1-3 months)', 'Planning horizon (3+ months)']
 
+const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ''
+
 export default function ContactPage() {
   const [submitted, setSubmitted] = React.useState(false)
   const [isSubmitting, setIsSubmitting] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
+  const [turnstileToken, setTurnstileToken] = React.useState('')
+
+  React.useEffect(() => {
+    if (!turnstileSiteKey) return
+
+    window.onTurnstileSuccess = (token: string) => setTurnstileToken(token)
+    window.onTurnstileExpired = () => setTurnstileToken('')
+    window.onTurnstileError = () => setTurnstileToken('')
+
+    return () => {
+      delete window.onTurnstileSuccess
+      delete window.onTurnstileExpired
+      delete window.onTurnstileError
+    }
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setError(null)
     setIsSubmitting(true)
+
+    if (turnstileSiteKey && !turnstileToken) {
+      setError('Please complete the anti-spam verification.')
+      setIsSubmitting(false)
+      return
+    }
 
     const formEl = e.currentTarget
     const form = new FormData(formEl)
@@ -43,6 +75,7 @@ export default function ContactPage() {
       description: String(form.get('description') || ''),
       website: String(form.get('website') || ''), // honeypot
       sourcePath: typeof window !== 'undefined' ? window.location.pathname : '/contact',
+      turnstileToken,
     }
 
     try {
@@ -61,6 +94,7 @@ export default function ContactPage() {
 
       formEl.reset()
       setSubmitted(true)
+      setTurnstileToken('')
     } catch {
       setError('Connection issue. Please try again or email nathaniel@natfordplanning.com.')
     } finally {
@@ -151,13 +185,27 @@ export default function ContactPage() {
                         required
                       />
 
+                      {turnstileSiteKey && (
+                        <>
+                          <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />
+                          <div
+                            className="cf-turnstile"
+                            data-sitekey={turnstileSiteKey}
+                            data-callback="onTurnstileSuccess"
+                            data-expired-callback="onTurnstileExpired"
+                            data-error-callback="onTurnstileError"
+                            data-theme="auto"
+                          />
+                        </>
+                      )}
+
                       {error && (
                         <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
                           {error}
                         </div>
                       )}
 
-                      <Button type="submit" size="lg" disabled={isSubmitting}>
+                      <Button type="submit" size="lg" disabled={isSubmitting || (Boolean(turnstileSiteKey) && !turnstileToken)}>
                         <Send className="mr-2 h-4 w-4" />
                         {isSubmitting ? 'Submitting…' : 'Submit Inquiry'}
                       </Button>

@@ -11,6 +11,10 @@ SUPABASE_SERVICE_ROLE_KEY=<SUPABASE_SERVICE_ROLE_KEY>
 # Internal Lead Inbox
 LEAD_INBOX_PASSWORD=<STRONG_PASSWORD>
 
+# Optional Cloudflare Turnstile (recommended for production spam hardening)
+NEXT_PUBLIC_TURNSTILE_SITE_KEY=<YOUR_TURNSTILE_SITE_KEY>
+TURNSTILE_SECRET_KEY=<YOUR_TURNSTILE_SECRET_KEY>
+
 # Site Configuration
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 NEXT_PUBLIC_SITE_NAME=Nat Ford Planning & Analysis
