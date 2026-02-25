@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { cookies } from 'next/headers'
 import { createClient } from '@supabase/supabase-js'
+import { Download, Mail } from 'lucide-react'
 import { Container } from '@/components/layout/container'
 import { Section } from '@/components/layout/section'
 import { Card, CardContent } from '@/components/ui/card'
@@ -45,6 +46,21 @@ function statusClass(status: Lead['status']) {
       return 'bg-gray-100 text-gray-700 border-gray-200'
     default:
       return 'bg-amber-100 text-amber-800 border-amber-200'
+  }
+}
+
+function updateMessage(code?: string) {
+  switch (code) {
+    case 'ok':
+      return { kind: 'ok' as const, text: 'Lead status updated.' }
+    case 'invalid':
+      return { kind: 'error' as const, text: 'Invalid update request.' }
+    case 'config':
+      return { kind: 'error' as const, text: 'Supabase env vars missing for update action.' }
+    case 'error':
+      return { kind: 'error' as const, text: 'Could not update lead status.' }
+    default:
+      return null
   }
 }
 
@@ -93,7 +109,7 @@ function LoginPanel({ showError }: { showError: boolean }) {
 export default async function LeadInboxPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string }>
+  searchParams: Promise<{ error?: string; update?: string }>
 }) {
   const params = await searchParams
   const secret = process.env.LEAD_INBOX_PASSWORD || ''
@@ -134,6 +150,7 @@ export default async function LeadInboxPage({
     .limit(200)
 
   const leads = (data || []) as Lead[]
+  const update = updateMessage(params.update)
 
   return (
     <>
@@ -147,13 +164,21 @@ export default async function LeadInboxPage({
                 {leads.length} recent submissions from natfordplanning.com
               </p>
             </div>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
+              <Button asChild variant="outline">
+                <a href="/api/lead-inbox/export">
+                  <Download className="mr-2 h-4 w-4" />
+                  Export CSV
+                </a>
+              </Button>
               <Button asChild variant="outline">
                 <Link href="/contact">Contact page</Link>
               </Button>
               <form action="/api/lead-inbox/auth" method="post">
                 <input type="hidden" name="action" value="logout" />
-                <Button type="submit" variant="outline">Log out</Button>
+                <Button type="submit" variant="outline">
+                  Log out
+                </Button>
               </form>
             </div>
           </div>
@@ -162,6 +187,18 @@ export default async function LeadInboxPage({
 
       <Section spacing="lg">
         <Container>
+          {update && (
+            <div
+              className={`mb-4 rounded-lg border px-3 py-2 text-sm ${
+                update.kind === 'ok'
+                  ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
+                  : 'border-red-200 bg-red-50 text-red-700'
+              }`}
+            >
+              {update.text}
+            </div>
+          )}
+
           {error && (
             <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
               Could not load leads: {error.message}
@@ -187,7 +224,11 @@ export default async function LeadInboxPage({
                         </p>
                       </div>
                       <div className="text-right">
-                        <span className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.08em] ${statusClass(lead.status)}`}>
+                        <span
+                          className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.08em] ${statusClass(
+                            lead.status
+                          )}`}
+                        >
                           {lead.status}
                         </span>
                         <p className="mt-2 text-xs text-[color:var(--foreground)]/55">{formatDate(lead.created_at)}</p>
@@ -211,6 +252,27 @@ export default async function LeadInboxPage({
 
                     <div className="mt-4 rounded-xl border border-[color:var(--line)] bg-[color:var(--background)] px-4 py-3 text-sm text-[color:var(--foreground)]/82 whitespace-pre-wrap">
                       {lead.description}
+                    </div>
+
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      <Button asChild size="sm" variant="outline">
+                        <a
+                          href={`mailto:${encodeURIComponent(lead.email)}?subject=${encodeURIComponent('Nat Ford follow-up')}`}
+                        >
+                          <Mail className="mr-1.5 h-4 w-4" />
+                          Email
+                        </a>
+                      </Button>
+
+                      {(['new', 'reviewing', 'qualified', 'closed'] as const).map((status) => (
+                        <form key={status} action="/api/lead-inbox/status" method="post">
+                          <input type="hidden" name="leadId" value={lead.id} />
+                          <input type="hidden" name="status" value={status} />
+                          <Button type="submit" size="sm" variant={lead.status === status ? 'secondary' : 'outline'}>
+                            Mark {status}
+                          </Button>
+                        </form>
+                      ))}
                     </div>
                   </CardContent>
                 </Card>
