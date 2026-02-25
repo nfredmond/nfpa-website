@@ -22,35 +22,50 @@ const timelines = ['Immediate (0-30 days)', 'Near-term (1-3 months)', 'Planning 
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = React.useState(false)
+  const [isSubmitting, setIsSubmitting] = React.useState(false)
+  const [error, setError] = React.useState<string | null>(null)
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setError(null)
+    setIsSubmitting(true)
 
-    const form = new FormData(e.currentTarget)
-    const firstName = String(form.get('firstName') || '')
-    const lastName = String(form.get('lastName') || '')
-    const email = String(form.get('email') || '')
-    const organization = String(form.get('organization') || '')
-    const inquiryType = String(form.get('inquiryType') || '')
-    const timeline = String(form.get('timeline') || '')
-    const description = String(form.get('description') || '')
+    const formEl = e.currentTarget
+    const form = new FormData(formEl)
 
-    const subject = encodeURIComponent(`Website inquiry: ${inquiryType || 'New project'} — ${organization || firstName}`)
-    const body = encodeURIComponent(
-      [
-        `Name: ${firstName} ${lastName}`.trim(),
-        `Email: ${email}`,
-        `Organization: ${organization}`,
-        `Inquiry type: ${inquiryType}`,
-        `Timeline: ${timeline}`,
-        '',
-        'Project details:',
-        description,
-      ].join('\n')
-    )
+    const payload = {
+      firstName: String(form.get('firstName') || ''),
+      lastName: String(form.get('lastName') || ''),
+      email: String(form.get('email') || ''),
+      organization: String(form.get('organization') || ''),
+      inquiryType: String(form.get('inquiryType') || ''),
+      timeline: String(form.get('timeline') || ''),
+      description: String(form.get('description') || ''),
+      website: String(form.get('website') || ''), // honeypot
+      sourcePath: typeof window !== 'undefined' ? window.location.pathname : '/contact',
+    }
 
-    window.location.href = `mailto:nathaniel@natfordplanning.com?subject=${subject}&body=${body}`
-    setSubmitted(true)
+    try {
+      const res = await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+
+      const data = (await res.json().catch(() => ({}))) as { ok?: boolean; message?: string }
+
+      if (!res.ok || !data.ok) {
+        setError(data.message || 'Could not submit right now. Please try again in a moment.')
+        return
+      }
+
+      formEl.reset()
+      setSubmitted(true)
+    } catch {
+      setError('Connection issue. Please try again or email nathaniel@natfordplanning.com.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -75,10 +90,11 @@ export default function ContactPage() {
                 {!submitted ? (
                   <>
                     <p className="text-sm text-[color:var(--foreground)]/70 mb-6">
-                      Submit this form to open a pre-filled email draft. This keeps communication transparent and simple while
-                      full CRM routing is finalized.
+                      Submit this form and we’ll route your request into our internal lead pipeline for follow-up.
                     </p>
                     <form onSubmit={handleSubmit} className="space-y-5">
+                      <input type="text" name="website" className="hidden" tabIndex={-1} autoComplete="off" />
+
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <Input label="First Name" name="firstName" required />
                         <Input label="Last Name" name="lastName" required />
@@ -135,9 +151,15 @@ export default function ContactPage() {
                         required
                       />
 
-                      <Button type="submit" size="lg">
+                      {error && (
+                        <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+                          {error}
+                        </div>
+                      )}
+
+                      <Button type="submit" size="lg" disabled={isSubmitting}>
                         <Send className="mr-2 h-4 w-4" />
-                        Open Email Draft
+                        {isSubmitting ? 'Submitting…' : 'Submit Inquiry'}
                       </Button>
                     </form>
                   </>
@@ -146,16 +168,12 @@ export default function ContactPage() {
                     <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[color:var(--pine)] text-white">
                       <Send className="h-6 w-6" />
                     </div>
-                    <h3 className="text-2xl font-semibold text-[color:var(--ink)]">Draft opened</h3>
+                    <h3 className="text-2xl font-semibold text-[color:var(--ink)]">Inquiry received</h3>
                     <p className="mt-3 text-[color:var(--foreground)]/75">
-                      If your email client didn’t open automatically, email us directly at{' '}
-                      <a className="font-semibold text-[color:var(--pine)]" href="mailto:nathaniel@natfordplanning.com">
-                        nathaniel@natfordplanning.com
-                      </a>
-                      .
+                      Thanks — your message is now in our intake pipeline. We typically respond within 1–2 business days.
                     </p>
                     <Button variant="outline" className="mt-6" onClick={() => setSubmitted(false)}>
-                      Send Another Inquiry
+                      Submit Another Inquiry
                     </Button>
                   </div>
                 )}
