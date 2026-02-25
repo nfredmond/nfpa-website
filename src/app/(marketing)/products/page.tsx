@@ -135,18 +135,23 @@ export default function ProductsPage() {
         </Container>
       </Section>
 
-      <Section spacing="lg" className="bg-[#101c27] text-white">
+      <Section spacing="lg" className="border-y border-[color:var(--line)] bg-[color:var(--fog)]/78 text-[color:var(--ink)] dark:bg-[#101c27] dark:text-white">
         <Container>
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="section-title text-4xl md:text-5xl text-white">Interested in a pilot or product partnership?</h2>
-            <p className="mt-4 text-lg text-white/80">
+          <div className="mx-auto max-w-3xl text-center">
+            <h2 className="section-title text-4xl text-[color:var(--ink)] dark:text-white md:text-5xl">Interested in a pilot or product partnership?</h2>
+            <p className="mt-4 text-lg text-[color:var(--foreground)]/82 dark:text-white/80">
               We can scope a pilot model that is measurable, bounded, and aligned with your internal delivery capacity.
             </p>
-            <div className="mt-7 flex flex-col sm:flex-row gap-3 justify-center">
+            <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
               <Button asChild variant="secondary" size="lg">
                 <Link href="/contact">Discuss Product Access</Link>
               </Button>
-              <Button asChild variant="outline" size="lg" className="border-white/35 text-white hover:bg-white/10 hover:text-white">
+              <Button
+                asChild
+                variant="outline"
+                size="lg"
+                className="border-[color:var(--line)] text-[color:var(--ink)] hover:border-[color:var(--pine)] hover:bg-[color:var(--background)] hover:text-[color:var(--pine)] dark:border-white/35 dark:text-white dark:hover:bg-white/10 dark:hover:text-white"
+              >
                 <Link href="/services">
                   Explore Services <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>

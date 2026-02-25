@@ -320,15 +320,15 @@ export default function HomePage() {
         </Container>
       </Section>
 
-      <Section spacing="lg" className="bg-[#101c27] text-white">
+      <Section spacing="lg" className="border-y border-[color:var(--line)] bg-[color:var(--fog)]/75 text-[color:var(--ink)] dark:bg-[#101c27] dark:text-white">
         <Container>
-          <div className="rounded-3xl border border-white/15 bg-white/[0.03] px-6 py-10 md:px-10 md:py-12 text-center">
-            <p className="text-xs uppercase tracking-[0.18em] text-white/65">Next Step</p>
-            <h2 className="section-title mt-3 text-4xl md:text-5xl text-white">Tell us what decision you need to make.</h2>
-            <p className="mx-auto mt-4 max-w-2xl text-lg text-white/80">
+          <div className="rounded-3xl border border-[color:var(--line)]/70 bg-[color:var(--background)]/75 px-6 py-10 text-center dark:border-white/15 dark:bg-white/[0.03] md:px-10 md:py-12">
+            <p className="text-xs uppercase tracking-[0.18em] text-[color:var(--foreground)]/62 dark:text-white/65">Next Step</p>
+            <h2 className="section-title mt-3 text-4xl md:text-5xl text-[color:var(--ink)] dark:text-white">Tell us what decision you need to make.</h2>
+            <p className="mx-auto mt-4 max-w-2xl text-lg text-[color:var(--foreground)]/82 dark:text-white/80">
               We’ll propose a scoped plan that is technically defensible, schedule-aware, and aligned with your budget.
             </p>
-            <div className="mt-7 flex flex-col sm:flex-row gap-3 justify-center">
+            <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
               <Link
                 href="/contact"
                 className="inline-flex items-center justify-center rounded-full bg-[color:var(--copper)] px-6 py-3 text-[0.98rem] font-semibold text-[#1f2428] transition hover:-translate-y-0.5"
@@ -337,7 +337,7 @@ export default function HomePage() {
               </Link>
               <Link
                 href="/services"
-                className="inline-flex items-center justify-center rounded-full border border-white/30 px-6 py-3 text-[0.98rem] font-semibold text-white transition hover:bg-white/8"
+                className="inline-flex items-center justify-center rounded-full border border-[color:var(--line)] px-6 py-3 text-[0.98rem] font-semibold text-[color:var(--ink)] transition hover:border-[color:var(--pine)] hover:text-[color:var(--pine)] dark:border-white/30 dark:text-white dark:hover:bg-white/8 dark:hover:text-white"
               >
                 Browse Services
               </Link>

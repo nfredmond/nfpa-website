@@ -63,7 +63,9 @@ export default function RootLayout({
       <head>
         <ThemeScript />
       </head>
-      <body className={`${display.variable} ${body.variable} font-body antialiased bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors duration-200`}>
+      <body
+        className={`${display.variable} ${body.variable} font-body antialiased transition-colors duration-200 bg-[color:var(--background)] text-[color:var(--foreground)]`}
+      >
         {children}
       </body>
     </html>

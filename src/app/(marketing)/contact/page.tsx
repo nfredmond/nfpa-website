@@ -264,10 +264,10 @@ export default function ContactPage() {
                 </CardContent>
               </Card>
 
-              <Card className="bg-[#101c27] text-white border-white/15">
+              <Card className="border-[color:var(--line)] bg-[color:var(--fog)]/75 text-[color:var(--ink)] dark:border-white/15 dark:bg-[#101c27] dark:text-white">
                 <CardContent className="p-6">
-                  <h3 className="text-lg font-semibold text-white">Discovery First</h3>
-                  <p className="mt-2 text-sm text-white/78">
+                  <h3 className="text-lg font-semibold text-[color:var(--ink)] dark:text-white">Discovery First</h3>
+                  <p className="mt-2 text-sm text-[color:var(--foreground)]/78 dark:text-white/78">
                     Every new engagement begins with a scoped intake so recommendations remain realistic, fair, and executable.
                   </p>
                 </CardContent>

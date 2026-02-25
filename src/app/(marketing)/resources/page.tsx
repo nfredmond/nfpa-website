@@ -208,16 +208,21 @@ export default function ResourcesPage() {
 
       <Section spacing="lg">
         <Container>
-          <div className="rounded-3xl border border-[color:var(--line)] bg-[#101c27] px-6 py-10 text-center text-white">
-            <h2 className="section-title text-4xl md:text-5xl text-white">Need a grant strategy partner?</h2>
-            <p className="mt-4 text-lg text-white/80 max-w-2xl mx-auto">
+          <div className="rounded-3xl border border-[color:var(--line)] bg-[color:var(--fog)]/78 px-6 py-10 text-center text-[color:var(--ink)] dark:bg-[#101c27] dark:text-white">
+            <h2 className="section-title text-4xl text-[color:var(--ink)] dark:text-white md:text-5xl">Need a grant strategy partner?</h2>
+            <p className="mx-auto mt-4 max-w-2xl text-lg text-[color:var(--foreground)]/82 dark:text-white/80">
               We can help prioritize opportunities, shape narratives, and build a submission plan that your team can execute.
             </p>
-            <div className="mt-7 flex flex-col sm:flex-row gap-3 justify-center">
+            <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
               <Button asChild variant="secondary" size="lg">
                 <Link href="/services/grants">Grant Services</Link>
               </Button>
-              <Button asChild variant="outline" size="lg" className="border-white/35 text-white hover:bg-white/10 hover:text-white">
+              <Button
+                asChild
+                variant="outline"
+                size="lg"
+                className="border-[color:var(--line)] text-[color:var(--ink)] hover:border-[color:var(--pine)] hover:bg-[color:var(--background)] hover:text-[color:var(--pine)] dark:border-white/35 dark:text-white dark:hover:bg-white/10 dark:hover:text-white"
+              >
                 <Link href="/contact">Schedule Consultation</Link>
               </Button>
             </div>
