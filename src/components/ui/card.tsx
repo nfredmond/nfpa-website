@@ -1,6 +1,6 @@
 /**
  * Card Component
- * Bento-box style card for modular layouts
+ * Adaptive card wrapper for marketing and content blocks
  */
 
 import * as React from 'react'
@@ -15,8 +15,8 @@ export function Card({ className, children, hover = false, ...props }: CardProps
   return (
     <div
       className={cn(
-        'bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden',
-        hover && 'transition-all duration-300 hover:shadow-md hover:-translate-y-1',
+        'soft-card rounded-2xl overflow-hidden',
+        hover && 'transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-[color:var(--pine)]/40',
         className
       )}
       {...props}
@@ -36,7 +36,7 @@ export function CardHeader({ className, children, ...props }: React.HTMLAttribut
 
 export function CardTitle({ className, children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
   return (
-    <h3 className={cn('text-xl font-bold text-[#0F172A] dark:text-white', className)} {...props}>
+    <h3 className={cn('text-xl font-semibold text-[color:var(--ink)]', className)} {...props}>
       {children}
     </h3>
   )
@@ -44,7 +44,7 @@ export function CardTitle({ className, children, ...props }: React.HTMLAttribute
 
 export function CardDescription({ className, children, ...props }: React.HTMLAttributes<HTMLParagraphElement>) {
   return (
-    <p className={cn('text-sm text-gray-700 dark:text-gray-300 mt-2', className)} {...props}>
+    <p className={cn('text-sm text-[color:var(--foreground)]/78 mt-2', className)} {...props}>
       {children}
     </p>
   )
@@ -65,4 +65,3 @@ export function CardFooter({ className, children, ...props }: React.HTMLAttribut
     </div>
   )
 }
-

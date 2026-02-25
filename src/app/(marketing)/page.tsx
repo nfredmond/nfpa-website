@@ -1,10 +1,20 @@
+import Image from 'next/image'
 import Link from 'next/link'
-import { MapPin, Database, Plane, FileText, Sparkles, ArrowRight, Bot, Map } from 'lucide-react'
+import {
+  ArrowRight,
+  Bot,
+  Compass,
+  Database,
+  FileText,
+  Handshake,
+  Map,
+  MapPin,
+  Plane,
+  Radar,
+  Sparkles,
+} from 'lucide-react'
 import { Container } from '@/components/layout/container'
 import { Section } from '@/components/layout/section'
-import { Grid } from '@/components/layout/grid'
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
 import JsonLd from '@/components/features/json-ld'
 import organizationData from '@/data/organization.json'
 import servicesData from '@/data/services.json'
@@ -13,32 +23,31 @@ import projectsData from '@/data/projects.json'
 const services = [
   {
     name: 'Urban & Transportation Planning',
-    description:
-      'RTPs, ATPs, VMT analysis, and carbon reduction programs for Northern California communities.',
+    description: 'RTPs, ATPs, VMT analysis, and implementation strategy tailored for Northern California agencies.',
     icon: MapPin,
     href: '/services/planning',
   },
   {
     name: 'GIS & Spatial Analysis',
-    description: 'PostGIS databases, interactive mapping, and data-driven decision support tools.',
+    description: 'PostGIS-backed analysis, map automation, and scenario intelligence for policy and capital decisions.',
     icon: Database,
     href: '/services/gis',
   },
   {
     name: 'Aerial Mapping & Photogrammetry',
-    description: 'Orthomosaics, DEMs, 3D models, and site documentation with professional drone capture.',
+    description: 'Orthomosaics, terrain models, and site intelligence from FAA-licensed drone workflows.',
     icon: Plane,
     href: '/services/aerial',
   },
   {
     name: 'Funding & Grant Services',
-    description: 'Grant identification, narrative development, and application assembly for competitive programs.',
+    description: 'Program fit, narrative strategy, and grant package execution that improves funding competitiveness.',
     icon: FileText,
     href: '/services/grants',
   },
   {
     name: 'AI-Enabled Documentation',
-    description: 'Automated report builds, figure/table pipelines, and citation QA for faster delivery.',
+    description: 'Faster report assembly with methods-first disclosure, citation QA, and human approval gates.',
     icon: Sparkles,
     href: '/services/ai',
   },
@@ -48,23 +57,46 @@ const products = [
   {
     name: 'OpenPlan',
     icon: Map,
-    description:
-      'Transportation planning SaaS for corridor analysis, equity/safety diagnostics, and grant-ready reporting.',
+    description: 'Corridor analysis + equity/safety diagnostics + grant-ready report generation in one operational flow.',
+    href: '/products#openplan',
   },
   {
     name: 'Ads Automation',
     icon: Bot,
-    description:
-      'Automation-focused product line built from a client-proven ads operations platform, evolving into multi-industry v2.',
+    description: 'A client-proven automation system evolving into a multi-industry SaaS operations platform.',
+    href: '/products#ads-automation',
   },
 ]
 
 const trustedBy = [
-  { name: 'Sierra County', note: '(served by Nathaniel in prior role)' },
-  { name: 'Del Norte County', note: '(served by Nathaniel in prior role)' },
-  { name: 'Tehama County', note: '(served by Nathaniel in prior role)' },
-  { name: 'Plumas County', note: '(served by Nathaniel in prior role)' },
-  { name: 'El Dorado County Transportation Commission', note: '(served by Nathaniel in prior role)' },
+  'Sierra County',
+  'Del Norte County',
+  'Tehama County',
+  'Plumas County',
+  'El Dorado County Transportation Commission',
+]
+
+const process = [
+  {
+    title: 'Frame the real decision',
+    desc: 'We clarify what decision must be made, which constraints are binding, and what success actually looks like.',
+    icon: Compass,
+  },
+  {
+    title: 'Build an auditable method',
+    desc: 'Assumptions, data lineage, and limitations are explicit so technical stakeholders can verify and trust the work.',
+    icon: Radar,
+  },
+  {
+    title: 'Translate to fundable action',
+    desc: 'We package recommendations into implementation-ready scopes, grant narratives, and board-usable materials.',
+    icon: FileText,
+  },
+  {
+    title: 'Stay in execution mode',
+    desc: 'Consulting and software are aligned so projects move from strategy to delivery without losing continuity.',
+    icon: Handshake,
+  },
 ]
 
 export default function HomePage() {
@@ -74,135 +106,242 @@ export default function HomePage() {
       <JsonLd data={servicesData} />
       <JsonLd data={projectsData} />
 
-      <Section spacing="xl" className="bg-gradient-to-b from-[#F1F5F9] to-white dark:from-gray-900 dark:to-gray-950">
-        <Container size="lg">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#0F172A] dark:text-white mb-6 leading-tight">
-              Planning expertise with software leverage
-            </h1>
-            <p className="text-lg md:text-xl text-gray-700 dark:text-gray-300 mb-8 leading-relaxed">
-              Nat Ford Planning & Analysis helps agencies, tribes, and consultancies move from analysis to funded implementation — with clear planning services, auditable methods, and two focused SaaS products.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild size="lg">
-                <Link href="/contact">Schedule Consultation</Link>
-              </Button>
-              <Button asChild variant="outline" size="lg">
-                <Link href="/products">Explore Products</Link>
-              </Button>
-              <Button asChild variant="outline" size="lg">
-                <Link href="/ethics">Ethics & AI Disclosure</Link>
-              </Button>
+      <Section spacing="xl" className="hero-mesh text-white">
+        <Container size="xl">
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1.2fr_0.8fr] items-center">
+            <div>
+              <span className="pill">Northern California · Planning + Software</span>
+              <h1 className="section-title mt-5 text-5xl sm:text-6xl lg:text-7xl leading-[0.96]">
+                Sleek planning intelligence built for agencies that need to move.
+              </h1>
+              <p className="mt-6 max-w-2xl text-lg sm:text-xl text-white/85">
+                Nat Ford combines transportation planning expertise with production-grade tools so agencies, tribes, and
+                consultancies can move from analysis to funded implementation with less friction.
+              </p>
+
+              <div className="mt-8 flex flex-col sm:flex-row gap-3">
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center justify-center rounded-full bg-[color:var(--copper)] px-6 py-3 text-[0.98rem] font-semibold text-[#1f2428] transition hover:-translate-y-0.5 hover:brightness-105"
+                >
+                  Schedule Strategy Call
+                </Link>
+                <Link
+                  href="/products"
+                  className="inline-flex items-center justify-center rounded-full border border-white/35 px-6 py-3 text-[0.98rem] font-semibold text-white transition hover:bg-white/10"
+                >
+                  Explore Products
+                </Link>
+              </div>
+            </div>
+
+            <div className="soft-card rounded-3xl p-5 sm:p-6 bg-white/95 text-[color:var(--ink)] float-slow">
+              <div className="mb-4 flex items-center justify-between">
+                <p className="font-semibold tracking-wide text-[0.8rem] uppercase text-[color:var(--pine)]">
+                  Delivery Signal Panel
+                </p>
+                <span className="text-xs font-semibold text-[color:var(--pine)]">Live Working Style</span>
+              </div>
+
+              <div className="relative h-44 w-full overflow-hidden rounded-2xl border border-[color:var(--line)]">
+                <Image
+                  src="/images/site/hero-corridor.jpg"
+                  alt="Aerial corridor view in Northern California foothills"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 40vw"
+                  priority
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0f1f2f]/65 via-[#0f1f2f]/15 to-transparent" />
+                <div className="absolute bottom-3 left-3 rounded-full bg-white/90 px-3 py-1 text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-[#12301f]">
+                  Corridor-ready analysis
+                </div>
+              </div>
+
+              <div className="mt-3 grid grid-cols-2 gap-3">
+                <div className="signal-tile rounded-2xl p-3.5">
+                  <p className="text-xs uppercase tracking-wide text-[color:var(--foreground)]/55">Focus region</p>
+                  <p className="mt-1 font-semibold">Rural Northern CA</p>
+                </div>
+                <div className="signal-tile rounded-2xl p-3.5">
+                  <p className="text-xs uppercase tracking-wide text-[color:var(--foreground)]/55">Operating model</p>
+                  <p className="mt-1 font-semibold">Consulting + SaaS</p>
+                </div>
+              </div>
+
+              <div className="mt-4 rounded-2xl border border-[color:var(--line)] bg-[color:var(--sand)]/40 p-4">
+                <p className="text-xs uppercase tracking-wide text-[color:var(--foreground)]/55">Promise</p>
+                <p className="mt-1 text-sm leading-relaxed">
+                  No hype. No hidden assumptions. No burden-shifting recommendations. Every deliverable is built to be
+                  client-safe, review-ready, and implementation-aware.
+                </p>
+              </div>
             </div>
           </div>
         </Container>
       </Section>
 
-      <Section spacing="md" className="bg-white dark:bg-gray-900 border-y border-gray-200 dark:border-gray-800">
+      <Section spacing="md" className="border-y border-[color:var(--line)] bg-[color:var(--background)]/80">
         <Container>
-          <p className="text-center text-sm text-gray-700 dark:text-gray-300 mb-6 uppercase tracking-wide">
-            Agencies Served by Nathaniel (Prior Employment)
+          <p className="text-center text-[0.76rem] uppercase tracking-[0.18em] text-[color:var(--foreground)]/55">
+            Agencies served by Nathaniel in prior roles
           </p>
-          <div className="flex flex-wrap justify-center items-center gap-x-8 gap-y-4">
-            {trustedBy.map((client) => (
-              <div key={client.name} className="text-sm text-gray-600 dark:text-gray-400 font-medium">
-                {client.name} <span className="text-xs text-gray-500 dark:text-gray-500">{client.note}</span>
-              </div>
+          <div className="mt-4 flex flex-wrap justify-center gap-x-8 gap-y-3 text-sm text-[color:var(--foreground)]/75">
+            {trustedBy.map((name) => (
+              <span key={name}>{name}</span>
             ))}
-          </div>
-        </Container>
-      </Section>
-
-      <Section spacing="lg" className="bg-[#F8FAFC] dark:bg-gray-900 border-y border-gray-200 dark:border-gray-800">
-        <Container>
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-2xl md:text-3xl font-bold text-[#0F172A] dark:text-white mb-4">Business Covenant</h2>
-            <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-              We use AI to accelerate drafting, data cleaning, and formatting, but final analysis and conclusions are reviewed and approved by qualified staff. We disclose assumptions and uncertainty, avoid burden-shifting recommendations to disadvantaged communities, and use fair, transparent pricing.
-            </p>
           </div>
         </Container>
       </Section>
 
       <Section spacing="xl">
         <Container>
-          <div className="text-center max-w-3xl mx-auto mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#0F172A] dark:text-white mb-4">Core Services</h2>
-            <p className="text-lg text-gray-700 dark:text-gray-300">
-              Technical planning support built for practical delivery, funding competitiveness, and board-ready decision making.
+          <div className="max-w-3xl">
+            <p className="pill mb-4">Consulting Services</p>
+            <h2 className="section-title text-4xl md:text-5xl text-[color:var(--ink)]">Technical depth without the consultant fog.</h2>
+            <p className="mt-4 text-lg text-[color:var(--foreground)]/80">
+              Modular support across planning, GIS, funding, and production documentation — structured for real public
+              workflows, not slide decks.
             </p>
           </div>
 
-          <Grid cols={{ default: 1, md: 2, lg: 3 }} gap="lg">
+          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {services.map((service) => {
               const Icon = service.icon
               return (
-                <Card key={service.name} hover>
-                  <CardHeader>
-                    <div className="w-12 h-12 bg-[#1F4E2E] rounded-lg flex items-center justify-center mb-4">
-                      <Icon className="w-6 h-6 text-white" />
-                    </div>
-                    <CardTitle>{service.name}</CardTitle>
-                    <CardDescription>{service.description}</CardDescription>
-                  </CardHeader>
-                  <CardFooter>
-                    <Button asChild variant="ghost" size="sm">
-                      <Link href={service.href}>
-                        Learn more <ArrowRight className="ml-2 w-4 h-4" />
-                      </Link>
-                    </Button>
-                  </CardFooter>
-                </Card>
+                <Link
+                  key={service.name}
+                  href={service.href}
+                  className="group rounded-2xl border border-[color:var(--line)] bg-[color:var(--background)] p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[color:var(--pine)]/60 hover:shadow-xl"
+                >
+                  <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-[color:var(--sand)] text-[color:var(--pine)] group-hover:bg-[color:var(--pine)] group-hover:text-white transition-colors">
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <h3 className="mt-4 text-xl font-semibold text-[color:var(--ink)]">{service.name}</h3>
+                  <p className="mt-2 text-[0.98rem] text-[color:var(--foreground)]/75">{service.description}</p>
+                  <span className="mt-4 inline-flex items-center text-sm font-semibold text-[color:var(--pine)]">
+                    Learn more <ArrowRight className="ml-1.5 h-4 w-4" />
+                  </span>
+                </Link>
               )
             })}
-          </Grid>
+          </div>
         </Container>
       </Section>
 
-      <Section spacing="xl" className="bg-[#F1F5F9] dark:bg-gray-900">
+      <Section spacing="xl" className="bg-[color:var(--fog)]/65 border-y border-[color:var(--line)]">
         <Container>
-          <div className="text-center max-w-3xl mx-auto mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#0F172A] dark:text-white mb-4">Product Suite</h2>
-            <p className="text-lg text-gray-700 dark:text-gray-300">
-              Two software products designed to compound delivery speed and analytical power.
-            </p>
+          <div className="grid grid-cols-1 lg:grid-cols-[0.95fr_1.05fr] gap-10 items-start">
+            <div>
+              <p className="pill mb-4">Product Layer</p>
+              <h2 className="section-title text-4xl md:text-5xl text-[color:var(--ink)]">Software that compounds consulting impact.</h2>
+              <p className="mt-4 text-lg text-[color:var(--foreground)]/80">
+                We are not building software for software's sake. Each product shortens cycle time, hardens quality,
+                and makes results easier to explain and defend.
+              </p>
+              <Link
+                href="/products"
+                className="mt-6 inline-flex items-center rounded-full border border-[color:var(--line)] px-5 py-2.5 font-semibold text-[color:var(--ink)] hover:border-[color:var(--pine)] hover:text-[color:var(--pine)] transition"
+              >
+                View Product Details
+              </Link>
+            </div>
+
+            <div className="grid gap-4">
+              {products.map((product) => {
+                const Icon = product.icon
+                return (
+                  <Link
+                    key={product.name}
+                    href={product.href}
+                    className="soft-card rounded-2xl p-6 transition hover:-translate-y-0.5 hover:shadow-xl"
+                  >
+                    <div className="flex items-start gap-4">
+                      <div className="mt-0.5 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-[color:var(--pine)] text-white">
+                        <Icon className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <h3 className="text-2xl font-semibold text-[color:var(--ink)]">{product.name}</h3>
+                        <p className="mt-2 text-[0.98rem] text-[color:var(--foreground)]/78">{product.description}</p>
+                      </div>
+                    </div>
+                  </Link>
+                )
+              })}
+            </div>
+          </div>
+        </Container>
+      </Section>
+
+      <Section spacing="xl">
+        <Container>
+          <div className="max-w-3xl">
+            <p className="pill mb-4">How We Work</p>
+            <h2 className="section-title text-4xl md:text-5xl text-[color:var(--ink)]">Intuitive process. Serious technical standards.</h2>
           </div>
 
-          <Grid cols={{ default: 1, md: 2 }} gap="lg">
-            {products.map((product) => {
-              const Icon = product.icon
+          <div className="mt-9 grid grid-cols-1 md:grid-cols-2 gap-5">
+            {process.map((step, idx) => {
+              const Icon = step.icon
               return (
-                <Card key={product.name} hover>
-                  <CardHeader>
-                    <div className="w-12 h-12 bg-[#1F4E2E] rounded-lg flex items-center justify-center mb-4">
-                      <Icon className="w-6 h-6 text-white" />
-                    </div>
-                    <CardTitle>{product.name}</CardTitle>
-                    <CardDescription>{product.description}</CardDescription>
-                  </CardHeader>
-                </Card>
+                <div key={step.title} className="rounded-2xl border border-[color:var(--line)] bg-[color:var(--background)] p-6">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--foreground)]/50">
+                      Step {idx + 1}
+                    </span>
+                    <Icon className="h-5 w-5 text-[color:var(--pine)]" />
+                  </div>
+                  <h3 className="mt-3 text-2xl font-semibold text-[color:var(--ink)]">{step.title}</h3>
+                  <p className="mt-2 text-[0.98rem] text-[color:var(--foreground)]/75">{step.desc}</p>
+                </div>
               )
             })}
-          </Grid>
-
-          <div className="text-center mt-10">
-            <Button asChild size="lg" variant="outline">
-              <Link href="/products">View Product Details</Link>
-            </Button>
           </div>
         </Container>
       </Section>
 
-      <Section spacing="lg" className="bg-[#1F4E2E] dark:bg-green-900 text-white">
+      <Section spacing="lg" className="bg-[color:var(--sand)]/45 border-y border-[color:var(--line)]">
         <Container>
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Need planning support or product access?</h2>
-            <p className="text-lg text-gray-200 dark:text-gray-300 mb-8">
-              We can scope consulting support, software pilots, or both — based on your timeline and budget.
+          <div className="max-w-4xl">
+            <p className="pill mb-4">Ethics & AI Disclosure</p>
+            <h2 className="section-title text-4xl text-[color:var(--ink)]">The covenant behind every deliverable.</h2>
+            <p className="mt-4 text-lg text-[color:var(--foreground)]/82">
+              AI is used to accelerate drafting, data cleaning, and formatting. Final analysis and conclusions remain
+              human-reviewed and accountable. Assumptions are disclosed, uncertainty is labeled, and key claims are
+              citation-supported or flagged for verification.
             </p>
-            <Button asChild variant="secondary" size="lg">
-              <Link href="/contact">Start the Conversation</Link>
-            </Button>
+            <Link
+              href="/ethics"
+              className="mt-6 inline-flex items-center font-semibold text-[color:var(--pine)] hover:text-[color:var(--pine-deep)] transition"
+            >
+              Read full ethics policy <ArrowRight className="ml-1.5 h-4 w-4" />
+            </Link>
+          </div>
+        </Container>
+      </Section>
+
+      <Section spacing="lg" className="bg-[#101c27] text-white">
+        <Container>
+          <div className="rounded-3xl border border-white/15 bg-white/[0.03] px-6 py-10 md:px-10 md:py-12 text-center">
+            <p className="text-xs uppercase tracking-[0.18em] text-white/65">Next Step</p>
+            <h2 className="section-title mt-3 text-4xl md:text-5xl text-white">Tell us what decision you need to make.</h2>
+            <p className="mx-auto mt-4 max-w-2xl text-lg text-white/80">
+              We’ll propose a scoped plan that is technically defensible, schedule-aware, and aligned with your budget.
+            </p>
+            <div className="mt-7 flex flex-col sm:flex-row gap-3 justify-center">
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center rounded-full bg-[color:var(--copper)] px-6 py-3 text-[0.98rem] font-semibold text-[#1f2428] transition hover:-translate-y-0.5"
+              >
+                Start the Conversation
+              </Link>
+              <Link
+                href="/services"
+                className="inline-flex items-center justify-center rounded-full border border-white/30 px-6 py-3 text-[0.98rem] font-semibold text-white transition hover:bg-white/8"
+              >
+                Browse Services
+              </Link>
+            </div>
           </div>
         </Container>
       </Section>

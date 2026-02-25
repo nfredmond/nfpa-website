@@ -30,80 +30,67 @@ const footerLinks = {
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
-  
+
   return (
-    <footer className="bg-[#0F172A] dark:bg-gray-950 text-white border-t border-gray-800">
+    <footer className="border-t border-[color:var(--line)] bg-[#0f1720] text-white">
       <Container>
-        <div className="py-12 md:py-16">
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
-            {/* Company Info */}
+        <div className="py-14 md:py-16">
+          <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4">
             <div className="lg:col-span-2">
               <div className="mb-4">
-                <Image
-                  src="/logos/nf-wordmark-slate.svg"
-                  alt="Nat Ford Planning & Analysis"
-                  width={220}
-                  height={48}
-                  className="h-10 w-auto block dark:hidden"
-                />
                 <Image
                   src="/logos/nf-wordmark-white.svg"
                   alt="Nat Ford Planning & Analysis"
                   width={220}
                   height={48}
-                  className="h-10 w-auto hidden dark:block"
+                  className="h-10 w-auto"
                 />
               </div>
-              <p className="text-gray-300 dark:text-gray-400 text-sm leading-relaxed max-w-md mb-4">
-                Data-driven urban planning, GIS, and aerial insights for Northern California communities.
+
+              <p className="max-w-md text-sm leading-relaxed text-white/70 mb-4">
+                Strategy-level planning, GIS, and software for communities that need clear decisions, fundable projects,
+                and delivery confidence.
               </p>
+
               <div className="flex gap-4">
                 <a
-                  href="mailto:nfredmond@gmail.com"
-                  className="text-gray-300 dark:text-gray-400 hover:text-[#D4A63F] transition-colors duration-300"
+                  href="mailto:nathaniel@natfordplanning.com"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-white/80 transition hover:border-[color:var(--copper)] hover:text-[color:var(--copper)]"
                   aria-label="Email Nat Ford"
                 >
-                  <Mail className="h-5 w-5" />
+                  <Mail className="h-4 w-4" />
                 </a>
                 <a
                   href="https://linkedin.com/in/nfredmond"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-300 dark:text-gray-400 hover:text-[#D4A63F] transition-colors duration-300"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-white/80 transition hover:border-[color:var(--copper)] hover:text-[color:var(--copper)]"
                   aria-label="LinkedIn Profile"
                 >
-                  <Linkedin className="h-5 w-5" />
+                  <Linkedin className="h-4 w-4" />
                 </a>
               </div>
             </div>
-            
-            {/* Services Links */}
+
             <div>
-              <h3 className="font-semibold text-white mb-4">Services</h3>
-              <ul className="space-y-2">
+              <h3 className="font-semibold text-white mb-4 tracking-wide">Services</h3>
+              <ul className="space-y-2.5">
                 {footerLinks.services.map((link) => (
                   <li key={link.name}>
-                    <Link
-                      href={link.href}
-                      className="text-sm text-gray-300 dark:text-gray-400 hover:text-white transition-colors duration-300"
-                    >
+                    <Link href={link.href} className="text-sm text-white/70 hover:text-white transition-colors duration-300">
                       {link.name}
                     </Link>
                   </li>
                 ))}
               </ul>
             </div>
-            
-            {/* Company Links */}
+
             <div>
-              <h3 className="font-semibold text-white mb-4">Company</h3>
-              <ul className="space-y-2">
+              <h3 className="font-semibold text-white mb-4 tracking-wide">Company</h3>
+              <ul className="space-y-2.5">
                 {footerLinks.company.map((link) => (
                   <li key={link.name}>
-                    <Link
-                      href={link.href}
-                      className="text-sm text-gray-300 dark:text-gray-400 hover:text-white transition-colors duration-300"
-                    >
+                    <Link href={link.href} className="text-sm text-white/70 hover:text-white transition-colors duration-300">
                       {link.name}
                     </Link>
                   </li>
@@ -111,27 +98,16 @@ export function Footer() {
               </ul>
             </div>
           </div>
-          
-          {/* Bottom Bar */}
-          <div className="mt-12 pt-8 border-t border-gray-800">
-            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-              <p className="text-sm text-gray-300 dark:text-gray-400">
-                © {currentYear} Nat Ford Planning & Analysis. All rights reserved.
-              </p>
-              <div className="flex gap-6">
-                <Link
-                  href="/privacy"
-                  className="text-sm text-gray-300 dark:text-gray-400 hover:text-white transition-colors duration-300"
-                >
-                  Privacy
-                </Link>
-                <Link
-                  href="/terms"
-                  className="text-sm text-gray-300 dark:text-gray-400 hover:text-white transition-colors duration-300"
-                >
-                  Terms
-                </Link>
-              </div>
+
+          <div className="mt-12 pt-7 border-t border-white/15 flex flex-col md:flex-row justify-between items-center gap-3">
+            <p className="text-sm text-white/65">© {currentYear} Nat Ford LLC. All rights reserved.</p>
+            <div className="flex gap-6">
+              <Link href="/privacy" className="text-sm text-white/65 hover:text-white transition-colors duration-300">
+                Privacy
+              </Link>
+              <Link href="/terms" className="text-sm text-white/65 hover:text-white transition-colors duration-300">
+                Terms
+              </Link>
             </div>
           </div>
         </div>
@@ -139,4 +115,3 @@ export function Footer() {
     </footer>
   )
 }
-

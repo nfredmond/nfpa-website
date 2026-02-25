@@ -1,160 +1,153 @@
-/**
- * Services Overview Page
- */
-
+import Image from 'next/image'
 import Link from 'next/link'
+import { ArrowRight, Database, FileText, MapPin, Plane, Sparkles } from 'lucide-react'
 import { Container } from '@/components/layout/container'
 import { Section } from '@/components/layout/section'
-import { Grid } from '@/components/layout/grid'
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card'
+import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { MapPin, Database, Plane, FileText, Sparkles, ArrowRight } from 'lucide-react'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Services',
-  description: 'Comprehensive planning, GIS, aerial mapping, grant writing, and AI-enabled documentation services for Northern California communities.',
+  description:
+    'Planning, GIS, funding strategy, and delivery automation services for agencies and consultancies operating in resource-constrained contexts.',
 }
 
 const services = [
   {
     name: 'Urban & Transportation Planning',
-    description: 'Regional Transportation Plans, Active Transportation Plans, VMT analysis, and carbon reduction programs that boards adopt and funders support.',
+    description:
+      'RTPs, ATPs, corridor strategy, and board-ready planning packages grounded in local implementation realities.',
     icon: MapPin,
     href: '/services/planning',
-    services: ['RTPs & ATPs', 'VMT & Carbon Reduction', 'Complete Streets', 'Speed & Safety Management'],
-    deliverables: [
-      'RTP/ATP chapters with fiscally constrained project lists',
-      'Performance target tables (safety, pavement, accessibility)',
-      'Before/after concept visualizations & cross-sections',
-      'Interactive web maps with project filters',
-      'Grant application support packages'
-    ]
+    outcomes: [
+      'Clear project prioritization tied to constraints',
+      'Defensible analysis narratives for public review',
+      'Implementation-ready scope and phasing guidance',
+    ],
   },
   {
     name: 'GIS & Spatial Analysis',
-    description: 'PostGIS databases, interactive web mapping, and spatial analytics that turn data into actionable insights for transportation and community planning.',
+    description:
+      'Spatial data systems, map products, and diagnostics that turn fragmented data into decision-ready intelligence.',
     icon: Database,
     href: '/services/gis',
-    services: ['PostGIS Development', 'Interactive Maps', 'Suitability Analysis', 'Custom Dashboards'],
-    deliverables: [
-      'PostGIS database schemas with documented queries',
-      'Interactive Mapbox/Leaflet web applications',
-      'Safety hotspot & accessibility analysis maps',
-      'Automated data pipelines & refresh workflows',
-      'Export-ready figures & presentation materials'
-    ]
+    outcomes: [
+      'PostGIS-backed reproducible workflows',
+      'Hotspot and accessibility mapping that withstands scrutiny',
+      'Production-friendly map exports for reports and presentations',
+    ],
   },
   {
     name: 'Aerial Mapping & Photogrammetry',
-    description: 'FAA Part 107 certified drone operations delivering orthomosaics, digital elevation models, 3D meshes, and progress documentation for sites and corridors.',
+    description:
+      'FAA-certified capture and geospatial outputs for corridor, site, and asset-level understanding.',
     icon: Plane,
     href: '/services/aerial',
-    services: ['Orthomosaic Imagery', 'Digital Elevation Models', '3D Meshes', 'Progress Tracking'],
-    deliverables: [
-      'GeoTIFF orthomosaics (sub-inch accuracy)',
-      'Digital Elevation Models (DEMs) for drainage/grading',
-      'Textured 3D meshes for visualization',
-      'Time-series progress photography',
-      'Deliverables in GIS-ready formats (GeoTIFF, LAS, OBJ)'
-    ]
+    outcomes: [
+      'Orthomosaics and terrain products for planning context',
+      'Faster field-to-analysis turnaround',
+      'Visual evidence packages for stakeholder alignment',
+    ],
   },
   {
     name: 'Funding & Grant Services',
-    description: 'Opportunity scanning, compelling narratives, benefit-cost analysis, and full application assembly for FTA, ATP, HSIP, CRP, RAISE, TIRCP, and Clean California programs.',
+    description:
+      'Opportunity fit, scoring-aware narratives, and grant package assembly to increase competitiveness.',
     icon: FileText,
     href: '/services/grants',
-    services: ['Opportunity Scans', 'Narrative Development', 'Benefit-Cost Analysis', 'Application Assembly'],
-    deliverables: [
-      'Funding opportunity calendars & eligibility matrices',
-      'Project narratives tied to scoring criteria',
-      'Benefit-cost worksheets & economic justification',
-      'Application assembly with exhibits & attachments',
-      'Post-award compliance & reporting support'
-    ]
+    outcomes: [
+      'Program alignment and timing clarity',
+      'Stronger benefit framing with cleaner logic chains',
+      'Submission-ready package discipline',
+    ],
   },
   {
     name: 'AI-Enabled Documentation',
-    description: 'Automated report generation, figure/table pipelines, citation management, and document QA/QC using AI workflows that reduce production time without sacrificing accuracy.',
+    description:
+      'Automation for report drafting, table/figure generation, and QA with human-reviewed outputs.',
     icon: Sparkles,
     href: '/services/ai',
-    services: ['Automated Reports', 'Figure/Table Generation', 'Literature Reviews', 'Document QA/QC'],
-    deliverables: [
-      'Automated figure & table generation pipelines',
-      'Citation-managed literature reviews',
-      'Template-based report assembly workflows',
-      'Batch document QA/QC (cross-references, formatting)',
-      'Reproducible documentation for audits & updates'
-    ]
+    outcomes: [
+      'Shorter production cycles without quality loss',
+      'Methods and assumptions clarity in final documents',
+      'Reduced formatting and revision churn',
+    ],
   },
 ]
 
 export default function ServicesPage() {
   return (
     <>
-      <Section spacing="lg" className="bg-gradient-to-b from-[#F1F5F9] to-white dark:from-gray-900 dark:to-gray-950">
-        <Container size="lg">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl font-bold text-[#0F172A] dark:text-white mb-6 leading-tight">
-              Integrated Planning Services
-            </h1>
-            <p className="text-xl text-gray-700 dark:text-gray-300 leading-relaxed">
-              From transportation planning to drone mapping, we combine technical expertise with 
-              plain-English communication to deliver clear, fundable outcomes for Northern California communities.
+      <Section spacing="lg" className="hero-mesh text-white">
+        <Container>
+          <div className="max-w-4xl">
+            <span className="pill">Service Portfolio</span>
+            <h1 className="section-title mt-5 text-5xl md:text-6xl leading-[0.96] text-white">Integrated services built for real public-sector execution.</h1>
+            <p className="mt-5 text-lg text-white/82 max-w-3xl">
+              We combine planning, GIS, funding strategy, and production systems so agencies can make clear decisions and
+              move projects forward with less rework.
             </p>
+          </div>
+        </Container>
+      </Section>
+
+      <Section spacing="md" className="border-y border-[color:var(--line)] bg-[color:var(--background)]/85">
+        <Container>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="relative h-56 overflow-hidden rounded-2xl border border-[color:var(--line)]">
+              <Image
+                src="/images/site/workshop-maps.jpg"
+                alt="Planning workshop maps and collaborative working session"
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 50vw"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0f1f2f]/55 via-transparent to-transparent" />
+            </div>
+            <div className="relative h-56 overflow-hidden rounded-2xl border border-[color:var(--line)]">
+              <Image
+                src="/images/site/mainstreet-aerial.jpg"
+                alt="Aerial complete streets perspective in a small Northern California town"
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 50vw"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0f1f2f]/55 via-transparent to-transparent" />
+            </div>
           </div>
         </Container>
       </Section>
 
       <Section spacing="xl">
         <Container>
-          <div className="space-y-8">
+          <div className="grid grid-cols-1 gap-5">
             {services.map((service) => {
               const Icon = service.icon
               return (
-                <Card key={service.name} hover className="overflow-hidden">
-                  <div className="grid grid-cols-1 lg:grid-cols-3">
-                    <div className="lg:col-span-2 bg-[#1F4E2E] dark:bg-green-900 text-white p-6">
-                      <CardHeader className="p-0 mb-4">
-                        <div className="w-12 h-12 bg-white/15 dark:bg-white/20 rounded-lg flex items-center justify-center mb-4">
-                          <Icon className="w-6 h-6 text-white" />
-                        </div>
-                        <CardTitle className="text-2xl text-white">{service.name}</CardTitle>
-                        <CardDescription className="text-base mt-2 text-white/85">{service.description}</CardDescription>
-                      </CardHeader>
-                      <CardContent className="p-0">
-                        <div className="mb-4">
-                          <p className="text-sm font-semibold text-white/75 mb-2">Service Areas:</p>
-                          <div className="flex flex-wrap gap-2">
-                            {service.services.map((item) => (
-                              <span
-                                key={item}
-                                className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-white/15 text-white border border-white/10"
-                              >
-                                {item}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      </CardContent>
-                    </div>
-                    <div className="bg-[#F1F5F9] dark:bg-gray-900 p-6 lg:border-l border-gray-200 dark:border-gray-700">
-                      <p className="text-sm font-medium text-[#0F172A] dark:text-white mb-3">Typical Deliverables:</p>
-                      <ul className="space-y-2">
-                        {service.deliverables.map((deliverable) => (
-                          <li key={deliverable} className="flex items-start gap-2 text-xs text-gray-700 dark:text-gray-300">
-                            <ArrowRight className="w-3 h-3 text-[#D4A63F] dark:text-amber-400 mt-0.5 flex-shrink-0" />
-                            <span>{deliverable}</span>
+                <Card key={service.name} hover className="p-6 md:p-7">
+                  <div className="grid grid-cols-1 lg:grid-cols-[0.78fr_0.22fr] gap-8">
+                    <div>
+                      <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-[color:var(--sand)] text-[color:var(--pine)]">
+                        <Icon className="h-5 w-5" />
+                      </div>
+                      <h2 className="mt-4 text-2xl md:text-3xl font-semibold text-[color:var(--ink)]">{service.name}</h2>
+                      <p className="mt-3 text-[1rem] text-[color:var(--foreground)]/78 max-w-3xl">{service.description}</p>
+
+                      <ul className="mt-4 space-y-2.5">
+                        {service.outcomes.map((item) => (
+                          <li key={item} className="flex items-start gap-2.5 text-sm text-[color:var(--foreground)]/75">
+                            <ArrowRight className="mt-0.5 h-4 w-4 shrink-0 text-[color:var(--copper)]" />
+                            <span>{item}</span>
                           </li>
                         ))}
                       </ul>
-                      <div className="mt-4">
-                        <Button asChild variant="ghost" size="sm" className="text-xs">
-                          <Link href={service.href}>
-                            Learn more <ArrowRight className="ml-2 w-3 h-3" />
-                          </Link>
-                        </Button>
-                      </div>
+                    </div>
+
+                    <div className="flex lg:justify-end lg:items-start">
+                      <Button asChild variant="outline" className="w-full lg:w-auto">
+                        <Link href={service.href}>View Service Detail</Link>
+                      </Button>
                     </div>
                   </div>
                 </Card>
@@ -164,16 +157,14 @@ export default function ServicesPage() {
         </Container>
       </Section>
 
-      <Section spacing="lg" className="bg-[#1F4E2E] dark:bg-green-900 text-white">
+      <Section spacing="lg" className="bg-[color:var(--sand)]/45 border-y border-[color:var(--line)]">
         <Container>
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Not sure where to start?
-            </h2>
-            <p className="text-lg text-gray-200 dark:text-gray-300 mb-8">
-              Schedule a free 30-minute consultation to discuss your needs and explore how our integrated services can help.
+            <h2 className="section-title text-4xl md:text-5xl text-[color:var(--ink)]">Not sure where to start?</h2>
+            <p className="mt-4 text-lg text-[color:var(--foreground)]/82">
+              Start with a 30-minute intake and we’ll recommend a scope that matches your timeline, budget, and decision risk.
             </p>
-            <Button asChild variant="secondary" size="lg">
+            <Button asChild size="lg" className="mt-7">
               <Link href="/contact">Schedule Consultation</Link>
             </Button>
           </div>
@@ -182,4 +173,3 @@ export default function ServicesPage() {
     </>
   )
 }
-

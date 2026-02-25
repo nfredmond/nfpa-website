@@ -1,46 +1,51 @@
 /**
  * Button Component
- * Accessible button with multiple variants
+ * Accessible button with variants + optional asChild rendering
  */
 
 import * as React from 'react'
 import { cn } from '@/lib/utils'
 
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost'
   size?: 'sm' | 'md' | 'lg'
+  asChild?: boolean
   children: React.ReactNode
 }
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = 'primary', size = 'md', children, ...props }, ref) => {
-    const baseStyles = 'inline-flex items-center justify-center font-medium transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none'
-    
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant = 'primary', size = 'md', asChild = false, children, ...props }, ref) => {
+    const baseStyles =
+      'inline-flex items-center justify-center font-semibold transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none'
+
     const variants = {
-      primary: 'bg-[#1F4E2E] text-white hover:bg-[#163d23] focus-visible:ring-[#1F4E2E]',
-      secondary: 'bg-[#D4A63F] text-[#0F172A] hover:bg-[#c5973a] focus-visible:ring-[#D4A63F]',
-      outline: 'border-2 border-[#1F4E2E] dark:border-green-400 text-[#1F4E2E] dark:text-green-400 hover:bg-[#1F4E2E] dark:hover:bg-green-400 hover:text-white dark:hover:text-gray-900 focus-visible:ring-[#1F4E2E]',
-      ghost: 'text-[#0F172A] dark:text-gray-300 hover:bg-[#F1F5F9] dark:hover:bg-gray-800 focus-visible:ring-[#4C84F7]',
+      primary:
+        'bg-[color:var(--pine)] text-white hover:bg-[color:var(--pine-deep)] focus-visible:ring-[color:var(--pine)]',
+      secondary:
+        'bg-[color:var(--copper)] text-[#1f2428] hover:brightness-105 focus-visible:ring-[color:var(--copper)]',
+      outline:
+        'border border-[color:var(--line)] text-[color:var(--foreground)] hover:border-[color:var(--pine)] hover:text-[color:var(--pine)] focus-visible:ring-[color:var(--pine)]',
+      ghost:
+        'text-[color:var(--foreground)] hover:bg-[color:var(--fog)] dark:hover:bg-[#15222d] focus-visible:ring-[color:var(--pine)]',
     }
-    
+
     const sizes = {
-      sm: 'px-3 py-1.5 text-sm rounded-md',
-      md: 'px-4 py-2 text-base rounded-lg',
-      lg: 'px-6 py-3 text-lg rounded-lg',
+      sm: 'h-9 px-3.5 text-sm rounded-full',
+      md: 'h-10 px-4.5 text-sm rounded-full',
+      lg: 'h-12 px-6 text-base rounded-full',
     }
-    
+
+    const mergedClassName = cn(baseStyles, variants[variant], sizes[size], className)
+
+    if (asChild && React.isValidElement(children)) {
+      const child = children as React.ReactElement<{ className?: string }>
+      return React.cloneElement(child, {
+        className: cn(mergedClassName, child.props.className),
+      })
+    }
+
     return (
-      <button
-        className={cn(
-          baseStyles,
-          variants[variant],
-          sizes[size],
-          className
-        )}
-        ref={ref}
-        {...props}
-      >
+      <button className={mergedClassName} ref={ref} {...props}>
         {children}
       </button>
     )
@@ -48,6 +53,3 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 )
 
 Button.displayName = 'Button'
-
-export { Button }
-
