@@ -4,7 +4,7 @@
 
 import { NextResponse, type NextRequest } from 'next/server'
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   // Only handle authentication for portal and auth routes
   // Marketing pages don't need Supabase authentication
   const isPortalRoute = request.nextUrl.pathname.startsWith('/portal') || 

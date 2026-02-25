@@ -81,7 +81,7 @@ export default function HomePage() {
               Planning expertise with software leverage
             </h1>
             <p className="text-lg md:text-xl text-gray-700 dark:text-gray-300 mb-8 leading-relaxed">
-              Nat Ford Planning & Analysis helps agencies, tribes, and consultancies move from analysis to funded implementation — with clear planning services and two focused SaaS products.
+              Nat Ford Planning & Analysis helps agencies, tribes, and consultancies move from analysis to funded implementation — with clear planning services, auditable methods, and two focused SaaS products.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg">
@@ -89,6 +89,9 @@ export default function HomePage() {
               </Button>
               <Button asChild variant="outline" size="lg">
                 <Link href="/products">Explore Products</Link>
+              </Button>
+              <Button asChild variant="outline" size="lg">
+                <Link href="/ethics">Ethics & AI Disclosure</Link>
               </Button>
             </div>
           </div>
@@ -106,6 +109,17 @@ export default function HomePage() {
                 {client.name} <span className="text-xs text-gray-500 dark:text-gray-500">{client.note}</span>
               </div>
             ))}
+          </div>
+        </Container>
+      </Section>
+
+      <Section spacing="lg" className="bg-[#F8FAFC] dark:bg-gray-900 border-y border-gray-200 dark:border-gray-800">
+        <Container>
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-2xl md:text-3xl font-bold text-[#0F172A] dark:text-white mb-4">Business Covenant</h2>
+            <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+              We use AI to accelerate drafting, data cleaning, and formatting, but final analysis and conclusions are reviewed and approved by qualified staff. We disclose assumptions and uncertainty, avoid burden-shifting recommendations to disadvantaged communities, and use fair, transparent pricing.
+            </p>
           </div>
         </Container>
       </Section>

@@ -22,6 +22,7 @@ const footerLinks = {
     { name: 'Projects', href: '/projects' },
     { name: 'Resources', href: '/resources' },
     { name: 'Our Process', href: '/process' },
+    { name: 'Ethics & AI Disclosure', href: '/ethics' },
     { name: 'FAQ', href: '/faq' },
     { name: 'Contact', href: '/contact' },
   ],
