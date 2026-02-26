@@ -57,7 +57,7 @@ payload=$(jq -n \
     sourcePath: "/contact"
   }')
 
-submit_http=$(curl -sS -o /tmp/lead_smoke_submit.json -w "%{http_code}" \
+submit_http=$(curl -sS -L -o /tmp/lead_smoke_submit.json -w "%{http_code}" \
   -H 'Content-Type: application/json' \
   -d "$payload" \
   "${SITE_URL}/api/leads")

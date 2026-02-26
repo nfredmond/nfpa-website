@@ -10,13 +10,20 @@ Execute end-to-end intake verification:
 
 ## Environment Used
 - App runtime: local Next.js (`http://localhost:3015`) with live Supabase project wiring
+- Production endpoint check: `https://www.natfordplanning.com/api/leads`
 - Supabase project ref: `vguhqcookoekpvumnvqc`
 - Test data policy: synthetic `@example.com` leads inserted and then removed
 
 ## Validation Results
-### 1) Submit -> API success
+### 1) Submit -> API success (local validation)
 - POST `/api/leads` returned `200` with `{ "ok": true }`.
 - Result: **PASS**
+
+### 1b) Production endpoint health check
+- POST `https://www.natfordplanning.com/api/leads` returned `503` with message:
+  - `Lead capture is not configured yet. Please email nathaniel@natfordplanning.com.`
+- This indicates production env vars for lead capture are currently missing/misconfigured.
+- Result: **FAIL (PRODUCTION BLOCKER)**
 
 ### 2) API -> DB write
 - Queried `public.leads` via service-role REST API for synthetic email.
@@ -42,13 +49,15 @@ Execute end-to-end intake verification:
 - Result: **GAP IDENTIFIED**
 
 ## Top Reliability Risks (Current)
-1. **No proactive alerting for intake failures (highest risk)**
+1. **Production lead capture currently down (`/api/leads` returns 503)**
+   - Direct impact: no website-originated leads are being captured in production.
+2. **No proactive alerting for intake failures**
    - Failure may go unnoticed until manual inbox review.
-2. **Limited structured logging across lead-inbox mutation routes**
+3. **Limited structured logging across lead-inbox mutation routes**
    - Harder to diagnose status/update/export issues quickly.
-3. **Single shared inbox password model**
+4. **Single shared inbox password model**
    - Operational and access-control fragility (rotation + audit challenges).
-4. **No formal synthetic monitoring schedule yet**
+5. **No formal synthetic monitoring schedule yet**
    - No guaranteed heartbeat on the lead funnel.
 
 ## Immediate Safeguards Implemented
@@ -62,7 +71,8 @@ Execute end-to-end intake verification:
    - Email/IP rate limiting and duplicate dampening are active
 
 ## Recommended Next Actions (24-72h)
-1. Wire smoke-check failures to `#ops-alerts` (cron + notifier).
-2. Add structured error logs to lead-inbox API routes (`status`, `update`, `export`, `auth`).
-3. Add deploy-gate check: run smoke check post-deploy and block promotion on failure.
-4. Plan migration from shared password to role-based inbox auth.
+1. **Restore production lead-capture env vars in Vercel immediately** (`NEXT_PUBLIC_SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`).
+2. Wire smoke-check failures to `#ops-alerts` (cron + notifier).
+3. Add structured error logs to lead-inbox API routes (`status`, `update`, `export`, `auth`).
+4. Add deploy-gate check: run smoke check post-deploy and block promotion on failure.
+5. Plan migration from shared password to role-based inbox auth.
