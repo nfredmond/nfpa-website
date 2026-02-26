@@ -26,6 +26,8 @@ const products = [
       'Report generation aligned with funding narratives',
       'Methods and assumptions disclosure built into output design',
     ],
+    demoUrl: null,
+    demoLabel: null,
   },
   {
     id: 'ads-automation',
@@ -40,6 +42,8 @@ const products = [
       'Structured migration path from custom build to reusable product',
       'Built with maintainability and multi-industry expansion in mind',
     ],
+    demoUrl: 'https://ads-chatbot.vercel.app',
+    demoLabel: 'View Web Demo',
   },
 ]
 
@@ -105,6 +109,16 @@ export default function ProductsPage() {
                         </li>
                       ))}
                     </ul>
+
+                    {product.demoUrl ? (
+                      <div className="mt-5">
+                        <Button asChild variant="outline">
+                          <a href={product.demoUrl} target="_blank" rel="noopener noreferrer">
+                            {product.demoLabel ?? 'View Demo'} <ArrowRight className="ml-2 h-4 w-4" />
+                          </a>
+                        </Button>
+                      </div>
+                    ) : null}
                   </CardContent>
                 </Card>
               )
