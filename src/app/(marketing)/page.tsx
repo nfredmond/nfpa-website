@@ -239,12 +239,22 @@ export default function HomePage() {
                 We are not building software for software's sake. Each product shortens cycle time, hardens quality,
                 and makes results easier to explain and defend.
               </p>
-              <Link
-                href="/products"
-                className="mt-6 inline-flex items-center rounded-full border border-[color:var(--line)] px-5 py-2.5 font-semibold text-[color:var(--ink)] hover:border-[color:var(--pine)] hover:text-[color:var(--pine)] transition"
-              >
-                View Product Details
-              </Link>
+              <div className="mt-6 flex flex-col sm:flex-row gap-3">
+                <Link
+                  href="/products"
+                  className="inline-flex items-center rounded-full border border-[color:var(--line)] px-5 py-2.5 font-semibold text-[color:var(--ink)] hover:border-[color:var(--pine)] hover:text-[color:var(--pine)] transition"
+                >
+                  View Product Details
+                </Link>
+                <a
+                  href="https://ads-chatbot.vercel.app"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center rounded-full border border-[color:var(--pine)]/45 bg-[color:var(--background)] px-5 py-2.5 font-semibold text-[color:var(--pine)] hover:border-[color:var(--pine)] hover:bg-[color:var(--pine)] hover:text-white transition"
+                >
+                  Launch Ads Demo <ArrowRight className="ml-1.5 h-4 w-4" />
+                </a>
+              </div>
             </div>
 
             <div className="grid gap-4">
