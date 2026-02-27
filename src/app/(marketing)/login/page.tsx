@@ -1,25 +1,36 @@
-import Link from 'next/link'
 import { Container } from '@/components/layout/container'
 import { Section } from '@/components/layout/section'
-import { Button } from '@/components/ui/button'
+import { LoginForm } from '@/components/auth/login-form'
 
-export default function LoginPage() {
+export const metadata = {
+  title: 'Login',
+}
+
+type LoginPageProps = {
+  searchParams?: {
+    redirect?: string
+    message?: string
+  }
+}
+
+function normalizeRedirectPath(input?: string) {
+  if (!input || !input.startsWith('/')) return '/portal'
+  return input
+}
+
+export default function LoginPage({ searchParams }: LoginPageProps) {
+  const redirectPath = normalizeRedirectPath(searchParams?.redirect)
+  const infoMessage = searchParams?.message
+
   return (
     <Section spacing="xl">
       <Container>
-        <div className="max-w-2xl mx-auto rounded-2xl border border-[color:var(--line)] bg-[color:var(--background)] p-8 text-center">
-          <h1 className="section-title text-4xl text-[color:var(--ink)]">Client Portal Coming Soon</h1>
+        <div className="mx-auto max-w-xl rounded-2xl border border-[color:var(--line)] bg-[color:var(--background)] p-8 text-center">
+          <h1 className="section-title text-4xl text-[color:var(--ink)]">Customer Login</h1>
           <p className="mt-4 text-[color:var(--foreground)]/80">
-            Secure account access is currently being configured. For files and updates, please contact us directly.
+            Sign in to access your portal, project updates, and account tools.
           </p>
-          <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
-            <Button asChild>
-              <a href="mailto:nathaniel@natfordplanning.com">Email Support</a>
-            </Button>
-            <Button asChild variant="outline">
-              <Link href="/contact">Contact Page</Link>
-            </Button>
-          </div>
+          <LoginForm redirectPath={redirectPath} infoMessage={infoMessage} />
         </div>
       </Container>
     </Section>

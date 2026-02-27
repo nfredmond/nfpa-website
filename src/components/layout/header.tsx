@@ -22,6 +22,7 @@ const navigation = [
   { name: 'About', href: '/about' },
   { name: 'Ethics', href: '/ethics' },
   { name: 'Contact', href: '/contact' },
+  { name: 'Login', href: '/login' },
 ]
 
 export function Header() {

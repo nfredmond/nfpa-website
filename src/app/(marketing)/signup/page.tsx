@@ -1,25 +1,34 @@
-import Link from 'next/link'
 import { Container } from '@/components/layout/container'
 import { Section } from '@/components/layout/section'
-import { Button } from '@/components/ui/button'
+import { SignupForm } from '@/components/auth/signup-form'
 
-export default function SignupPage() {
+export const metadata = {
+  title: 'Sign Up',
+}
+
+type SignupPageProps = {
+  searchParams?: {
+    redirect?: string
+  }
+}
+
+function normalizeRedirectPath(input?: string) {
+  if (!input || !input.startsWith('/')) return '/portal'
+  return input
+}
+
+export default function SignupPage({ searchParams }: SignupPageProps) {
+  const redirectPath = normalizeRedirectPath(searchParams?.redirect)
+
   return (
     <Section spacing="xl">
       <Container>
-        <div className="max-w-2xl mx-auto rounded-2xl border border-[color:var(--line)] bg-[color:var(--background)] p-8 text-center">
-          <h1 className="section-title text-4xl text-[color:var(--ink)]">Portal Access Setup</h1>
+        <div className="mx-auto max-w-xl rounded-2xl border border-[color:var(--line)] bg-[color:var(--background)] p-8 text-center">
+          <h1 className="section-title text-4xl text-[color:var(--ink)]">Create Customer Account</h1>
           <p className="mt-4 text-[color:var(--foreground)]/80">
-            Account signup is not yet enabled while we finalize secure Supabase authentication and role permissions.
+            Set up your login now so you can access secure project updates and future account features.
           </p>
-          <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
-            <Button asChild>
-              <a href="mailto:nathaniel@natfordplanning.com">Request Access</a>
-            </Button>
-            <Button asChild variant="outline">
-              <Link href="/">Back Home</Link>
-            </Button>
-          </div>
+          <SignupForm redirectPath={redirectPath} />
         </div>
       </Container>
     </Section>
