@@ -19,6 +19,9 @@ TURNSTILE_SECRET_KEY=<YOUR_TURNSTILE_SECRET_KEY>
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 NEXT_PUBLIC_SITE_NAME=Nat Ford Planning & Analysis
 
+# Optional (if using custom app URLs in auth templates)
+# SUPABASE_AUTH_REDIRECT_URL=https://www.natfordplanning.com/login
+
 # Stripe checkout links used by /api/commerce/checkout routing
 STRIPE_LINK_VIBE_CODING_PLANNERS_29=<https://buy.stripe.com/...>
 STRIPE_LINK_VIBE_CODING_PLANNERS_39=<https://buy.stripe.com/...>
@@ -34,6 +37,10 @@ STRIPE_PRICE_VIBE_CODING_PLANNERS_49=<price_...>
 
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY` is safe for browser use.
 - `SUPABASE_SERVICE_ROLE_KEY` is **server-only**. Never expose it client-side.
+- Configure Supabase Auth redirect URLs to include:
+  - `https://<your-domain>/login`
+  - `https://<your-domain>/auth/update-password`
+  - local dev: `http://localhost:3000/login` and `http://localhost:3000/auth/update-password`
 - `STRIPE_LINK_VIBE_CODING_PLANNERS_*` values are required for live checkout redirects from `/api/commerce/checkout`.
 - `STRIPE_PRICE_VIBE_CODING_PLANNERS_*` values are documented for launch ops and reconciliation (not read by app runtime yet).
 - Production/Preview/Development env vars are configured in Vercel for `natford/nat-ford-website`.

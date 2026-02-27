@@ -20,6 +20,23 @@ function formatJoinedDate(dateInput?: string | null) {
   }
 }
 
+type PortalRole = 'customer' | 'planner' | 'admin'
+
+function resolvePortalRole(user: {
+  app_metadata?: Record<string, unknown>
+  user_metadata?: Record<string, unknown>
+}): PortalRole {
+  const rawRole =
+    (typeof user.app_metadata?.role === 'string' && user.app_metadata.role) ||
+    (typeof user.user_metadata?.role === 'string' && user.user_metadata.role) ||
+    'customer'
+
+  const normalized = rawRole.toLowerCase()
+  if (['admin', 'owner', 'super_admin'].includes(normalized)) return 'admin'
+  if (['planner', 'staff', 'team'].includes(normalized)) return 'planner'
+  return 'customer'
+}
+
 export default async function PortalPage() {
   const supabase = await createClient()
   const {
@@ -29,6 +46,8 @@ export default async function PortalPage() {
   if (!user) {
     redirect('/login?redirect=/portal')
   }
+
+  const role = resolvePortalRole(user)
 
   return (
     <Section spacing="xl">
@@ -66,9 +85,64 @@ export default async function PortalPage() {
                     {user.email_confirmed_at ? 'Yes' : 'Pending confirmation'}
                   </dd>
                 </div>
+                <div>
+                  <dt className="text-xs uppercase tracking-[0.12em] text-[color:var(--foreground)]/60">Portal role</dt>
+                  <dd className="mt-1 text-sm capitalize text-[color:var(--foreground)]">{role}</dd>
+                </div>
               </dl>
             </CardContent>
           </Card>
+
+          <div className="grid gap-4 md:grid-cols-3">
+            <Card className="border border-[color:var(--line)] bg-[color:var(--background)]">
+              <CardContent className="p-5">
+                <h3 className="text-base font-semibold text-[color:var(--ink)]">Documents</h3>
+                <p className="mt-2 text-sm text-[color:var(--foreground)]/78">
+                  Secure plan files, PDFs, and delivery packages for your projects.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="border border-[color:var(--line)] bg-[color:var(--background)]">
+              <CardContent className="p-5">
+                <h3 className="text-base font-semibold text-[color:var(--ink)]">Invoices</h3>
+                <p className="mt-2 text-sm text-[color:var(--foreground)]/78">
+                  Billing history, payment status, and downloadable invoice records.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="border border-[color:var(--line)] bg-[color:var(--background)]">
+              <CardContent className="p-5">
+                <h3 className="text-base font-semibold text-[color:var(--ink)]">Project Status</h3>
+                <p className="mt-2 text-sm text-[color:var(--foreground)]/78">
+                  Milestones, current phase, upcoming actions, and owner updates.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+
+          {role !== 'customer' && (
+            <Card className="border border-[color:var(--line)] bg-[color:var(--background)]">
+              <CardContent className="p-6">
+                <h3 className="text-lg font-semibold text-[color:var(--ink)]">Team Operations Section</h3>
+                <p className="mt-2 text-sm text-[color:var(--foreground)]/78">
+                  Internal workflow panel enabled for planner/admin roles: queue health, lead handoffs, and delivery readiness checks.
+                </p>
+              </CardContent>
+            </Card>
+          )}
+
+          {role === 'admin' && (
+            <Card className="border border-[color:var(--line)] bg-[color:var(--background)]">
+              <CardContent className="p-6">
+                <h3 className="text-lg font-semibold text-[color:var(--ink)]">Admin Controls</h3>
+                <p className="mt-2 text-sm text-[color:var(--foreground)]/78">
+                  Elevated controls for account governance, billing policy, and access-role administration.
+                </p>
+              </CardContent>
+            </Card>
+          )}
         </div>
       </Container>
     </Section>

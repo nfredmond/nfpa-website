@@ -108,6 +108,10 @@ export function SignupForm({ redirectPath }: SignupFormProps) {
         {isLoading ? 'Creating account…' : 'Create account'}
       </Button>
 
+      <p className="text-xs text-[color:var(--foreground)]/70">
+        After signup, we send a verification email before first login.
+      </p>
+
       <p className="text-sm text-[color:var(--foreground)]/78">
         Already have an account?{' '}
         <Link href={`/login?redirect=${encodeURIComponent(redirectPath)}`} className="font-semibold text-[color:var(--pine)]">

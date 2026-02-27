@@ -32,7 +32,13 @@ export function LoginForm({ redirectPath, infoMessage }: LoginFormProps) {
     })
 
     if (signInError) {
-      setError(signInError.message)
+      const rawMessage = signInError.message || 'Unable to sign in.'
+      const normalized = rawMessage.toLowerCase()
+      if (normalized.includes('email') && normalized.includes('confirm')) {
+        setError('Please confirm your email first, then try signing in again.')
+      } else {
+        setError(rawMessage)
+      }
       setIsLoading(false)
       return
     }
@@ -76,6 +82,13 @@ export function LoginForm({ redirectPath, infoMessage }: LoginFormProps) {
       <Button type="submit" className="w-full" disabled={isLoading}>
         {isLoading ? 'Signing in…' : 'Sign in'}
       </Button>
+
+      <p className="text-sm text-[color:var(--foreground)]/78">
+        Forgot your password?{' '}
+        <Link href="/reset-password" className="font-semibold text-[color:var(--pine)]">
+          Reset it
+        </Link>
+      </p>
 
       <p className="text-sm text-[color:var(--foreground)]/78">
         New customer?{' '}
