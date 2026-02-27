@@ -47,13 +47,13 @@ http://localhost:3000
 If the server isn't running, start it with:
 
 ```bash
-cd "C:\Code\Nat Ford Planning\nfpa-website"
+cd "C:\Code\Nat Ford Planning\nat-ford-website"
 npm run dev
 ```
 
 ### 2. Set Up Environment Variables
 
-Create `.env.local` file in `C:\Users\nfred\nfpa-website\`:
+Create `.env.local` file in `C:\Users\nfred\nat-ford-website\`:
 
 ```env
 # Supabase (already configured)
@@ -176,7 +176,7 @@ Edit links in:
 ## 📁 Project Structure
 
 ```
-C:\Users\nfred\nfpa-website\
+C:\Users\nfred\nat-ford-website\
 ├── public/
 │   ├── images/
 │   │   ├── headshot.png              # Your photo
@@ -220,7 +220,7 @@ npm run dev
 ### Missing Dependencies
 
 ```bash
-cd "C:\Code\Nat Ford Planning\nfpa-website"
+cd "C:\Code\Nat Ford Planning\nat-ford-website"
 npm install
 ```
 
@@ -290,7 +290,7 @@ When marketing site is complete:
 
 1. **Connect GitHub:**
    ```bash
-   cd "C:\Code\Nat Ford Planning\nfpa-website"
+   cd "C:\Code\Nat Ford Planning\nat-ford-website"
    git init
    git add .
    git commit -m "Initial commit"

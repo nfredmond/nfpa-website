@@ -2,7 +2,7 @@
 
 ## 🎉 **YOUR PRODUCTION WEBSITE**
 
-# **https://nfpa-website.vercel.app**
+# **https://nat-ford-website.vercel.app**
 
 **It's live! Click the link above to see your professional website on the internet.**
 
@@ -13,7 +13,7 @@
 I've successfully:
 
 1. ✅ **Built** your complete website (Next.js 15 + TypeScript + Tailwind)
-2. ✅ **Pushed** all code to GitHub: https://github.com/nfredmond/nfpa-website
+2. ✅ **Pushed** all code to GitHub: https://github.com/nfredmond/nat-ford-website
 3. ✅ **Configured** Supabase database with 7 tables and Row Level Security
 4. ✅ **Deployed** to Vercel production with automatic deployments
 5. ✅ **Fixed** all build errors and middleware issues
@@ -27,14 +27,14 @@ I've successfully:
 
 All these URLs are working right now:
 
-- **Homepage**: https://nfpa-website.vercel.app
-- **About**: https://nfpa-website.vercel.app/about
-- **Services**: https://nfpa-website.vercel.app/services
-- **Projects**: https://nfpa-website.vercel.app/projects
-- **Resources**: https://nfpa-website.vercel.app/resources
-- **Process**: https://nfpa-website.vercel.app/process
-- **FAQ**: https://nfpa-website.vercel.app/faq
-- **Contact**: https://nfpa-website.vercel.app/contact
+- **Homepage**: https://nat-ford-website.vercel.app
+- **About**: https://nat-ford-website.vercel.app/about
+- **Services**: https://nat-ford-website.vercel.app/services
+- **Projects**: https://nat-ford-website.vercel.app/projects
+- **Resources**: https://nat-ford-website.vercel.app/resources
+- **Process**: https://nat-ford-website.vercel.app/process
+- **FAQ**: https://nat-ford-website.vercel.app/faq
+- **Contact**: https://nat-ford-website.vercel.app/contact
 
 ---
 
@@ -82,7 +82,7 @@ It's incredibly easy:
 
 ```bash
 # 1. Navigate to project
-cd "C:\Code\Nat Ford Planning\nfpa-website"
+cd "C:\Code\Nat Ford Planning\nat-ford-website"
 
 # 2. Edit any file you want to change
 
@@ -102,17 +102,17 @@ git push origin main
 
 **Local Copy:**
 ```
-C:\Code\Nat Ford Planning\nfpa-website\
+C:\Code\Nat Ford Planning\nat-ford-website\
 ```
 
 **GitHub:**
 ```
-https://github.com/nfredmond/nfpa-website
+https://github.com/nfredmond/nat-ford-website
 ```
 
 **Production:**
 ```
-https://nfpa-website.vercel.app
+https://nat-ford-website.vercel.app
 ```
 
 ---
@@ -195,7 +195,7 @@ In your project folder:
 ## 🌟 **CONGRATULATIONS!**
 
 # Your website is live at:
-# **https://nfpa-website.vercel.app**
+# **https://nat-ford-website.vercel.app**
 
 Share it with the world! 🚀
 
@@ -206,5 +206,5 @@ Everything was completed automatically using MCP tools - you didn't have to do a
 ---
 
 *Built with Next.js 15, Supabase, and deployed on Vercel*  
-*All code available at: https://github.com/nfredmond/nfpa-website*
+*All code available at: https://github.com/nfredmond/nat-ford-website*
 

@@ -68,7 +68,7 @@ Go when all are true:
 ## 4) Supabase Connection Plan (when greenlit)
 
 1. Create project: `natford-website-prod` in Nat Ford org (West US region).
-2. Add env vars in Vercel (`nfpa-website`):
+2. Add env vars in Vercel (`nat-ford-website`):
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
    - `SUPABASE_SERVICE_ROLE_KEY` (server-only)

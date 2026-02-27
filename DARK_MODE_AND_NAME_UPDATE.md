@@ -200,7 +200,7 @@ darkMode: 'class'  // Controlled by .dark class on <html>
 
 ## Deployment
 
-**Repository:** `github.com/nfredmond/nfpa-website`  
+**Repository:** `github.com/nfredmond/nat-ford-website`  
 **Branch:** `main`  
 **Commit:** `6c2e98c`
 

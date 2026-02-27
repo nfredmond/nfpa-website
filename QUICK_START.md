@@ -8,7 +8,7 @@ You must be in the **project directory** to run the development server.
 
 ```powershell
 # Navigate to project directory first
-cd "C:\Code\Nat Ford Planning\nfpa-website"
+cd "C:\Code\Nat Ford Planning\nat-ford-website"
 
 # Then start the dev server
 npm run dev
@@ -21,7 +21,7 @@ If you see:
 npm error enoent Could not read package.json
 ```
 
-This means you're in the wrong directory. Always `cd` to `C:\Users\nfred\nfpa-website` first!
+This means you're in the wrong directory. Always `cd` to `C:\Users\nfred\nat-ford-website` first!
 
 ---
 
@@ -31,7 +31,7 @@ This means you're in the wrong directory. Always `cd` to `C:\Users\nfred\nfpa-we
 # 1. Open PowerShell/Terminal
 
 # 2. Navigate to project
-cd C:\Users\nfred\nfpa-website
+cd C:\Users\nfred\nat-ford-website
 
 # 3. Start development server
 npm run dev
@@ -102,7 +102,7 @@ npm run dev
 ### Need to Reinstall Dependencies
 
 ```powershell
-cd C:\Users\nfred\nfpa-website
+cd C:\Users\nfred\nat-ford-website
 npm install
 ```
 

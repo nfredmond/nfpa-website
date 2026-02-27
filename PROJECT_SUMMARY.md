@@ -82,7 +82,7 @@ Your professional website has been successfully built with a modern, production-
 ## File Structure Overview
 
 ```
-C:\Users\nfred\nfpa-website\
+C:\Users\nfred\nat-ford-website\
 ├── public/
 │   ├── images/
 │   │   ├── headshot.png ✅
@@ -127,7 +127,7 @@ Supabase tables ready for client portal:
 
 ```bash
 # Navigate to project
-cd "C:\Code\Nat Ford Planning\nfpa-website"
+cd "C:\Code\Nat Ford Planning\nat-ford-website"
 
 # Install dependencies (if needed)
 npm install

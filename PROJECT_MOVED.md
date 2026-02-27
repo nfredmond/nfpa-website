@@ -5,12 +5,12 @@
 Your NFPA website project has been moved to:
 
 ```
-C:\Code\Nat Ford Planning\nfpa-website\
+C:\Code\Nat Ford Planning\nat-ford-website\
 ```
 
 ## ✅ What Was Done
 
-1. **Entire project copied** from `C:\Users\nfred\nfpa-website` to new location
+1. **Entire project copied** from `C:\Users\nfred\nat-ford-website` to new location
 2. **All files preserved** - node_modules, source code, documentation
 3. **Documentation updated** with new paths in:
    - QUICK_START.md
@@ -23,7 +23,7 @@ From now on, use this command:
 
 ```powershell
 # Navigate to new location
-cd "C:\Code\Nat Ford Planning\nfpa-website"
+cd "C:\Code\Nat Ford Planning\nat-ford-website"
 
 # Start development server
 npm run dev
@@ -35,7 +35,7 @@ npm run dev
 
 ```
 C:\Code\Nat Ford Planning\
-├── nfpa-website\                    ← Your website project
+├── nat-ford-website\                    ← Your website project
 │   ├── src\
 │   ├── public\
 │   ├── node_modules\
@@ -58,7 +58,7 @@ C:\Code\Nat Ford Planning\
 
 1. **Open new directory:**
    ```powershell
-   cd "C:\Code\Nat Ford Planning\nfpa-website"
+   cd "C:\Code\Nat Ford Planning\nat-ford-website"
    ```
 
 2. **Start dev server:**
@@ -75,7 +75,7 @@ C:\Code\Nat Ford Planning\
 
 ```powershell
 # Navigate to project
-cd "C:\Code\Nat Ford Planning\nfpa-website"
+cd "C:\Code\Nat Ford Planning\nat-ford-website"
 
 # Start development
 npm run dev
@@ -94,14 +94,14 @@ npm run build
 
 The original project is still at:
 ```
-C:\Users\nfred\nfpa-website\
+C:\Users\nfred\nat-ford-website\
 ```
 
 You can safely delete it after verifying everything works in the new location:
 
 ```powershell
 # OPTIONAL: Remove old directory after testing
-Remove-Item "C:\Users\nfred\nfpa-website" -Recurse -Force
+Remove-Item "C:\Users\nfred\nat-ford-website" -Recurse -Force
 ```
 
 ⚠️ **Only delete after you've verified the new location works!**
@@ -137,7 +137,7 @@ Test these after moving:
 
 Your project is now in a better organized location with all your Nat Ford Planning files together.
 
-**Start coding from:** `C:\Code\Nat Ford Planning\nfpa-website`
+**Start coding from:** `C:\Code\Nat Ford Planning\nat-ford-website`
 
 Happy planning! 🗺️✨
 

@@ -5,18 +5,18 @@
 Your Nat Ford Planning & Analysis website is now live on the internet!
 
 ### **Primary URL:**
-# **https://nfpa-website.vercel.app**
+# **https://nat-ford-website.vercel.app**
 
 ### **Alternative URLs:**
-- https://nfpa-website-green-dot-transportation-solutions.vercel.app
-- https://nfpa-website-git-main-green-dot-transportation-solutions.vercel.app
+- https://nat-ford-website-green-dot-transportation-solutions.vercel.app
+- https://nat-ford-website-git-main-green-dot-transportation-solutions.vercel.app
 
 ---
 
 ## 🚀 What Was Accomplished
 
 ### 1. **GitHub Repository** ✅
-- **Repository**: https://github.com/nfredmond/nfpa-website
+- **Repository**: https://github.com/nfredmond/nat-ford-website
 - **Commits**: 5 total
 - **Branch**: main
 - **Status**: Public repository with all code
@@ -44,15 +44,15 @@ Your Nat Ford Planning & Analysis website is now live on the internet!
 - ✅ Helper functions and policies created
 
 ### 3. **Vercel Production Deployment** ✅
-- **Project**: nfpa-website
+- **Project**: nat-ford-website
 - **Team**: Nat Ford Planning (Hobby tier)
 - **Framework**: Next.js 15.5.6 detected automatically
 - **Region**: Washington D.C., USA (East) - iad1
 - **Status**: **READY and LIVE** ✨
 
 **Production Domains:**
-- nfpa-website.vercel.app (primary)
-- nfpa-website-green-dot-transportation-solutions.vercel.app
+- nat-ford-website.vercel.app (primary)
+- nat-ford-website-green-dot-transportation-solutions.vercel.app
 - Automatic deployments enabled on push to main branch
 
 **Environment Variables Added:**
@@ -79,14 +79,14 @@ Your Nat Ford Planning & Analysis website is now live on the internet!
 
 Visit your production website:
 
-1. **Homepage** - https://nfpa-website.vercel.app
+1. **Homepage** - https://nat-ford-website.vercel.app
    - Hero section ✅
    - Services overview ✅
    - Featured projects ✅
    - Trust signals ✅
    - CTAs ✅
 
-2. **About** - https://nfpa-website.vercel.app/about
+2. **About** - https://nat-ford-website.vercel.app/about
    - Your professional bio ✅
    - Education (MUP, B.A.) ✅
    - Certifications (FAA Part 107, APA) ✅
@@ -94,28 +94,28 @@ Visit your production website:
    - 16 counties served ✅
    - Contact info with phone ✅
 
-3. **Services** - https://nfpa-website.vercel.app/services
+3. **Services** - https://nat-ford-website.vercel.app/services
    - 5 service cards ✅
    - Full planning service page ✅
 
-4. **Projects** - https://nfpa-website.vercel.app/projects
+4. **Projects** - https://nat-ford-website.vercel.app/projects
    - 7 project cards ✅
    - Sierra RTP case study ✅
 
-5. **Resources** - https://nfpa-website.vercel.app/resources
+5. **Resources** - https://nat-ford-website.vercel.app/resources
    - Grant funding calendar ✅
    - Downloadable resources ✅
    - Interactive search ✅
 
-6. **Process** - https://nfpa-website.vercel.app/process
+6. **Process** - https://nat-ford-website.vercel.app/process
    - 3-step methodology ✅
    - Capture → Compute → Communicate ✅
 
-7. **FAQ** - https://nfpa-website.vercel.app/faq
+7. **FAQ** - https://nat-ford-website.vercel.app/faq
    - 10 Q&As ✅
    - Professional answers ✅
 
-8. **Contact** - https://nfpa-website.vercel.app/contact
+8. **Contact** - https://nat-ford-website.vercel.app/contact
    - Contact form ✅
    - Contact information ✅
 
@@ -158,7 +158,7 @@ Visit your production website:
 ## 📁 Repository Structure
 
 ```
-GitHub: nfredmond/nfpa-website
+GitHub: nfredmond/nat-ford-website
 └── main branch (auto-deploys to Vercel)
     ├── src/
     │   ├── app/(marketing)/   ← All public pages
@@ -291,15 +291,15 @@ Tested and working on:
 ## 📞 What to Share
 
 ### For Clients & Networking:
-**"Visit my new website: https://nfpa-website.vercel.app"**
+**"Visit my new website: https://nat-ford-website.vercel.app"**
 
 ### For LinkedIn/Professional Updates:
-> Excited to launch Nat Ford Planning & Analysis - a new consultancy bringing data-driven urban planning, GIS, and aerial mapping to Northern California communities. Visit https://nfpa-website.vercel.app to learn more about our services in transportation planning, grant writing, and AI-enabled documentation.
+> Excited to launch Nat Ford Planning & Analysis - a new consultancy bringing data-driven urban planning, GIS, and aerial mapping to Northern California communities. Visit https://nat-ford-website.vercel.app to learn more about our services in transportation planning, grant writing, and AI-enabled documentation.
 
 ### For Business Cards:
 ```
 Nat Ford Planning & Analysis
-nfpa-website.vercel.app
+nat-ford-website.vercel.app
 nfredmond@gmail.com
 530.492.9775
 ```
@@ -318,7 +318,7 @@ Your site now has automatic deployments:
 
 Example workflow:
 ```bash
-cd "C:\Code\Nat Ford Planning\nfpa-website"
+cd "C:\Code\Nat Ford Planning\nat-ford-website"
 # Make your edits
 git add .
 git commit -m "Update services page"
@@ -383,7 +383,7 @@ git push origin main
 
 ### Local Development
 ```bash
-cd "C:\Code\Nat Ford Planning\nfpa-website"
+cd "C:\Code\Nat Ford Planning\nat-ford-website"
 npm run dev
 # View at http://localhost:3001
 ```
@@ -394,7 +394,7 @@ npm run dev
 git add .
 git commit -m "Your message"
 git push origin main
-# Auto-deploys to https://nfpa-website.vercel.app
+# Auto-deploys to https://nat-ford-website.vercel.app
 ```
 
 ---
@@ -403,9 +403,9 @@ git push origin main
 
 | Resource | URL |
 |----------|-----|
-| **Live Website** | https://nfpa-website.vercel.app |
-| **GitHub Repo** | https://github.com/nfredmond/nfpa-website |
-| **Vercel Dashboard** | https://vercel.com/green-dot-transportation-solutions/nfpa-website |
+| **Live Website** | https://nat-ford-website.vercel.app |
+| **GitHub Repo** | https://github.com/nfredmond/nat-ford-website |
+| **Vercel Dashboard** | https://vercel.com/green-dot-transportation-solutions/nat-ford-website |
 | **Supabase Dashboard** | https://supabase.com/dashboard/project/xezwjmclbpvklojbcmaj |
 
 ---
@@ -536,7 +536,7 @@ You now have a **professional, production-ready website** that:
 
 **Your website is live and ready to attract clients!**
 
-Visit: **https://nfpa-website.vercel.app**
+Visit: **https://nat-ford-website.vercel.app**
 
 ---
 
@@ -562,7 +562,7 @@ After editing, just commit and push - your site updates automatically!
 
 **Total Time**: ~2 hours from start to production  
 **Status**: ✅ **LIVE and WORKING**  
-**URL**: **https://nfpa-website.vercel.app**  
+**URL**: **https://nat-ford-website.vercel.app**  
 
 **Everything you asked for is complete:**
 - ✅ Pushed to GitHub

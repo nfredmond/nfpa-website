@@ -267,7 +267,7 @@ Comprehensive contrast improvements across all pages to ensure text is readable 
 
 ## Deployment Status
 
-**Repository:** github.com/nfredmond/nfpa-website  
+**Repository:** github.com/nfredmond/nat-ford-website  
 **Branch:** main  
 **Latest Commit:** 2a3cb1d
 

@@ -4,11 +4,11 @@
 
 The old project directory has been successfully deleted:
 
-~~`C:\Users\nfred\nfpa-website`~~ ❌ **DELETED**
+~~`C:\Users\nfred\nat-ford-website`~~ ❌ **DELETED**
 
 ## ✅ Current Status
 
-**Active Location:** `C:\Code\Nat Ford Planning\nfpa-website\`
+**Active Location:** `C:\Code\Nat Ford Planning\nat-ford-website\`
 
 **Dev Server:** Running on **http://localhost:3001**
 
@@ -32,7 +32,7 @@ All pages accessible:
 
 ```
 C:\Code\Nat Ford Planning\
-├── nfpa-website\                          ← Your website project (ONLY location)
+├── nat-ford-website\                          ← Your website project (ONLY location)
 │   ├── src\
 │   │   ├── app\
 │   │   │   ├── (marketing)\              ← All public pages
@@ -84,7 +84,7 @@ From now on, just use:
 
 ```powershell
 # Navigate to project
-cd "C:\Code\Nat Ford Planning\nfpa-website"
+cd "C:\Code\Nat Ford Planning\nat-ford-website"
 
 # Start dev server
 npm run dev
@@ -102,7 +102,7 @@ npm run dev
 
 | What | Where |
 |------|-------|
-| **Project** | `C:\Code\Nat Ford Planning\nfpa-website\` |
+| **Project** | `C:\Code\Nat Ford Planning\nat-ford-website\` |
 | **Homepage** | `src/app/(marketing)/page.tsx` |
 | **About** | `src/app/(marketing)/about/page.tsx` |
 | **Services** | `src/app/(marketing)/services/` |
