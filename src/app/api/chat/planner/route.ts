@@ -215,11 +215,11 @@ export async function POST(req: NextRequest) {
         input: [
           {
             role: 'system',
-            content: [{ type: 'input_text', text: SYSTEM_PROMPT }],
+            content: SYSTEM_PROMPT,
           },
           ...messages.map((message) => ({
             role: message.role,
-            content: [{ type: 'input_text', text: message.content }],
+            content: message.content,
           })),
         ],
       }),
