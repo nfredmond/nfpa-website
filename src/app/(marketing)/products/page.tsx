@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { ArrowRight, Bot, Map, ShieldCheck, Workflow, PlaneTakeoff } from 'lucide-react'
+import { ArrowRight, Bot, FileText, Map, PlaneTakeoff, ShieldCheck, Workflow } from 'lucide-react'
 import { Container } from '@/components/layout/container'
 import { Section } from '@/components/layout/section'
 import { Card, CardContent } from '@/components/ui/card'
@@ -10,7 +10,7 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Products',
   description:
-    'OpenPlan, Ads Automation, and DroneOps Intelligence: delivery-ready products with transparent subscription lanes.',
+    'OpenPlan, Ads Automation, DroneOps Intelligence, and Vibe Coding for Planners: delivery-ready products with transparent Stripe checkout lanes.',
 }
 
 const products = [
@@ -62,6 +62,22 @@ const products = [
     demoUrl: null,
     demoLabel: null,
   },
+  {
+    id: 'vibe-coding-for-planners',
+    name: 'Vibe Coding for Planners (PDF Guide)',
+    icon: FileText,
+    stage: 'Launch-ready digital product',
+    description:
+      'A practical guide for planners who want faster drafting, better QA, and repeatable AI-assisted workflow hygiene.',
+    capabilities: [
+      'How-to workflow for planning-specific vibe coding',
+      'Prompt patterns that preserve defensibility and auditability',
+      'Lean QA checklists for client-facing technical docs',
+      'Rapid implementation path for solo planners and small teams',
+    ],
+    demoUrl: null,
+    demoLabel: null,
+  },
 ]
 
 const principles = [
@@ -86,7 +102,7 @@ export default function ProductsPage() {
             <span className="pill">Product Suite</span>
             <h1 className="section-title mt-5 text-5xl md:text-6xl leading-[0.96] text-white">Focused products. Transparent pricing lanes.</h1>
             <p className="mt-5 text-lg text-white/82 max-w-3xl">
-              Built for practical operations, budget realism, and measurable outcomes. Subscriptions use secure Stripe-hosted checkout.
+              Built for practical operations, budget realism, and measurable outcomes. Paid plans and guides use secure Stripe-hosted checkout.
             </p>
           </div>
         </Container>
@@ -94,6 +110,22 @@ export default function ProductsPage() {
 
       <Section spacing="xl">
         <Container>
+          <Card className="mb-6 border-[color:var(--pine)]/25 bg-[color:var(--sand)]/25 p-5">
+            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[color:var(--pine)]">Live Demo</p>
+                <p className="mt-1 text-sm text-[color:var(--foreground)]/80">
+                  Want a quick proof point? Launch Mike&apos;s Ads Automation demo in one click.
+                </p>
+              </div>
+              <Button asChild>
+                <a href="https://ads-chatbot.vercel.app" target="_blank" rel="noopener noreferrer">
+                  Open Mike&apos;s Demo <ArrowRight className="ml-2 h-4 w-4" />
+                </a>
+              </Button>
+            </div>
+          </Card>
+
           <div className="grid grid-cols-1 gap-6">
             {products.map((product) => {
               const Icon = product.icon
@@ -146,10 +178,10 @@ export default function ProductsPage() {
       <Section spacing="xl" className="bg-[color:var(--fog)]/65 border-y border-[color:var(--line)]">
         <Container>
           <div className="space-y-3">
-            <span className="pill">Subscriptions</span>
-            <h2 className="section-title text-4xl md:text-5xl text-[color:var(--ink)]">Launch-ready subscription tiers</h2>
+            <span className="pill">Pricing & Checkout</span>
+            <h2 className="section-title text-4xl md:text-5xl text-[color:var(--ink)]">Launch-ready pricing tiers</h2>
             <p className="max-w-4xl text-[color:var(--foreground)]/80">
-              Choose a plan lane that matches operational load. Checkout routes through Stripe hosted links. If a lane is not yet published,
+              Choose the lane that matches your operational need. Checkout routes through Stripe-hosted links. If a lane is not yet published,
               we route you to a scoped contact workflow.
             </p>
           </div>
@@ -165,7 +197,10 @@ export default function ProductsPage() {
                   {product.tiers.map((tier) => (
                     <Card key={tier.id} className="p-5 border border-[color:var(--line)] bg-[color:var(--background)]">
                       <p className="text-xs font-semibold uppercase tracking-[0.13em] text-[color:var(--foreground)]/62">{tier.name}</p>
-                      <p className="mt-2 text-3xl font-semibold text-[color:var(--ink)]">${tier.monthlyUsd}<span className="text-base font-medium text-[color:var(--foreground)]/62">/mo</span></p>
+                      <p className="mt-2 text-3xl font-semibold text-[color:var(--ink)]">
+                        ${tier.monthlyUsd}
+                        <span className="text-base font-medium text-[color:var(--foreground)]/62"> {product.priceSuffix ?? '/mo'}</span>
+                      </p>
                       <p className="mt-2 text-sm text-[color:var(--foreground)]/75">{tier.summary}</p>
                       <ul className="mt-4 space-y-1.5 text-sm text-[color:var(--foreground)]/78">
                         {tier.features.map((feature) => (
@@ -175,7 +210,7 @@ export default function ProductsPage() {
                       <div className="mt-5">
                         <Button asChild size="sm" className="w-full">
                           <Link href={`/api/commerce/checkout?tier=${tier.id}`}>
-                            Subscribe via Stripe <ArrowRight className="ml-2 h-4 w-4" />
+                            {product.checkoutCtaLabel ?? 'Subscribe via Stripe'} <ArrowRight className="ml-2 h-4 w-4" />
                           </Link>
                         </Button>
                       </div>

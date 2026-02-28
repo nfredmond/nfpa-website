@@ -66,6 +66,12 @@ const products = [
     description: 'A client-proven automation system evolving into a multi-industry SaaS operations platform.',
     href: '/products#ads-automation',
   },
+  {
+    name: 'Vibe Coding for Planners',
+    icon: FileText,
+    description: 'A practical PDF guide with structured prompts, QA checklists, and launch-ready implementation workflow.',
+    href: '/products#vibe-coding-for-planners',
+  },
 ]
 
 const trustedBy = [
@@ -132,6 +138,14 @@ export default function HomePage() {
                 >
                   Explore Products
                 </Link>
+                <a
+                  href="https://ads-chatbot.vercel.app"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center rounded-full border border-[color:var(--copper)]/70 bg-[color:var(--copper)]/15 px-6 py-3 text-[0.98rem] font-semibold text-white transition hover:bg-[color:var(--copper)]/25"
+                >
+                  Try Mike&apos;s Ads Demo
+                </a>
               </div>
             </div>
 
