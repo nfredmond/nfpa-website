@@ -271,7 +271,7 @@ export default function HomePage() {
               <p className="pill mb-4">Product Layer</p>
               <h2 className="section-title text-4xl md:text-5xl text-[color:var(--ink)]">Software that compounds consulting impact.</h2>
               <p className="mt-4 text-lg text-[color:var(--foreground)]/80">
-                We are not building software for software's sake. Each product shortens cycle time, hardens quality,
+                We are not building software for software&apos;s sake. Each product shortens cycle time, hardens quality,
                 and makes results easier to explain and defend.
               </p>
               <div className="mt-6 flex flex-col sm:flex-row gap-3">

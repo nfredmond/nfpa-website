@@ -1,10 +1,5 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next'
 
-const nextConfig: NextConfig = {
-  typescript: {
-    // Allow production builds to successfully complete even if there are TypeScript errors
-    ignoreBuildErrors: true,
-  },
-};
+const nextConfig: NextConfig = {}
 
-export default nextConfig;
+export default nextConfig

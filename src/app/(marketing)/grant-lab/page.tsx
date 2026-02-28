@@ -2,6 +2,7 @@
 
 import { FormEvent, useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { ArrowRight, Copy, Download, Loader2, Save, Sparkles } from 'lucide-react'
 import { Container } from '@/components/layout/container'
 import { Section } from '@/components/layout/section'
@@ -116,6 +117,8 @@ export default function GrantLabPage() {
   const [saveLabel, setSaveLabel] = useState('')
   const [persistLocalDrafts, setPersistLocalDrafts] = useState(false)
   const [mapPreviewUrl, setMapPreviewUrl] = useState<string>('')
+  const [mapPreviewFailed, setMapPreviewFailed] = useState(false)
+  const [workingElapsedSec, setWorkingElapsedSec] = useState(0)
 
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -159,15 +162,31 @@ export default function GrantLabPage() {
     const query = context.location.trim()
     if (query.length < 4) {
       setMapPreviewUrl('')
+      setMapPreviewFailed(false)
       return
     }
 
     const timer = window.setTimeout(() => {
+      setMapPreviewFailed(false)
       setMapPreviewUrl(`/api/maps/preview?location=${encodeURIComponent(query)}`)
     }, 500)
 
     return () => window.clearTimeout(timer)
   }, [context.location])
+
+  useEffect(() => {
+    if (!isWorking) {
+      setWorkingElapsedSec(0)
+      return
+    }
+
+    const startedAt = Date.now()
+    const timer = window.setInterval(() => {
+      setWorkingElapsedSec(Math.floor((Date.now() - startedAt) / 1000))
+    }, 1000)
+
+    return () => window.clearInterval(timer)
+  }, [isWorking])
 
   const canGenerate = useMemo(() => {
     return Boolean(context.grantProgram && context.goals.trim() && context.scope.trim()) && !isWorking
@@ -420,15 +439,21 @@ export default function GrantLabPage() {
                         <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[color:var(--foreground)]/70">Mapbox location preview</p>
                         <p className="text-[11px] text-[color:var(--foreground)]/65">Map centered from location input</p>
                       </div>
-                      {mapPreviewUrl ? (
-                        <img
+                      {mapPreviewUrl && !mapPreviewFailed ? (
+                        <Image
                           src={mapPreviewUrl}
                           alt={`Map preview for ${context.location}`}
+                          width={900}
+                          height={360}
+                          unoptimized
+                          onError={() => setMapPreviewFailed(true)}
                           className="h-44 w-full rounded-xl border border-[color:var(--line)] object-cover"
                         />
                       ) : (
-                        <div className="flex h-44 items-center justify-center rounded-xl border border-dashed border-[color:var(--line)] bg-[color:var(--background)] text-sm text-[color:var(--foreground)]/65">
-                          Loading map preview…
+                        <div className="flex h-44 items-center justify-center rounded-xl border border-dashed border-[color:var(--line)] bg-[color:var(--background)] px-4 text-center text-sm text-[color:var(--foreground)]/65">
+                          {mapPreviewFailed
+                            ? 'Map preview is unavailable right now. You can still generate drafts without it.'
+                            : 'Loading map preview…'}
                         </div>
                       )}
                       <p className="mt-1 text-[11px] text-[color:var(--foreground)]/60">Map tiles © Mapbox © OpenStreetMap.</p>
@@ -617,8 +642,11 @@ export default function GrantLabPage() {
                     </div>
                   ))}
                   {isWorking && (
-                    <div className="inline-flex items-center gap-2 rounded-2xl bg-[color:var(--fog)] px-4 py-3 text-sm text-[color:var(--foreground)]/75">
-                      <Loader2 className="h-4 w-4 animate-spin" /> Working on your draft...
+                    <div className="rounded-2xl bg-[color:var(--fog)] px-4 py-3 text-sm text-[color:var(--foreground)]/75">
+                      <div className="inline-flex items-center gap-2">
+                        <Loader2 className="h-4 w-4 animate-spin" /> Working on your draft… {workingElapsedSec}s
+                      </div>
+                      <p className="mt-1 text-xs text-[color:var(--foreground)]/65">Longer revisions can take 20–45 seconds depending on prompt depth.</p>
                     </div>
                   )}
                 </div>

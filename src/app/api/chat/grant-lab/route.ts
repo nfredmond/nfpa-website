@@ -23,6 +23,7 @@ const MEMBER_MIN_INTERVAL_MS = 350
 
 const GUEST_DAILY_TOKEN_BUDGET = 45000
 const MEMBER_DAILY_TOKEN_BUDGET = 120000
+const OPENAI_TIMEOUT_MS = 45000
 
 const SYSTEM_PROMPT = `You are a senior Northern California transportation + land use grant strategist.
 
@@ -252,35 +253,53 @@ export async function POST(req: NextRequest) {
 
     const maxOutputTokens = user ? MAX_OUTPUT_TOKENS_MEMBER : MAX_OUTPUT_TOKENS_GUEST
 
-    const openAiResponse = await fetch('https://api.openai.com/v1/responses', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: CHAT_MODEL,
-        max_output_tokens: maxOutputTokens,
-        input: [
-          {
-            role: 'system',
-            content: SYSTEM_PROMPT,
-          },
-          {
-            role: 'system',
-            content: modeInstruction,
-          },
-          {
-            role: 'system',
-            content: `Grant context:\n${contextText}`,
-          },
-          ...userMessages.map((message) => ({
-            role: 'user',
-            content: message.content,
-          })),
-        ],
-      }),
-    })
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort('openai_timeout'), OPENAI_TIMEOUT_MS)
+
+    let openAiResponse: Response
+    try {
+      openAiResponse = await fetch('https://api.openai.com/v1/responses', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+        },
+        signal: controller.signal,
+        body: JSON.stringify({
+          model: CHAT_MODEL,
+          max_output_tokens: maxOutputTokens,
+          input: [
+            {
+              role: 'system',
+              content: SYSTEM_PROMPT,
+            },
+            {
+              role: 'system',
+              content: modeInstruction,
+            },
+            {
+              role: 'system',
+              content: `Grant context:\n${contextText}`,
+            },
+            ...userMessages.map((message) => ({
+              role: 'user',
+              content: message.content,
+            })),
+          ],
+        }),
+      })
+    } catch (fetchError) {
+      clearTimeout(timeout)
+      const timedOut = fetchError instanceof Error && fetchError.name === 'AbortError'
+      return jsonError(
+        timedOut
+          ? 'Grant assistant timed out while generating your draft. Please retry with a shorter target word count or narrower section focus.'
+          : 'Grant assistant is temporarily unavailable. Please retry in a minute.',
+        timedOut ? 504 : 502
+      )
+    } finally {
+      clearTimeout(timeout)
+    }
 
     if (!openAiResponse.ok) {
       const details = await openAiResponse.text()

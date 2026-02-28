@@ -199,7 +199,7 @@ export default function SierraRTPCaseStudy() {
               Similar project in mind?
             </h2>
             <p className="text-lg text-gray-200 mb-8">
-              Let's discuss how data-driven planning can support your community's transportation goals.
+              Let&apos;s discuss how data-driven planning can support your community&apos;s transportation goals.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild variant="secondary" size="lg">

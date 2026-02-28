@@ -79,7 +79,6 @@ type VisitorState = {
 type PlannerStateStore = Map<string, VisitorState>
 
 declare global {
-  // eslint-disable-next-line no-var
   var __plannerChatState: PlannerStateStore | undefined
 }
 
@@ -210,10 +209,11 @@ export async function POST(req: NextRequest) {
     const {
       data: { user },
     } = await supabase.auth.getUser()
+    const userId = user?.id ?? null
 
     const now = Date.now()
     const ip = getRequesterIp(req)
-    const scopeKey = buildScopeKey(user?.id, visitorId, ip)
+    const scopeKey = buildScopeKey(userId, visitorId, ip)
     const requesterKind = user ? 'member' : 'guest'
 
     const maxPerHour = user ? MEMBER_MAX_REQUESTS_PER_HOUR : GUEST_MAX_REQUESTS_PER_HOUR
@@ -241,7 +241,7 @@ export async function POST(req: NextRequest) {
               scopeKey,
               route: ROUTE_KEY,
               requesterKind,
-              userId: user?.id,
+              userId,
               visitorId: visitorId ?? null,
               ip,
               status: 'guest_expired',
@@ -275,7 +275,7 @@ export async function POST(req: NextRequest) {
             scopeKey,
             route: ROUTE_KEY,
             requesterKind,
-            userId: user?.id,
+            userId,
             visitorId: visitorId ?? null,
             ip,
             status: 'rate_limited',
@@ -289,7 +289,7 @@ export async function POST(req: NextRequest) {
             scopeKey,
             route: ROUTE_KEY,
             requesterKind,
-            userId: user?.id,
+            userId,
             visitorId: visitorId ?? null,
             ip,
             status: 'rate_limited',
@@ -365,7 +365,7 @@ export async function POST(req: NextRequest) {
             scopeKey,
             route: ROUTE_KEY,
             requesterKind,
-            userId: user?.id,
+            userId,
             visitorId: visitorId ?? null,
             ip,
             inputTokens: estimatedInputTokens,
@@ -396,7 +396,7 @@ export async function POST(req: NextRequest) {
           scopeKey,
           route: ROUTE_KEY,
           requesterKind,
-          userId: user?.id,
+          userId,
           visitorId: visitorId ?? null,
           ip,
           inputTokens: estimatedInputTokens,

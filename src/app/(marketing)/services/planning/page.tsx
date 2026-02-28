@@ -241,7 +241,7 @@ export default function PlanningServicePage() {
               Ready to start your planning project?
             </h2>
             <p className="text-lg text-gray-200 mb-8 max-w-2xl mx-auto">
-              Schedule a free consultation to discuss your community's needs, timeline, 
+              Schedule a free consultation to discuss your community&apos;s needs, timeline, 
               and funding opportunities.
             </p>
             <Button asChild variant="secondary" size="lg">

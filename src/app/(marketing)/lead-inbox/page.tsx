@@ -198,8 +198,9 @@ export default async function LeadInboxPage({
   if (daysFilter !== 'all') {
     const days = Number(daysFilter)
     if (Number.isFinite(days) && days > 0) {
-      const cutoff = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString()
-      query = query.gte('created_at', cutoff)
+      const cutoffDate = new Date()
+      cutoffDate.setUTCDate(cutoffDate.getUTCDate() - days)
+      query = query.gte('created_at', cutoffDate.toISOString())
     }
   }
 

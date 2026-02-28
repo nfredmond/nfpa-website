@@ -9,7 +9,15 @@ type GeocodeResponse = {
 }
 
 function getToken() {
-  return process.env.MAPBOX_ACCESS_TOKEN || process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN || ''
+  const candidates = [
+    process.env.MAPBOX_ACCESS_TOKEN,
+    process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN,
+    // Backward-compatible aliases used in prior docs/setup guides.
+    process.env.MAPBOX_TOKEN,
+    process.env.NEXT_PUBLIC_MAPBOX_TOKEN,
+  ]
+
+  return candidates.find((value) => typeof value === 'string' && value.trim().length > 0)?.trim() || ''
 }
 
 export async function GET(req: NextRequest) {
