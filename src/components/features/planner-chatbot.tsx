@@ -7,9 +7,18 @@ import { Button } from '@/components/ui/button'
 
 type ChatRole = 'user' | 'assistant'
 
+type ChatSource = {
+  label: string
+  dataset: string
+  vintage: string
+  geography: string
+  url: string
+}
+
 type ChatMessage = {
   role: ChatRole
   content: string
+  sources?: ChatSource[]
 }
 
 type PlannerPreferences = {
@@ -23,6 +32,7 @@ type PlannerApiResponse = {
   message?: string
   requiresSignup?: boolean
   guestExpiresAt?: number
+  sources?: ChatSource[]
 }
 
 const STARTED_AT_KEY = 'nfpa_planner_chat_started_at'
@@ -146,7 +156,7 @@ export function PlannerChatbot() {
       }
 
       if (data.reply) {
-        setMessages((prev) => [...prev, { role: 'assistant', content: data.reply || '' }])
+        setMessages((prev) => [...prev, { role: 'assistant', content: data.reply || '', sources: data.sources || [] }])
       }
 
       if (data.requiresSignup) {
@@ -271,6 +281,25 @@ export function PlannerChatbot() {
               }`}
             >
               {message.content}
+              {message.role === 'assistant' && message.sources && message.sources.length > 0 ? (
+                <div className="mt-3 border-t border-[color:var(--line)]/80 pt-2 text-xs text-[color:var(--foreground)]/70">
+                  <p className="font-semibold">Data sources</p>
+                  <ul className="mt-1 space-y-1">
+                    {message.sources.map((source) => (
+                      <li key={`${source.url}-${source.label}`}>
+                        <a
+                          href={source.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="underline decoration-dotted underline-offset-2 hover:text-[color:var(--pine)]"
+                        >
+                          {source.label}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
             </div>
           ))}
 

@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { createClient } from '@/lib/supabase/server'
 import { getSupabaseAdminClient } from '@/lib/supabase/admin'
 import { buildScopeKey, fetchUsageSnapshot, logUsageEvent } from '@/lib/ai-usage'
+import { getCensusContextForPrompt } from '@/lib/census'
 
 export const runtime = 'nodejs'
 
@@ -44,6 +45,7 @@ Domain focus:
 
 Safety and scope:
 - Do not invent data, statutes, or citations.
+- If Census figures are used, include dataset + vintage in plain language.
 - If uncertain, state uncertainty clearly.
 - This is planning support, not legal advice.`
 
@@ -307,8 +309,13 @@ export async function POST(req: NextRequest) {
     }
 
     const preferenceInstruction = buildPreferenceInstruction(preferences)
+    const latestUserMessage = userMessages[userMessages.length - 1]?.content ?? ''
+    const censusContext = await getCensusContextForPrompt(latestUserMessage)
+
     const estimatedInputTokens = estimateTokens(
-      `${preferenceInstruction}\n\n${userMessages.map((message) => message.content).join('\n\n')}`
+      `${preferenceInstruction}\n\n${censusContext.promptBlock || ''}\n\n${userMessages
+        .map((message) => message.content)
+        .join('\n\n')}`
     )
 
     const openAiResponse = await fetch('https://api.openai.com/v1/responses', {
@@ -329,6 +336,14 @@ export async function POST(req: NextRequest) {
             role: 'system',
             content: preferenceInstruction,
           },
+          ...(censusContext.promptBlock
+            ? [
+                {
+                  role: 'system' as const,
+                  content: censusContext.promptBlock,
+                },
+              ]
+            : []),
           ...userMessages.map((message) => ({
             role: 'user',
             content: message.content,
@@ -402,6 +417,7 @@ export async function POST(req: NextRequest) {
       reply,
       model: CHAT_MODEL,
       guestExpiresAt: !user ? guestExpiresAt : null,
+      sources: censusContext.sources,
     })
   } catch (error) {
     console.error('Planner chat route error', error)

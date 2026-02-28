@@ -25,8 +25,12 @@ NEXT_PUBLIC_SITE_NAME=Nat Ford Planning & Analysis
 # Optional Meta/Facebook callback verification
 FACEBOOK_APP_SECRET=<META_APP_SECRET>
 
-# AI planner chatbot (homepage)
+# AI planner chatbot (homepage) + Grant AI Lab
 OPENAI_API_KEY=<OPENAI_API_KEY>
+# Optional but recommended for Census-backed responses (higher quota)
+CENSUS_API_KEY=<CENSUS_API_KEY>
+# Optional Mapbox token for location preview in Grant AI Lab (public token)
+NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN=<MAPBOX_PUBLIC_TOKEN>
 # Model is fixed in code to provider-native: gpt-5.3-codex
 # (OpenClaw alias equivalent: openai-codex/gpt-5.3-codex)
 
@@ -56,6 +60,8 @@ STRIPE_PRICE_VIBE_CODING_PLANNERS_49=<price_...>
   - `OPENPLAN_PRELAUNCH_END` (default: `2026-04-01T00:00:00-07:00`)
 - `FACEBOOK_APP_SECRET` enables signature verification for Meta Data Deletion callback endpoint (`/api/facebook/data-deletion`).
 - Homepage AI planner chatbot and Grant Lab both use `OPENAI_API_KEY` and are pinned to `gpt-5.3-codex` (OpenClaw alias equivalent: `openai-codex/gpt-5.3-codex`).
+- Planner chatbot can enrich Census-oriented requests via U.S. Census API and return clickable source links (ACS 5-year vintage). Configure `CENSUS_API_KEY` for better production quota resilience.
+- Grant AI Lab supports optional Mapbox location preview when `NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN` is configured.
 - Anonymous users get a 10-minute planning-chat window before signup/login is required; authenticated users keep higher throughput limits.
 - AI usage controls now use Supabase persistence (`public.ai_usage_events`) and require `SUPABASE_SERVICE_ROLE_KEY` in runtime env.
 - Production/Preview/Development env vars should be set in the active Vercel project serving `www.natfordplanning.com` (`nat-ford-planning/nfpa-website`).

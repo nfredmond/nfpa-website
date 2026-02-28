@@ -93,6 +93,12 @@ const REVISION_CHIPS = [
 
 const VISITOR_ID_KEY = 'nfpa_grant_lab_visitor_id'
 const STORAGE_KEY = 'nfpa_grant_lab_workspace_v1'
+const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN || ''
+
+type MapboxCoords = {
+  lng: number
+  lat: number
+}
 
 function ensureVisitorId() {
   if (typeof window === 'undefined') return 'server'
@@ -104,6 +110,11 @@ function ensureVisitorId() {
   return id
 }
 
+function buildStaticMapUrl(coords: MapboxCoords, token: string) {
+  const { lng, lat } = coords
+  const pin = `pin-s+2f855a(${lng},${lat})`
+  return `https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/${pin}/${lng},${lat},10.8,0/900x360?access_token=${token}`
+}
 
 export default function GrantLabPage() {
   const [context, setContext] = useState<GrantContext>(INITIAL_CONTEXT)
@@ -114,6 +125,8 @@ export default function GrantLabPage() {
   const [remainingBudget, setRemainingBudget] = useState<number | null>(null)
   const [budgetCap, setBudgetCap] = useState<number | null>(null)
   const [saveLabel, setSaveLabel] = useState('')
+  const [mapCoords, setMapCoords] = useState<MapboxCoords | null>(null)
+  const [mapStatus, setMapStatus] = useState<'idle' | 'loading' | 'ready' | 'error'>('idle')
 
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -134,6 +147,55 @@ export default function GrantLabPage() {
     localStorage.setItem(STORAGE_KEY, payload)
     setSaveLabel(`Auto-saved locally on this device at ${new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`)
   }, [context, messages])
+
+  useEffect(() => {
+    const query = context.location.trim()
+
+    if (!MAPBOX_TOKEN || query.length < 4) {
+      setMapCoords(null)
+      setMapStatus('idle')
+      return
+    }
+
+    let cancelled = false
+    setMapStatus('loading')
+
+    const timer = window.setTimeout(async () => {
+      try {
+        const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(query)}.json?limit=1&country=us&access_token=${MAPBOX_TOKEN}`
+        const response = await fetch(url)
+        if (!response.ok) throw new Error('Mapbox geocoding failed')
+
+        const payload = (await response.json()) as {
+          features?: Array<{ center?: [number, number] }>
+        }
+
+        const center = payload.features?.[0]?.center
+        if (!center || center.length < 2) {
+          if (!cancelled) {
+            setMapCoords(null)
+            setMapStatus('error')
+          }
+          return
+        }
+
+        if (!cancelled) {
+          setMapCoords({ lng: center[0], lat: center[1] })
+          setMapStatus('ready')
+        }
+      } catch {
+        if (!cancelled) {
+          setMapCoords(null)
+          setMapStatus('error')
+        }
+      }
+    }, 500)
+
+    return () => {
+      cancelled = true
+      window.clearTimeout(timer)
+    }
+  }, [context.location])
 
   const canGenerate = useMemo(() => {
     return Boolean(context.grantProgram && context.goals.trim() && context.scope.trim()) && !isWorking
@@ -361,6 +423,27 @@ export default function GrantLabPage() {
                     <Input label="Funding need" value={context.fundingNeed} onChange={(event) => setContext((prev) => ({ ...prev, fundingNeed: event.target.value }))} />
                     <Input label="Local match capacity" value={context.localMatch} onChange={(event) => setContext((prev) => ({ ...prev, localMatch: event.target.value }))} />
                   </div>
+
+                  {MAPBOX_TOKEN && context.location.trim().length >= 4 ? (
+                    <div className="rounded-2xl border border-[color:var(--line)] bg-[color:var(--fog)]/65 p-3">
+                      <div className="mb-2 flex items-center justify-between gap-2">
+                        <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[color:var(--foreground)]/70">Mapbox location preview</p>
+                        <p className="text-[11px] text-[color:var(--foreground)]/65">{mapStatus === 'loading' ? 'Locating…' : mapStatus === 'error' ? 'Could not resolve location' : 'Map centered from location input'}</p>
+                      </div>
+                      {mapCoords ? (
+                        <img
+                          src={buildStaticMapUrl(mapCoords, MAPBOX_TOKEN)}
+                          alt={`Map preview for ${context.location}`}
+                          className="h-44 w-full rounded-xl border border-[color:var(--line)] object-cover"
+                        />
+                      ) : (
+                        <div className="flex h-44 items-center justify-center rounded-xl border border-dashed border-[color:var(--line)] bg-[color:var(--background)] text-sm text-[color:var(--foreground)]/65">
+                          Add a more specific location to preview it on the map.
+                        </div>
+                      )}
+                      <p className="mt-1 text-[11px] text-[color:var(--foreground)]/60">Map tiles © Mapbox © OpenStreetMap.</p>
+                    </div>
+                  ) : null}
 
                   <p className="pt-1 text-xs uppercase tracking-[0.12em] text-[color:var(--foreground)]/60">Step 2 of 3 — Need, Scope, and Readiness</p>
                   <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
