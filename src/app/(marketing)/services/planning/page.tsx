@@ -39,7 +39,7 @@ const process = [
   {
     step: '1',
     name: 'Discovery & Data Assembly',
-    description: 'Gather crash data (SWITRS/TIMS), traffic counts (HPMS/Caltrans), Census/ACS demographics, existing plans, and local priorities.',
+    description: 'Gather crash data (state/local sources, including SWITRS/TIMS where applicable), traffic counts (HPMS/state DOT sources), Census/ACS demographics, existing plans, and local priorities.',
     benefit: 'Ensures analysis reflects real conditions and community goals.',
   },
   {
@@ -57,7 +57,7 @@ const process = [
   {
     step: '4',
     name: 'Plan Assembly & Review',
-    description: 'Draft plan with narrative, maps, tables, and appendices; coordinate review with Caltrans, stakeholders, and public comment.',
+    description: 'Draft plan with narrative, maps, tables, and appendices; coordinate review with state/regional agency partners, stakeholders, and public comment.',
     benefit: 'Transparent, auditable documentation ready for adoption.',
   },
   {
