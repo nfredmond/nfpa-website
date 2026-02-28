@@ -52,7 +52,8 @@ const fundingPrograms = [
 const resources = [
   {
     title: 'Capability One-Pager',
-    description: 'Quick overview of services, positioning, and delivery model.',
+    description:
+      'Current service overview with explicit attribution that representative project experience was completed at Green DOT Transportation Solutions (Senior Transportation Planner + Project Manager, ~4 years), not by Nat Ford.',
     file: '/NFPA_Capability_OnePager.pdf',
     ready: true,
   },
@@ -123,12 +124,19 @@ export default function ResourcesPage() {
                   <h3 className="mt-4 text-xl font-semibold text-[color:var(--ink)]">{resource.title}</h3>
                   <p className="mt-2 text-sm text-[color:var(--foreground)]/75">{resource.description}</p>
                   {resource.ready ? (
-                    <Button asChild variant="outline" className="mt-5 w-full">
-                      <a href={resource.file} download>
-                        <Download className="mr-2 h-4 w-4" />
-                        Download
-                      </a>
-                    </Button>
+                    <>
+                      <Button asChild variant="outline" className="mt-5 w-full">
+                        <a href={resource.file} download>
+                          <Download className="mr-2 h-4 w-4" />
+                          Download
+                        </a>
+                      </Button>
+                      {resource.title === 'Capability One-Pager' && (
+                        <p className="mt-3 text-xs leading-relaxed text-[color:var(--foreground)]/68">
+                          Includes explicit prior-role attribution for Green DOT Transportation Solutions experience.
+                        </p>
+                      )}
+                    </>
                   ) : (
                     <div className="mt-5 rounded-full border border-[color:var(--line)] px-4 py-2 text-center text-xs uppercase tracking-[0.15em] text-[color:var(--foreground)]/55">
                       Coming soon

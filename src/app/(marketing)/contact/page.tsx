@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import Script from 'next/script'
-import { Clock, Linkedin, Mail, MapPin, Send } from 'lucide-react'
+import { Clock, Linkedin, Mail, MapPin, Phone, Send } from 'lucide-react'
 import { Container } from '@/components/layout/container'
 import { Section } from '@/components/layout/section'
 import { Card, CardContent } from '@/components/ui/card'
@@ -243,6 +243,16 @@ export default function ContactPage() {
                     <a href="mailto:nathaniel@natfordplanning.com" className="font-semibold text-[color:var(--pine)] hover:underline">
                       nathaniel@natfordplanning.com
                     </a>
+                  </div>
+
+                  <div className="flex items-start gap-3 text-sm text-[color:var(--foreground)]/78">
+                    <Phone className="h-4 w-4 mt-0.5 text-[color:var(--pine)]" />
+                    <div>
+                      <a href="tel:+15302648801" className="font-semibold text-[color:var(--pine)] hover:underline">
+                        (530) 264-8801
+                      </a>
+                      <p className="text-xs text-[color:var(--foreground)]/62">Google Voice intake line</p>
+                    </div>
                   </div>
 
                   <div className="flex items-start gap-3 text-sm text-[color:var(--foreground)]/78">

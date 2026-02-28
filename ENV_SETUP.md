@@ -25,6 +25,10 @@ NEXT_PUBLIC_SITE_NAME=Nat Ford Planning & Analysis
 # Optional Meta/Facebook callback verification
 FACEBOOK_APP_SECRET=<META_APP_SECRET>
 
+# AI planner chatbot (homepage)
+OPENAI_API_KEY=<OPENAI_API_KEY>
+# Model is fixed in code to: openai-codex/gpt-5.3-codex
+
 # Stripe checkout links used by /api/commerce/checkout routing
 STRIPE_LINK_VIBE_CODING_PLANNERS_29=<https://buy.stripe.com/...>
 STRIPE_LINK_VIBE_CODING_PLANNERS_39=<https://buy.stripe.com/...>
@@ -50,4 +54,6 @@ STRIPE_PRICE_VIBE_CODING_PLANNERS_49=<price_...>
   - `OPENPLAN_PRELAUNCH_PROMO_CODE` (default: `OPENPLAN15`)
   - `OPENPLAN_PRELAUNCH_END` (default: `2026-04-01T00:00:00-07:00`)
 - `FACEBOOK_APP_SECRET` enables signature verification for Meta Data Deletion callback endpoint (`/api/facebook/data-deletion`).
+- Homepage AI planner chatbot uses `OPENAI_API_KEY` and is hard-pinned to `openai-codex/gpt-5.3-codex` in `src/app/api/chat/planner/route.ts`.
+- Anonymous users get a 10-minute chat window before signup/login is required; authenticated users keep higher throughput limits.
 - Production/Preview/Development env vars are configured in Vercel for `natford/nat-ford-website`.

@@ -78,7 +78,8 @@ body {
   background: color-mix(in srgb, #0a1118 74%, #152230 26%);
 }
 
-.hero-mesh {
+.hero-mesh,
+.hero-mesh-light {
   position: relative;
   overflow: hidden;
 }
@@ -104,6 +105,42 @@ body {
   mask-image: radial-gradient(circle at center, black 35%, transparent 85%);
   opacity: 0.38;
   z-index: -1;
+}
+
+.hero-mesh-light::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  background:
+    radial-gradient(880px 420px at 12% 5%, rgba(72, 126, 94, 0.22), transparent 68%),
+    radial-gradient(760px 420px at 88% 0%, rgba(190, 142, 47, 0.25), transparent 60%),
+    linear-gradient(120deg, #edf3f7, #f6f4ee 52%, #eaf1f8);
+  z-index: -2;
+}
+
+.hero-mesh-light::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(20, 33, 43, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(20, 33, 43, 0.06) 1px, transparent 1px);
+  background-size: 36px 36px;
+  mask-image: radial-gradient(circle at center, black 35%, transparent 85%);
+  opacity: 0.34;
+  z-index: -1;
+}
+
+.dark .hero-mesh-light::before {
+  background:
+    radial-gradient(650px 320px at 15% 10%, rgba(31, 78, 46, 0.2), transparent 65%),
+    radial-gradient(700px 420px at 85% 0%, rgba(190, 142, 47, 0.22), transparent 58%),
+    linear-gradient(110deg, rgba(20, 33, 43, 0.95), rgba(18, 48, 31, 0.94));
+}
+
+.dark .hero-mesh-light::after {
+  background-image: linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  opacity: 0.38;
 }
 
 .soft-card {

@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://natfordplanning.com",
+    url: "https://www.natfordplanning.com",
     siteName: "Nat Ford Planning & Analysis",
     title: "Nat Ford Planning & Analysis",
     description: "Data-driven urban planning, GIS, and aerial insights for Northern California communities.",
