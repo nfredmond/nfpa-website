@@ -337,6 +337,17 @@ export default function GrantLabPage() {
             <p className="mt-5 text-lg text-white/84 max-w-3xl">
               Choose a grant program, enter your criteria, generate a narrative draft, then refine it by chat. Built for Northern California and Bay Area planners who need practical, fundable language.
             </p>
+            <p className="mt-3 max-w-3xl text-sm text-white/80">
+              Want unlimited access? This workflow is included in OpenPlan subscriptions, and can also be custom-built into client-specific delivery systems.
+            </p>
+            <div className="mt-4 flex flex-wrap gap-3 text-sm">
+              <Link href="/products#openplan" className="inline-flex items-center rounded-full border border-white/35 bg-white/10 px-4 py-2 font-semibold text-white hover:bg-white/18">
+                See OpenPlan inclusion <ArrowRight className="ml-1.5 h-4 w-4" />
+              </Link>
+              <Link href="/contact?inquiry=custom-grant-ai" className="inline-flex items-center rounded-full border border-white/28 px-4 py-2 font-semibold text-white/90 hover:bg-white/10">
+                Request custom build
+              </Link>
+            </div>
           </div>
         </Container>
       </Section>
@@ -636,9 +647,17 @@ export default function GrantLabPage() {
                 {error && <p className="mt-3 text-sm text-red-600 dark:text-red-400">{error}</p>}
 
                 <div className="mt-4 rounded-xl border border-[color:var(--line)] bg-[color:var(--fog)] p-3 text-sm text-[color:var(--foreground)]/78">
-                  Save your narrative drafts and unlock unlimited AI revisions with a{' '}
+                  Start with a{' '}
                   <Link href="/signup?redirect=/grant-lab" className="font-semibold text-[color:var(--pine)]">
                     free account
+                  </Link>
+                  . Want unlimited access and production rollout? It’s included in{' '}
+                  <Link href="/products#openplan" className="font-semibold text-[color:var(--pine)]">
+                    OpenPlan subscriptions
+                  </Link>
+                  , and available as a{' '}
+                  <Link href="/contact?inquiry=custom-grant-ai" className="font-semibold text-[color:var(--pine)]">
+                    custom-built client solution
                   </Link>
                   .
                 </div>
