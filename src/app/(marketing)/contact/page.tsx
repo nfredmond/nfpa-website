@@ -29,6 +29,20 @@ const inquiryTypes = [
 
 const timelines = ['Immediate (0-30 days)', 'Near-term (1-3 months)', 'Planning horizon (3+ months)']
 
+const checkoutInquiryByProduct: Record<string, string> = {
+  openplan: 'OpenPlan product',
+  'ads-automation': 'Ads automation product',
+  'drone-ops': 'General inquiry',
+  'vibe-coding-for-planners': 'General inquiry',
+}
+
+const checkoutProductLabel: Record<string, string> = {
+  openplan: 'OpenPlan SaaS',
+  'ads-automation': 'Marketing & Planning Analytics Software',
+  'drone-ops': 'DroneOps Intelligence',
+  'vibe-coding-for-planners': 'Vibe Coding for Planners (PDF Guide)',
+}
+
 const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ''
 
 export default function ContactPage() {
@@ -36,6 +50,34 @@ export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
   const [turnstileToken, setTurnstileToken] = React.useState('')
+  const [checkoutContext, setCheckoutContext] = React.useState({
+    intent: false,
+    product: '',
+    tier: '',
+  })
+
+  const checkoutIntent = checkoutContext.intent
+  const checkoutProduct = checkoutContext.product
+  const checkoutTier = checkoutContext.tier
+  const defaultInquiryType = checkoutInquiryByProduct[checkoutProduct] || ''
+  const defaultTimeline = checkoutIntent ? timelines[0] : ''
+  const checkoutLabel = checkoutProductLabel[checkoutProduct] || checkoutProduct
+  const defaultDescription = checkoutIntent
+    ? [`Subscription request`, `Product: ${checkoutLabel}`, checkoutTier ? `Tier: ${checkoutTier}` : null, '', 'Please share next steps, onboarding requirements, and checkout availability.']
+        .filter(Boolean)
+        .join('\n')
+    : ''
+
+  React.useEffect(() => {
+    if (typeof window === 'undefined') return
+
+    const params = new URLSearchParams(window.location.search)
+    setCheckoutContext({
+      intent: params.get('intent') === 'subscription',
+      product: params.get('product') || '',
+      tier: params.get('tier') || '',
+    })
+  }, [])
 
   React.useEffect(() => {
     if (!turnstileSiteKey) return
@@ -74,7 +116,7 @@ export default function ContactPage() {
       timeline: String(form.get('timeline') || ''),
       description: String(form.get('description') || ''),
       website: String(form.get('website') || ''), // honeypot
-      sourcePath: typeof window !== 'undefined' ? window.location.pathname : '/contact',
+      sourcePath: typeof window !== 'undefined' ? `${window.location.pathname}${window.location.search}` : '/contact',
       turnstileToken,
     }
 
@@ -126,7 +168,15 @@ export default function ContactPage() {
                     <p className="text-sm text-[color:var(--foreground)]/70 mb-6">
                       Submit this form and we’ll route your request into our internal lead pipeline for follow-up.
                     </p>
-                    <form onSubmit={handleSubmit} className="space-y-5">
+                    {checkoutIntent ? (
+                      <div className="mb-6 rounded-xl border border-[color:var(--pine)]/25 bg-[color:var(--sand)]/35 px-4 py-3 text-sm text-[color:var(--foreground)]/85">
+                        <p className="font-semibold text-[color:var(--pine)]">Subscription request detected</p>
+                        <p className="mt-1">
+                          We captured your product lane from the pricing page{checkoutTier ? ` (${checkoutTier})` : ''}. Complete the form and we’ll send scoped checkout/onboarding next steps.
+                        </p>
+                      </div>
+                    ) : null}
+                    <form key={`${checkoutProduct}:${checkoutTier}:${checkoutIntent ? '1' : '0'}`} onSubmit={handleSubmit} className="space-y-5">
                       <input type="text" name="website" className="hidden" tabIndex={-1} autoComplete="off" />
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -145,6 +195,7 @@ export default function ContactPage() {
                           <select
                             id="inquiryType"
                             name="inquiryType"
+                            defaultValue={defaultInquiryType}
                             required
                             className="flex h-11 w-full rounded-xl border border-[color:var(--line)] bg-[color:var(--background)] px-3.5 py-2 text-sm text-[color:var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[color:var(--pine)]"
                           >
@@ -164,6 +215,7 @@ export default function ContactPage() {
                           <select
                             id="timeline"
                             name="timeline"
+                            defaultValue={defaultTimeline}
                             required
                             className="flex h-11 w-full rounded-xl border border-[color:var(--line)] bg-[color:var(--background)] px-3.5 py-2 text-sm text-[color:var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[color:var(--pine)]"
                           >
@@ -180,6 +232,7 @@ export default function ContactPage() {
                       <Textarea
                         label="Project Description"
                         name="description"
+                        defaultValue={defaultDescription}
                         placeholder="What decision are you trying to make? What constraints are you working with?"
                         rows={7}
                         required

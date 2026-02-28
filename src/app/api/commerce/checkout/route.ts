@@ -58,6 +58,7 @@ export async function GET(request: NextRequest) {
     fallback.searchParams.set("intent", "subscription");
     fallback.searchParams.set("product", tier.product.id);
     fallback.searchParams.set("tier", tier.id);
+    fallback.searchParams.set("checkout", "pending");
 
     return NextResponse.redirect(fallback, { status: 302 });
   }

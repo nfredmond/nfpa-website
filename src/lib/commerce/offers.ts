@@ -160,7 +160,7 @@ export const offerCatalog: OfferProduct[] = [
     name: "Vibe Coding for Planners (PDF Guide)",
     description: "Practical AI workflow guide for planners who need faster drafting, cleaner QA, and defensible deliverables.",
     priceSuffix: "one-time",
-    checkoutCtaLabel: "Subscribe",
+    checkoutCtaLabel: "Buy now",
     tiers: [
       {
         id: "vibe-coding-planners-starter",

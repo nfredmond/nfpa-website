@@ -82,6 +82,10 @@ const products = [
 
 const OPENPLAN_PRELAUNCH_DISCOUNT = 0.15
 
+function hasPublishedStripeCheckout(envName: string): boolean {
+  return Boolean(process.env[envName]?.trim())
+}
+
 const principles = [
   {
     icon: Workflow,
@@ -104,7 +108,7 @@ export default function ProductsPage() {
             <span className="pill">Product Suite</span>
             <h1 className="section-title mt-5 text-5xl md:text-6xl leading-[0.96] text-white">Focused products. Transparent pricing lanes.</h1>
             <p className="mt-5 text-lg text-white/82 max-w-3xl">
-              Built for practical operations, budget realism, and measurable outcomes. Paid plans and guides use secure Stripe-hosted checkout.
+              Built for practical operations, budget realism, and measurable outcomes. Published lanes use secure Stripe-hosted checkout; unpublished lanes route to scoped contact intake.
             </p>
           </div>
         </Container>
@@ -183,8 +187,8 @@ export default function ProductsPage() {
             <span className="pill">Pricing & Checkout</span>
             <h2 className="section-title text-4xl md:text-5xl text-[color:var(--ink)]">Launch-ready pricing tiers</h2>
             <p className="max-w-4xl text-[color:var(--foreground)]/80">
-              Choose the lane that matches your operational need. Checkout routes through Stripe-hosted links. If a lane is not yet published,
-              we route you to a scoped contact workflow.
+              Choose the lane that matches your operational need. Published tiers route through Stripe-hosted links; tiers still being finalized route
+              to a scoped contact workflow with product/tier context attached.
             </p>
           </div>
 
@@ -207,6 +211,8 @@ export default function ProductsPage() {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {product.tiers.map((tier) => {
                       const discountedPrice = isOpenPlan ? Math.round(tier.monthlyUsd * (1 - OPENPLAN_PRELAUNCH_DISCOUNT)) : tier.monthlyUsd
+                      const hasCheckout = hasPublishedStripeCheckout(tier.stripePaymentLinkEnv)
+                      const ctaLabel = hasCheckout ? product.checkoutCtaLabel ?? 'Subscribe' : 'Request access'
 
                       return (
                         <Card key={tier.id} className="p-5 border border-[color:var(--line)] bg-[color:var(--background)]">
@@ -229,9 +235,14 @@ export default function ProductsPage() {
                           <div className="mt-5">
                             <Button asChild size="sm" className="w-full">
                               <Link href={`/api/commerce/checkout?tier=${tier.id}`}>
-                                {product.checkoutCtaLabel ?? 'Subscribe'} <ArrowRight className="ml-2 h-4 w-4" />
+                                {ctaLabel} <ArrowRight className="ml-2 h-4 w-4" />
                               </Link>
                             </Button>
+                            {!hasCheckout ? (
+                              <p className="mt-2 text-xs text-[color:var(--foreground)]/65">
+                                Stripe checkout for this tier is currently being finalized. We’ll route you to scoped intake.
+                              </p>
+                            ) : null}
                           </div>
                         </Card>
                       )
