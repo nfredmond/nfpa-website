@@ -16,6 +16,7 @@ import {
 import { Container } from '@/components/layout/container'
 import { Section } from '@/components/layout/section'
 import JsonLd from '@/components/features/json-ld'
+import { PlannerChatbot } from '@/components/features/planner-chatbot'
 import organizationData from '@/data/organization.json'
 import servicesData from '@/data/services.json'
 import projectsData from '@/data/projects.json'
@@ -112,15 +113,15 @@ export default function HomePage() {
       <JsonLd data={servicesData} />
       <JsonLd data={projectsData} />
 
-      <Section spacing="xl" className="hero-mesh text-white">
+      <Section spacing="xl" className="hero-mesh-light text-[color:var(--ink)] dark:text-white">
         <Container size="xl">
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1.2fr_0.8fr] items-center">
             <div>
               <span className="pill">Northern California · Planning + Software</span>
-              <h1 className="section-title mt-5 text-5xl sm:text-6xl lg:text-7xl leading-[0.96]">
+              <h1 className="section-title mt-5 text-5xl sm:text-6xl lg:text-7xl leading-[0.96] text-[color:var(--ink)] dark:text-white">
                 Sleek planning intelligence built for agencies that need to move.
               </h1>
-              <p className="mt-6 max-w-2xl text-lg sm:text-xl text-white/85">
+              <p className="mt-6 max-w-2xl text-lg sm:text-xl text-[color:var(--foreground)]/82 dark:text-white/85">
                 Nat Ford combines transportation planning expertise with production-grade tools so agencies, tribes, and
                 consultancies can move from analysis to funded implementation with less friction.
               </p>
@@ -134,7 +135,7 @@ export default function HomePage() {
                 </Link>
                 <Link
                   href="/products"
-                  className="inline-flex items-center justify-center rounded-full border border-white/35 px-6 py-3 text-[0.98rem] font-semibold text-white transition hover:bg-white/10"
+                  className="inline-flex items-center justify-center rounded-full border border-[color:var(--line)] bg-white/65 px-6 py-3 text-[0.98rem] font-semibold text-[color:var(--ink)] transition hover:bg-white dark:border-white/35 dark:bg-transparent dark:text-white dark:hover:bg-white/10"
                 >
                   Explore Products
                 </Link>
@@ -142,14 +143,14 @@ export default function HomePage() {
                   href="https://ads-chatbot.vercel.app"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center rounded-full border border-[color:var(--copper)]/70 bg-[color:var(--copper)]/15 px-6 py-3 text-[0.98rem] font-semibold text-white transition hover:bg-[color:var(--copper)]/25"
+                  className="inline-flex items-center justify-center rounded-full border border-[color:var(--copper)]/65 bg-[color:var(--copper)]/20 px-6 py-3 text-[0.98rem] font-semibold text-[color:var(--ink)] transition hover:bg-[color:var(--copper)]/30 dark:text-white"
                 >
                   Try Analytics Software Demo
                 </a>
               </div>
             </div>
 
-            <div className="soft-card rounded-3xl p-5 sm:p-6 bg-white/95 text-[color:var(--ink)] float-slow">
+            <div className="soft-card float-slow rounded-3xl bg-white/92 p-5 text-[color:var(--ink)] dark:bg-[#101b24]/92 dark:text-white sm:p-6">
               <div className="mb-4 flex items-center justify-between">
                 <p className="font-semibold tracking-wide text-[0.8rem] uppercase text-[color:var(--pine)]">
                   Delivery Signal Panel
@@ -192,6 +193,26 @@ export default function HomePage() {
               </div>
             </div>
           </div>
+        </Container>
+      </Section>
+
+      <Section spacing="lg" className="border-y border-[color:var(--line)] bg-[color:var(--fog)]/55">
+        <Container>
+          <div className="mb-6 max-w-3xl">
+            <p className="pill mb-4">New · AI Expert Chat</p>
+            <h2 className="section-title text-4xl text-[color:var(--ink)] md:text-5xl">
+              Get instant planning strategy from a rural NorCal specialist.
+            </h2>
+            <p className="mt-3 text-lg text-[color:var(--foreground)]/80">
+              Ask detailed transportation and land use questions, stress-test options, and get actionable next steps.
+            </p>
+            <div className="mt-4">
+              <Link href="/grant-lab" className="inline-flex items-center text-sm font-semibold text-[color:var(--pine)]">
+                Try the new AI Grant Narrative Lab <ArrowRight className="ml-1.5 h-4 w-4" />
+              </Link>
+            </div>
+          </div>
+          <PlannerChatbot />
         </Container>
       </Section>
 

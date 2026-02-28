@@ -20,6 +20,39 @@ export function SignupForm({ redirectPath }: SignupFormProps) {
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false)
+
+  async function onGoogleSignup() {
+    setError(null)
+    setSuccess(null)
+    setIsGoogleLoading(true)
+
+    try {
+      const supabase = createClient()
+      const callbackUrl = `${window.location.origin}/auth/callback?redirect=${encodeURIComponent(redirectPath)}`
+      const { data, error: oauthError } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: callbackUrl,
+        },
+      })
+
+      if (oauthError) {
+        throw oauthError
+      }
+
+      if (data?.url) {
+        window.location.assign(data.url)
+        return
+      }
+
+      throw new Error('Google sign-up is temporarily unavailable. Please use email signup or retry in a minute.')
+    } catch (oauthError) {
+      const message = oauthError instanceof Error ? oauthError.message : 'Unable to start Google sign-up.'
+      setError(message)
+      setIsGoogleLoading(false)
+    }
+  }
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -77,6 +110,22 @@ export function SignupForm({ redirectPath }: SignupFormProps) {
         </p>
       )}
 
+      <Button
+        type="button"
+        variant="outline"
+        className="w-full"
+        onClick={onGoogleSignup}
+        disabled={isGoogleLoading || isLoading}
+      >
+        {isGoogleLoading ? 'Connecting to Google…' : 'Sign up with Google'}
+      </Button>
+
+      <div className="flex items-center gap-3 text-xs uppercase tracking-[0.12em] text-[color:var(--foreground)]/55">
+        <span className="h-px flex-1 bg-[color:var(--line)]" />
+        <span>Email signup</span>
+        <span className="h-px flex-1 bg-[color:var(--line)]" />
+      </div>
+
       <Input
         type="email"
         label="Email"
@@ -104,7 +153,7 @@ export function SignupForm({ redirectPath }: SignupFormProps) {
         required
       />
 
-      <Button type="submit" className="w-full" disabled={isLoading}>
+      <Button type="submit" className="w-full" disabled={isLoading || isGoogleLoading}>
         {isLoading ? 'Creating account…' : 'Create account'}
       </Button>
 

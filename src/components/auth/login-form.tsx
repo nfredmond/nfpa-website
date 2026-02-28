@@ -19,6 +19,38 @@ export function LoginForm({ redirectPath, infoMessage }: LoginFormProps) {
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false)
+
+  async function onGoogleSignIn() {
+    setError(null)
+    setIsGoogleLoading(true)
+
+    try {
+      const supabase = createClient()
+      const callbackUrl = `${window.location.origin}/auth/callback?redirect=${encodeURIComponent(redirectPath)}`
+      const { data, error: oauthError } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: callbackUrl,
+        },
+      })
+
+      if (oauthError) {
+        throw oauthError
+      }
+
+      if (data?.url) {
+        window.location.assign(data.url)
+        return
+      }
+
+      throw new Error('Google sign-in is temporarily unavailable. Please try email login or retry in a moment.')
+    } catch (oauthError) {
+      const message = oauthError instanceof Error ? oauthError.message : 'Unable to start Google sign-in.'
+      setError(message)
+      setIsGoogleLoading(false)
+    }
+  }
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -61,6 +93,22 @@ export function LoginForm({ redirectPath, infoMessage }: LoginFormProps) {
         </p>
       )}
 
+      <Button
+        type="button"
+        variant="outline"
+        className="w-full"
+        onClick={onGoogleSignIn}
+        disabled={isGoogleLoading || isLoading}
+      >
+        {isGoogleLoading ? 'Connecting to Google…' : 'Continue with Google'}
+      </Button>
+
+      <div className="flex items-center gap-3 text-xs uppercase tracking-[0.12em] text-[color:var(--foreground)]/55">
+        <span className="h-px flex-1 bg-[color:var(--line)]" />
+        <span>Email login</span>
+        <span className="h-px flex-1 bg-[color:var(--line)]" />
+      </div>
+
       <Input
         type="email"
         label="Email"
@@ -79,7 +127,7 @@ export function LoginForm({ redirectPath, infoMessage }: LoginFormProps) {
         required
       />
 
-      <Button type="submit" className="w-full" disabled={isLoading}>
+      <Button type="submit" className="w-full" disabled={isLoading || isGoogleLoading}>
         {isLoading ? 'Signing in…' : 'Sign in'}
       </Button>
 

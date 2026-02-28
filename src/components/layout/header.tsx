@@ -17,6 +17,7 @@ import { cn } from '@/lib/utils'
 const navigation = [
   { name: 'Services', href: '/services' },
   { name: 'Products', href: '/products' },
+  { name: 'Grant AI Lab', href: '/grant-lab' },
   { name: 'Experience', href: '/projects' },
   { name: 'Resources', href: '/resources' },
   { name: 'About', href: '/about' },
@@ -45,20 +46,20 @@ export function Header() {
               <span className="sr-only">Nat Ford Planning & Analysis</span>
               <div className="flex items-center gap-2">
                 <Image
-                  src="/logos/nf-wordmark-slate.svg"
+                  src="/logos/nf-wordmark-slate.png"
                   alt="Nat Ford Planning & Analysis"
-                  width={220}
-                  height={48}
+                  width={692}
+                  height={130}
                   priority
-                  className="h-10 w-auto block dark:hidden"
+                  className="block h-10 w-auto dark:hidden"
                 />
                 <Image
-                  src="/logos/nf-wordmark-white.svg"
+                  src="/logos/nf-wordmark-white.png"
                   alt="Nat Ford Planning & Analysis"
-                  width={220}
-                  height={48}
+                  width={712}
+                  height={134}
                   priority
-                  className="h-10 w-auto hidden dark:block"
+                  className="hidden h-10 w-auto dark:block"
                 />
               </div>
             </Link>
