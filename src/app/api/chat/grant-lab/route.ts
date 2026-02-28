@@ -259,20 +259,15 @@ export async function POST(req: NextRequest) {
         input: [
           {
             role: 'system',
-            content: [{ type: 'input_text', text: SYSTEM_PROMPT }],
+            content: SYSTEM_PROMPT,
           },
           {
             role: 'system',
-            content: [
-              {
-                type: 'input_text',
-                text: `Current workflow mode: ${mode}.\nGrant context:\n${contextText}`,
-              },
-            ],
+            content: `Current workflow mode: ${mode}.\nGrant context:\n${contextText}`,
           },
           ...messages.map((message) => ({
             role: message.role,
-            content: [{ type: 'input_text', text: message.content }],
+            content: message.content,
           })),
         ],
       }),
