@@ -183,6 +183,16 @@ body {
   color: #d6dee6;
 }
 
+.hero-mesh .pill {
+  border-color: rgba(255, 255, 255, 0.44);
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+}
+
+.hero-mesh .pill:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
 .section-title {
   font-family: var(--font-display);
   letter-spacing: -0.018em;
