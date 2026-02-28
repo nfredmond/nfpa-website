@@ -72,7 +72,7 @@ export default function FAQPage() {
           <div className="relative h-52 overflow-hidden rounded-2xl border border-[color:var(--line)]">
             <Image
               src="/images/site/hero-corridor.jpg"
-              alt="Northern California transportation corridor"
+              alt="U.S. transportation corridor planning context"
               fill
               className="object-cover"
               sizes="100vw"

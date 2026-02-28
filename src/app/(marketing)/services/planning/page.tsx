@@ -210,7 +210,7 @@ export default function PlanningServicePage() {
               See It In Action
             </h2>
             <p className="text-lg text-gray-700">
-              Selected planning projects from our Northern California experience base
+              Selected planning projects from our Northern California experience base, now delivered nationwide
             </p>
           </div>
           

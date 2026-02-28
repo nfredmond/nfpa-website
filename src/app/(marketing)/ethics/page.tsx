@@ -32,7 +32,7 @@ export default function EthicsPage() {
           <div className="relative h-52 overflow-hidden rounded-2xl border border-[color:var(--line)]">
             <Image
               src="/images/site/hero-corridor.jpg"
-              alt="Northern California corridor landscape"
+              alt="Transportation corridor landscape used for U.S. planning context"
               fill
               className="object-cover"
               sizes="100vw"

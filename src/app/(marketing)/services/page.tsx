@@ -108,7 +108,7 @@ export default function ServicesPage() {
             <div className="relative h-56 overflow-hidden rounded-2xl border border-[color:var(--line)]">
               <Image
                 src="/images/site/mainstreet-aerial.jpg"
-                alt="Aerial complete streets perspective in a small Northern California town"
+                alt="Aerial complete streets perspective in a U.S. small-town corridor"
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 50vw"
