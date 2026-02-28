@@ -175,7 +175,7 @@ function detectStateFips(query: string): string {
 }
 
 function detectCounty(query: string): string | null {
-  const match = query.match(/([A-Za-z][A-Za-z\s'\.-]+?)\s+County\b/i)
+  const match = query.match(/(?:^|,|\b(?:in|for|of|at|near|within)\s+)([A-Za-z][A-Za-z\s'\.-]+?)\s+County\b/i)
   if (!match) return null
   return match[1].trim().toLowerCase()
 }
@@ -330,9 +330,10 @@ export async function getCensusContextForPrompt(query: string): Promise<{ prompt
     const stateFips = detectStateFips(query)
     const county = detectCounty(query)
 
-    const snapshot = county
-      ? await fetchCountySnapshot(stateFips, county)
-      : (await fetchStateSnapshot(stateFips)) ?? (await fetchUsSnapshot())
+    const snapshot =
+      (county ? await fetchCountySnapshot(stateFips, county) : null) ??
+      (await fetchStateSnapshot(stateFips)) ??
+      (await fetchUsSnapshot())
 
     if (!snapshot) {
       return {
