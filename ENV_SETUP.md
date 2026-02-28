@@ -22,6 +22,9 @@ NEXT_PUBLIC_SITE_NAME=Nat Ford Planning & Analysis
 # Optional (if using custom app URLs in auth templates)
 # SUPABASE_AUTH_REDIRECT_URL=https://www.natfordplanning.com/login
 
+# Optional Meta/Facebook callback verification
+FACEBOOK_APP_SECRET=<META_APP_SECRET>
+
 # Stripe checkout links used by /api/commerce/checkout routing
 STRIPE_LINK_VIBE_CODING_PLANNERS_29=<https://buy.stripe.com/...>
 STRIPE_LINK_VIBE_CODING_PLANNERS_39=<https://buy.stripe.com/...>
@@ -46,4 +49,5 @@ STRIPE_PRICE_VIBE_CODING_PLANNERS_49=<price_...>
 - Optional prelaunch OpenPlan discount controls:
   - `OPENPLAN_PRELAUNCH_PROMO_CODE` (default: `OPENPLAN15`)
   - `OPENPLAN_PRELAUNCH_END` (default: `2026-04-01T00:00:00-07:00`)
+- `FACEBOOK_APP_SECRET` enables signature verification for Meta Data Deletion callback endpoint (`/api/facebook/data-deletion`).
 - Production/Preview/Development env vars are configured in Vercel for `natford/nat-ford-website`.
