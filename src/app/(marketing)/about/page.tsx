@@ -36,7 +36,7 @@ const priorEmployment = [
     employer: 'Green DOT Transportation Solutions',
     years: '2021–2025',
     highlights: [
-      'Led and supported RTP/ATP planning across multiple Northern California counties',
+      'Led and supported RTP/ATP planning across multiple Northern California counties as a representative delivery base now applied nationwide',
       'Delivered VMT and carbon reduction integration work tied to implementable CIP pathways',
       'Contributed to numerous grant applications including ATP, RAISE, TIRCP, and PROTECT',
     ],
