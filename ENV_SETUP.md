@@ -43,4 +43,7 @@ STRIPE_PRICE_VIBE_CODING_PLANNERS_49=<price_...>
   - local dev: `http://localhost:3000/login` and `http://localhost:3000/auth/update-password`
 - `STRIPE_LINK_VIBE_CODING_PLANNERS_*` values are required for live checkout redirects from `/api/commerce/checkout`.
 - `STRIPE_PRICE_VIBE_CODING_PLANNERS_*` values are documented for launch ops and reconciliation (not read by app runtime yet).
+- Optional prelaunch OpenPlan discount controls:
+  - `OPENPLAN_PRELAUNCH_PROMO_CODE` (default: `OPENPLAN15`)
+  - `OPENPLAN_PRELAUNCH_END` (default: `2026-04-01T00:00:00-07:00`)
 - Production/Preview/Development env vars are configured in Vercel for `natford/nat-ford-website`.
