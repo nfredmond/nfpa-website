@@ -188,7 +188,8 @@ export default function ProductsPage() {
             <h2 className="section-title text-4xl md:text-5xl text-[color:var(--ink)]">Launch-ready pricing tiers</h2>
             <p className="max-w-4xl text-[color:var(--foreground)]/80">
               Choose the lane that matches your operational need. Published tiers route through Stripe-hosted links; tiers still being finalized route
-              to a scoped contact workflow with product/tier context attached.
+              to a scoped contact workflow with product/tier context attached. Pricing is transparent, assumptions are explicit, and checkout language is
+              aligned with our ethics policy (no hidden fees, no guaranteed funding/approval claims, and human-reviewed analysis at critical gates).
             </p>
           </div>
 
@@ -243,6 +244,13 @@ export default function ProductsPage() {
                                 Stripe checkout for this tier is currently being finalized. We’ll route you to scoped intake.
                               </p>
                             ) : null}
+                            <p className="mt-2 text-xs text-[color:var(--foreground)]/65">
+                              Secure Stripe-hosted checkout. By continuing, you agree to our{' '}
+                              <Link href="/terms" className="underline underline-offset-2 hover:text-[color:var(--pine)]">
+                                Terms
+                              </Link>
+                              . AI may be used to accelerate drafting/data prep; final analysis is human-reviewed. No guarantee of funding awards or regulatory approvals.
+                            </p>
                           </div>
                         </Card>
                       )
