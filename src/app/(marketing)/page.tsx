@@ -119,7 +119,7 @@ export default function HomePage() {
             <div>
               <span className="pill">Northern California · Planning + Software</span>
               <h1 className="section-title mt-5 text-5xl sm:text-6xl lg:text-7xl leading-[0.96] text-[color:var(--ink)] dark:text-white">
-                Sleek planning intelligence built for agencies that need to move.
+                Practical planning intelligence built for agencies that need to move.
               </h1>
               <p className="mt-6 max-w-2xl text-lg sm:text-xl text-[color:var(--foreground)]/82 dark:text-white/85">
                 Nat Ford combines transportation planning expertise with production-grade tools so agencies, tribes, and
@@ -176,7 +176,7 @@ export default function HomePage() {
               <div className="mt-3 grid grid-cols-2 gap-3">
                 <div className="signal-tile rounded-2xl p-3.5">
                   <p className="text-xs uppercase tracking-wide text-[color:var(--foreground)]/55">Focus region</p>
-                  <p className="mt-1 font-semibold">Rural Northern CA</p>
+                  <p className="mt-1 font-semibold">Rural Northern California</p>
                 </div>
                 <div className="signal-tile rounded-2xl p-3.5">
                   <p className="text-xs uppercase tracking-wide text-[color:var(--foreground)]/55">Operating model</p>
@@ -201,7 +201,7 @@ export default function HomePage() {
           <div className="mb-6 max-w-3xl">
             <p className="pill mb-4">New · AI Expert Chat</p>
             <h2 className="section-title text-4xl text-[color:var(--ink)] md:text-5xl">
-              Get instant planning strategy from a rural NorCal specialist.
+              Get instant planning strategy from a rural Northern California specialist.
             </h2>
             <p className="mt-3 text-lg text-[color:var(--foreground)]/80">
               Ask detailed transportation and land use questions, stress-test options, and get actionable next steps.

@@ -196,7 +196,7 @@ export function PlannerChatbot() {
           <Bot className="h-5 w-5" />
         </div>
         <div>
-          <h3 className="section-title text-3xl text-[color:var(--ink)]">Ask the NorCal & Bay Area Urban Planning AI</h3>
+          <h3 className="section-title text-3xl text-[color:var(--ink)]">Ask the Northern California & Bay Area Urban Planning AI</h3>
           <p className="mt-2 text-[color:var(--foreground)]/78">
             Built for planners who need decision-grade guidance fast: concrete steps, explicit tradeoffs, and funding-aware recommendations.
           </p>
@@ -214,7 +214,7 @@ export function PlannerChatbot() {
               }
               className="mt-1 h-10 w-full rounded-xl border border-[color:var(--line)] bg-[color:var(--background)] px-3 text-sm text-[color:var(--foreground)]"
             >
-              <option value="mixed">Mixed NorCal + Bay Area</option>
+              <option value="mixed">Mixed Northern California + Bay Area</option>
               <option value="rural-norcal">Rural Northern California</option>
               <option value="bay-area">Bay Area</option>
             </select>

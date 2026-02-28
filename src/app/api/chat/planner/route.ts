@@ -176,7 +176,7 @@ function buildPreferenceInstruction(preferences?: z.infer<typeof preferenceSchem
 
   const geography = preferences?.geographyFocus
     ? geographyMap[preferences.geographyFocus]
-    : 'Use mixed NorCal + Bay Area context when relevant.'
+    : 'Use mixed Northern California + Bay Area context when relevant.'
   const style = preferences?.responseStyle
     ? responseStyleMap[preferences.responseStyle]
     : 'Use balanced depth: concise first, then detail.'

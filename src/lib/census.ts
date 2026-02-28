@@ -170,7 +170,7 @@ function detectStateFips(query: string): string {
     if (fips) return fips
   }
 
-  // NorCal-first default for planning context.
+  // Northern California-first default for planning context.
   return '06'
 }
 

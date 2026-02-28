@@ -1,8 +1,10 @@
 @import "tailwindcss";
 
+/* Ensure all `dark:*` utilities key off the `.dark` class (not OS media query). */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-*: initial;
-  --dark-mode: class;
 }
 
 :root {
