@@ -47,6 +47,24 @@ const fundingPrograms = [
     localMatch: '20% typical',
     notes: 'Narrative strength around state-of-good-repair and transition readiness is critical.',
   },
+  {
+    program: 'Safe Streets and Roads for All (SS4A)',
+    agency: 'U.S. DOT',
+    category: 'Comprehensive safety action plans + implementation grants',
+    cycle: 'Annual NOFO',
+    nextWindow: '2026 NOFO (TBD)',
+    localMatch: '20% typical (implementation)',
+    notes: 'Strong roadway safety problem statements and measurable outcomes are essential.',
+  },
+  {
+    program: 'Tribal Transportation Program (TTP)',
+    agency: 'FHWA / BIA',
+    category: 'Tribal transportation planning + construction',
+    cycle: 'Formula + competitive components',
+    nextWindow: 'Annual/Fiscal cycle (varies)',
+    localMatch: 'Varies by program component',
+    notes: 'Align project scope with tribal priorities, safety outcomes, and long-term O&M feasibility.',
+  },
 ]
 
 const resources = [
@@ -152,10 +170,14 @@ export default function ResourcesPage() {
       <Section spacing="xl" className="bg-[color:var(--fog)]/65 border-y border-[color:var(--line)]">
         <Container>
           <div className="max-w-6xl mx-auto">
-            <div className="flex items-center gap-3 mb-6">
+            <div className="flex items-center gap-3 mb-4">
               <Calendar className="h-7 w-7 text-[color:var(--pine)]" />
               <h2 className="section-title text-4xl text-[color:var(--ink)]">Grant Funding Calendar</h2>
             </div>
+            <p className="mb-6 max-w-4xl text-sm text-[color:var(--foreground)]/78">
+              Includes federal and California examples. We support nationwide funding strategy and can map this to your state,
+              tribal, county/county-equivalent, RTPA, transportation commission, or MPO context.
+            </p>
 
             <div className="relative max-w-md mb-6">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[color:var(--foreground)]/45" />

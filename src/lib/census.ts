@@ -170,8 +170,8 @@ function detectStateFips(query: string): string {
     if (fips) return fips
   }
 
-  // Northern California-first default for planning context.
-  return '06'
+  // Nationwide default: if no explicit state is detected, fall back to U.S.-level context.
+  return 'us'
 }
 
 function detectCounty(query: string): string | null {
@@ -330,10 +330,10 @@ export async function getCensusContextForPrompt(query: string): Promise<{ prompt
     const stateFips = detectStateFips(query)
     const county = detectCounty(query)
 
-    const snapshot =
-      (county ? await fetchCountySnapshot(stateFips, county) : null) ??
-      (await fetchStateSnapshot(stateFips)) ??
-      (await fetchUsSnapshot())
+    const countySnapshot = county && stateFips !== 'us' ? await fetchCountySnapshot(stateFips, county) : null
+    const stateSnapshot = stateFips !== 'us' ? await fetchStateSnapshot(stateFips) : null
+
+    const snapshot = countySnapshot ?? stateSnapshot ?? (await fetchUsSnapshot())
 
     if (!snapshot) {
       return {
