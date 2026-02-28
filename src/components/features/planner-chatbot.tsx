@@ -22,7 +22,7 @@ type ChatMessage = {
 }
 
 type PlannerPreferences = {
-  geographyFocus: 'rural-norcal' | 'bay-area' | 'mixed'
+  geographyFocus: 'small-town-rural-us' | 'tribal-governments' | 'state-regional-agencies' | 'mixed-us'
   responseStyle: 'quick-take' | 'deep-dive' | 'board-memo'
 }
 
@@ -56,7 +56,7 @@ const REVISION_CHIPS = [
 const GREETING_MESSAGE: ChatMessage = {
   role: 'assistant',
   content:
-    "Hi — I’m your Northern California & Bay Area planning copilot. Ask me about corridor safety, ATP/RTP strategy, VMT framing, implementation phasing, or grant competitiveness.",
+    "Hi — I’m your U.S. small-town, tribal, county, RTPA, transportation commission, and state-agency planning copilot. Ask me about corridor safety, ATP/RTP strategy, VMT framing, implementation phasing, or grant competitiveness.",
 }
 
 function ensureVisitorId() {
@@ -88,7 +88,7 @@ export function PlannerChatbot() {
   const [guestStartedAt, setGuestStartedAt] = useState<number>(Date.now())
   const [nowMs, setNowMs] = useState<number>(Date.now())
   const [preferences, setPreferences] = useState<PlannerPreferences>({
-    geographyFocus: 'mixed',
+    geographyFocus: 'mixed-us',
     responseStyle: 'quick-take',
   })
 
@@ -196,7 +196,7 @@ export function PlannerChatbot() {
           <Bot className="h-5 w-5" />
         </div>
         <div>
-          <h3 className="section-title text-3xl text-[color:var(--ink)]">Ask the Northern California & Bay Area Urban Planning AI</h3>
+          <h3 className="section-title text-3xl text-[color:var(--ink)]">Ask the U.S. Urban & Transportation Planning AI</h3>
           <p className="mt-2 text-[color:var(--foreground)]/78">
             Built for planners who need decision-grade guidance fast: concrete steps, explicit tradeoffs, and funding-aware recommendations.
           </p>
@@ -214,9 +214,10 @@ export function PlannerChatbot() {
               }
               className="mt-1 h-10 w-full rounded-xl border border-[color:var(--line)] bg-[color:var(--background)] px-3 text-sm text-[color:var(--foreground)]"
             >
-              <option value="mixed">Mixed Northern California + Bay Area</option>
-              <option value="rural-norcal">Rural Northern California</option>
-              <option value="bay-area">Bay Area</option>
+              <option value="mixed-us">Mixed U.S. public-sector context</option>
+              <option value="small-town-rural-us">Small towns + counties (rural U.S.)</option>
+              <option value="tribal-governments">Tribal governments and tribal transportation priorities</option>
+              <option value="state-regional-agencies">State DOTs, RTPAs, and transportation commissions</option>
             </select>
           </label>
 
@@ -321,7 +322,7 @@ export function PlannerChatbot() {
               }
             }}
             rows={3}
-            placeholder="Example: Give me a practical ATP strategy for a Bay Area suburban corridor with school safety issues and constrained match capacity."
+            placeholder="Example: Give me a practical ATP strategy for a small U.S. county corridor with school safety issues and constrained match capacity."
             className="flex-1 resize-none rounded-xl border border-[color:var(--line)] bg-[color:var(--background)] px-3 py-2 text-sm text-[color:var(--foreground)] focus:border-transparent focus:outline-none focus:ring-2 focus:ring-[color:var(--pine)]"
           />
           <Button

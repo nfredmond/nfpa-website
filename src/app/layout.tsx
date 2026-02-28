@@ -17,10 +17,10 @@ const body = Source_Sans_3({
 
 export const metadata: Metadata = {
   title: {
-    default: "Nat Ford Planning & Analysis | Northern California Planning, GIS & Aerial Mapping",
+    default: "Nat Ford Planning & Analysis | U.S. Transportation Planning, GIS & Aerial Mapping",
     template: "%s | Nat Ford Planning & Analysis",
   },
-  description: "Data-driven urban planning, GIS, and aerial insights for Northern California communities. Expert transportation planning, grant writing, and spatial analysis.",
+  description: "Data-driven transportation planning, GIS, and aerial insights for U.S. small towns, tribes, counties, RTPAs, transportation commissions, and state agencies.",
   keywords: [
     "urban planning",
     "transportation planning",
@@ -28,9 +28,12 @@ export const metadata: Metadata = {
     "aerial mapping",
     "photogrammetry",
     "grant writing",
-    "Northern California",
+    "United States",
     "rural planning",
-    "small municipalities",
+    "tribal transportation",
+    "small towns",
+    "RTPA",
+    "transportation commission",
   ],
   authors: [{ name: "Nathaniel Ford Redmond" }],
   creator: "Nat Ford Planning & Analysis",
@@ -40,12 +43,14 @@ export const metadata: Metadata = {
     url: "https://www.natfordplanning.com",
     siteName: "Nat Ford Planning & Analysis",
     title: "Nat Ford Planning & Analysis",
-    description: "Data-driven urban planning, GIS, and aerial insights for Northern California communities.",
+    description:
+      "Data-driven transportation planning, GIS, and aerial insights for U.S. small towns, tribes, counties, RTPAs, transportation commissions, and state agencies.",
   },
   twitter: {
     card: "summary_large_image",
     title: "Nat Ford Planning & Analysis",
-    description: "Data-driven urban planning, GIS, and aerial insights for Northern California communities.",
+    description:
+      "Data-driven transportation planning, GIS, and aerial insights for U.S. small towns, tribes, counties, RTPAs, transportation commissions, and state agencies.",
   },
   robots: {
     index: true,

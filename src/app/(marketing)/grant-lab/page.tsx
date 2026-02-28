@@ -354,7 +354,7 @@ export default function GrantLabPage() {
             <span className="pill">New · Grant AI</span>
             <h1 className="section-title mt-5 text-5xl md:text-6xl leading-[0.96] text-white">AI Grant Narrative Lab</h1>
             <p className="mt-5 text-lg text-white/84 max-w-3xl">
-              Choose a grant program, enter your criteria, generate a narrative draft, then refine it by chat. Built for Northern California and Bay Area planners who need practical, fundable language.
+              Choose a grant program, enter your criteria, generate a narrative draft, then refine it by chat. Built for U.S. small towns, tribes, counties, RTPAs, transportation commissions, and state agencies that need practical, fundable language.
             </p>
             <p className="mt-3 max-w-3xl text-sm text-white/80">
               Want unlimited access? This workflow is included in OpenPlan subscriptions, and can also be custom-built into client-specific delivery systems.

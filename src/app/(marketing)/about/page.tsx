@@ -9,7 +9,7 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'About',
   description:
-    'Nathaniel Ford Redmond is a transportation planner and GIS practitioner focused on rural Northern California implementation work.',
+    'Nathaniel Ford Redmond is a transportation planner and GIS practitioner based in Northern California and serving agencies across the United States.',
 }
 
 const expertise = [
@@ -90,9 +90,9 @@ export default function AboutPage() {
               <span className="pill">Founder Profile</span>
               <h1 className="section-title mt-5 text-5xl md:text-6xl leading-[0.96] text-white">Nathaniel Ford Redmond</h1>
               <p className="mt-5 text-lg text-white/85 max-w-3xl">
-                Nathaniel is a transportation planner and GIS practitioner focused on rural and small-city implementation
-                work in Northern California. His operating style is straightforward: clear assumptions, defensible
-                methods, and recommendations that can actually be funded and delivered.
+                Nathaniel is a transportation planner and GIS practitioner based in Northern California and serving
+                agencies across the United States. His operating style is straightforward: clear assumptions,
+                defensible methods, and recommendations that can actually be funded and delivered.
               </p>
               <p className="mt-4 text-base text-white/78 max-w-3xl">
                 He combines planning discipline with technical systems — including spatial data engineering,
@@ -131,7 +131,7 @@ export default function AboutPage() {
                 <div>
                   <p className="text-xs uppercase tracking-[0.15em] text-[color:var(--foreground)]/55">Coverage</p>
                   <p className="mt-1 text-sm text-[color:var(--foreground)]/78">
-                    Remote-first across California with in-person facilitation and field work when needed.
+                    Remote-first across the United States with in-person facilitation and field work when needed.
                   </p>
                 </div>
               </CardContent>
@@ -209,8 +209,8 @@ export default function AboutPage() {
       <Section spacing="lg">
         <Container>
           <div className="max-w-4xl">
-            <span className="pill">Regional Familiarity</span>
-            <h2 className="section-title mt-4 text-4xl text-[color:var(--ink)]">Counties served across Northern California.</h2>
+            <span className="pill">Representative Regional Experience</span>
+            <h2 className="section-title mt-4 text-4xl text-[color:var(--ink)]">Selected counties served in Northern California (experience base, now delivered nationwide).</h2>
             <div className="mt-5 flex flex-wrap gap-2.5">
               {counties.map((county) => (
                 <span

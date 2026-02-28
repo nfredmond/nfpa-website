@@ -12,7 +12,8 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Urban & Transportation Planning Services',
-  description: 'Expert regional transportation plans, active transportation plans, VMT analysis, and carbon reduction programs for Northern California communities.',
+  description:
+    'Expert RTP/ATP planning, VMT analysis, and carbon-reduction strategy for U.S. small towns, tribes, counties, RTPAs, transportation commissions, and state agencies.',
 }
 
 const benefits = [
@@ -209,7 +210,7 @@ export default function PlanningServicePage() {
               See It In Action
             </h2>
             <p className="text-lg text-gray-700">
-              Recent planning projects across Northern California
+              Selected planning projects from our Northern California experience base
             </p>
           </div>
           

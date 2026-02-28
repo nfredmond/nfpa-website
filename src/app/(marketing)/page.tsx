@@ -24,7 +24,7 @@ import projectsData from '@/data/projects.json'
 const services = [
   {
     name: 'Urban & Transportation Planning',
-    description: 'RTPs, ATPs, VMT analysis, and implementation strategy tailored for Northern California agencies.',
+    description: 'RTPs, ATPs, VMT analysis, and implementation strategy for U.S. small towns, tribes, counties, RTPAs, transportation commissions, and state agencies.',
     icon: MapPin,
     href: '/services/planning',
   },
@@ -117,7 +117,7 @@ export default function HomePage() {
         <Container size="xl">
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1.2fr_0.8fr] items-center">
             <div>
-              <span className="pill">Northern California · Planning + Software</span>
+              <span className="pill">United States · Planning + Software</span>
               <h1 className="section-title mt-5 text-5xl sm:text-6xl lg:text-7xl leading-[0.96] text-[color:var(--ink)] dark:text-white">
                 Practical planning intelligence built for agencies that need to move.
               </h1>
@@ -161,7 +161,7 @@ export default function HomePage() {
               <div className="relative h-44 w-full overflow-hidden rounded-2xl border border-[color:var(--line)]">
                 <Image
                   src="/images/site/hero-corridor.jpg"
-                  alt="Aerial corridor view in Northern California foothills"
+                  alt="Aerial corridor view supporting U.S. rural and small-town mobility planning"
                   fill
                   className="object-cover"
                   sizes="(max-width: 1024px) 100vw, 40vw"
@@ -176,7 +176,7 @@ export default function HomePage() {
               <div className="mt-3 grid grid-cols-2 gap-3">
                 <div className="signal-tile rounded-2xl p-3.5">
                   <p className="text-xs uppercase tracking-wide text-[color:var(--foreground)]/55">Focus region</p>
-                  <p className="mt-1 font-semibold">Rural Northern California</p>
+                  <p className="mt-1 font-semibold">U.S. small towns + tribal + county agencies</p>
                 </div>
                 <div className="signal-tile rounded-2xl p-3.5">
                   <p className="text-xs uppercase tracking-wide text-[color:var(--foreground)]/55">Operating model</p>
@@ -201,7 +201,7 @@ export default function HomePage() {
           <div className="mb-6 max-w-3xl">
             <p className="pill mb-4">New · AI Expert Chat</p>
             <h2 className="section-title text-4xl text-[color:var(--ink)] md:text-5xl">
-              Get instant planning strategy from a rural Northern California specialist.
+              Get instant planning strategy for U.S. small towns, tribes, counties, RTPAs, and state agencies.
             </h2>
             <p className="mt-3 text-lg text-[color:var(--foreground)]/80">
               Ask detailed transportation and land use questions, stress-test options, and get actionable next steps.

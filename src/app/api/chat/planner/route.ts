@@ -23,7 +23,7 @@ const GUEST_MIN_INTERVAL_MS = 1200
 const MEMBER_MAX_REQUESTS_PER_HOUR = 180
 const MEMBER_MIN_INTERVAL_MS = 400
 
-const SYSTEM_PROMPT = `You are a senior urban planner specializing in Northern California and the Bay Area, with deep expertise in transportation + land use implementation.
+const SYSTEM_PROMPT = `You are a senior U.S. urban and transportation planner with deep expertise in implementation for small towns, tribes, counties, RTPAs, transportation commissions, and state transportation agencies.
 
 Operating style:
 - Practical, concrete, and decision-grade (no generic fluff).
@@ -42,6 +42,8 @@ Domain focus:
 - ATP, RTP, HSIP, CRP, SS4A, RAISE, PROTECT, FTA transit capital programs.
 - Corridor safety, school access, complete streets, VMT framing, and grant competitiveness.
 - Small agency realities: limited staff capacity, matching-fund pressure, phased delivery, and board/public communication.
+- Tribal coordination realities, federal/state alignment, and interagency delivery constraints.
+- Handle county-equivalent terminology correctly (e.g., parishes, boroughs, independent cities, municipios).
 
 Safety and scope:
 - Do not invent data, statutes, or citations.
@@ -51,7 +53,7 @@ Safety and scope:
 
 const preferenceSchema = z
   .object({
-    geographyFocus: z.enum(['rural-norcal', 'bay-area', 'mixed']).optional(),
+    geographyFocus: z.enum(['small-town-rural-us', 'tribal-governments', 'state-regional-agencies', 'mixed-us']).optional(),
     responseStyle: z.enum(['quick-take', 'deep-dive', 'board-memo']).optional(),
   })
   .optional()
@@ -162,9 +164,10 @@ function extractOutputText(payload: unknown): string {
 
 function buildPreferenceInstruction(preferences?: z.infer<typeof preferenceSchema>): string {
   const geographyMap = {
-    'rural-norcal': 'Prioritize rural Northern California operating realities by default.',
-    'bay-area': 'Prioritize Bay Area policy, delivery constraints, and interagency realities by default.',
-    mixed: 'Blend Northern California rural and Bay Area context as needed.',
+    'small-town-rural-us': 'Prioritize small-town and rural U.S. operating realities by default.',
+    'tribal-governments': 'Prioritize tribal transportation realities, sovereignty-aware coordination, and culturally responsive implementation by default.',
+    'state-regional-agencies': 'Prioritize state DOT, RTPA, and transportation commission coordination and delivery constraints by default.',
+    'mixed-us': 'Blend U.S. small-town, tribal, county, regional, and state-agency context as needed.',
   } as const
 
   const responseStyleMap = {
@@ -175,7 +178,7 @@ function buildPreferenceInstruction(preferences?: z.infer<typeof preferenceSchem
 
   const geography = preferences?.geographyFocus
     ? geographyMap[preferences.geographyFocus]
-    : 'Use mixed Northern California + Bay Area context when relevant.'
+    : 'Use mixed U.S. small-town, tribal, county, regional, and state-agency context when relevant.'
   const style = preferences?.responseStyle
     ? responseStyleMap[preferences.responseStyle]
     : 'Use balanced depth: concise first, then detail.'
