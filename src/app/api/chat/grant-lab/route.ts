@@ -34,6 +34,7 @@ Output requirements:
 - Be honest about risk, match constraints, delivery readiness, and schedule dependencies.
 - Avoid fabricated statutes, fake citations, or invented numbers.
 - When revising a prior draft, preserve good material and show what changed.
+- Respect requested tone, section focus, and target word count when provided.
 
 Default structure for first draft:
 1) Problem Statement
@@ -58,6 +59,10 @@ const grantContextSchema = z.object({
   readiness: z.string().trim().max(1200).optional(),
   risks: z.string().trim().max(1200).optional(),
   extraNotes: z.string().trim().max(1200).optional(),
+  scoringPriorities: z.string().trim().max(1200).optional(),
+  tone: z.enum(['balanced', 'technical', 'executive']).optional(),
+  targetWordCount: z.coerce.number().int().min(150).max(1800).optional(),
+  sectionFocus: z.string().trim().max(240).optional(),
 })
 
 const requestSchema = z.object({
@@ -171,6 +176,10 @@ function formatGrantContext(context: z.infer<typeof grantContextSchema>): string
     `Readiness + Delivery Status: ${context.readiness || 'Not provided'}`,
     `Known Risks / Constraints: ${context.risks || 'Not provided'}`,
     `Extra Notes: ${context.extraNotes || 'Not provided'}`,
+    `Scoring Priorities: ${context.scoringPriorities || 'Not provided'}`,
+    `Preferred Tone: ${context.tone || 'balanced'}`,
+    `Target Word Count: ${context.targetWordCount || 'Not specified'}`,
+    `Section Focus: ${context.sectionFocus || 'Full narrative'}`,
   ]
 
   return lines.join('\n')

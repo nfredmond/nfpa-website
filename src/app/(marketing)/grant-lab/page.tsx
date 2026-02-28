@@ -1,8 +1,8 @@
 'use client'
 
-import { FormEvent, useMemo, useState } from 'react'
+import { FormEvent, useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
-import { ArrowRight, Loader2, Sparkles } from 'lucide-react'
+import { ArrowRight, Download, Loader2, Save, Sparkles } from 'lucide-react'
 import { Container } from '@/components/layout/container'
 import { Section } from '@/components/layout/section'
 import { Card, CardContent } from '@/components/ui/card'
@@ -30,6 +30,10 @@ type GrantContext = {
   readiness: string
   risks: string
   extraNotes: string
+  scoringPriorities: string
+  tone: 'balanced' | 'technical' | 'executive'
+  targetWordCount: number | ''
+  sectionFocus: string
 }
 
 type GrantApiResponse = {
@@ -67,9 +71,27 @@ const INITIAL_CONTEXT: GrantContext = {
   readiness: '',
   risks: '',
   extraNotes: '',
+  scoringPriorities: '',
+  tone: 'balanced',
+  targetWordCount: '',
+  sectionFocus: '',
 }
 
+const GREETING_MESSAGE: ChatMessage = {
+  role: 'assistant',
+  content:
+    'Welcome to the Grant Narrative Lab. Fill in the form, generate a first draft, then chat with me to tighten competitiveness, clarity, and delivery readiness.',
+}
+
+const REVISION_CHIPS = [
+  'Tighten this narrative for ATP scoring competitiveness.',
+  'Rewrite this in a concise executive tone for city council review.',
+  'Strengthen equity + safety argument with clearer implementation signals.',
+  'Add a stronger risk/mitigation section for delivery credibility.',
+]
+
 const VISITOR_ID_KEY = 'nfpa_grant_lab_visitor_id'
+const STORAGE_KEY = 'nfpa_grant_lab_workspace_v1'
 
 function ensureVisitorId() {
   if (typeof window === 'undefined') return 'server'
@@ -96,6 +118,10 @@ function buildDraftPrompt(context: GrantContext) {
     `Equity and safety need: ${context.equitySafetyNeed || 'Not provided'}`,
     `Readiness: ${context.readiness || 'Not provided'}`,
     `Risks: ${context.risks || 'Not provided'}`,
+    `Scoring priorities: ${context.scoringPriorities || 'Not provided'}`,
+    `Tone: ${context.tone}`,
+    `Target word count: ${context.targetWordCount || 'Not specified'}`,
+    `Section focus: ${context.sectionFocus || 'Full narrative'}`,
     `Extra notes: ${context.extraNotes || 'Not provided'}`,
     `Return a polished draft with clear section headings and practical language.`,
   ].join('\n')
@@ -103,22 +129,42 @@ function buildDraftPrompt(context: GrantContext) {
 
 export default function GrantLabPage() {
   const [context, setContext] = useState<GrantContext>(INITIAL_CONTEXT)
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    {
-      role: 'assistant',
-      content:
-        'Welcome to the Grant Narrative Lab. Fill in the form, generate a first draft, then chat with me to tighten competitiveness, clarity, and delivery readiness.',
-    },
-  ])
+  const [messages, setMessages] = useState<ChatMessage[]>([GREETING_MESSAGE])
   const [chatDraft, setChatDraft] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [isWorking, setIsWorking] = useState(false)
   const [remainingBudget, setRemainingBudget] = useState<number | null>(null)
   const [budgetCap, setBudgetCap] = useState<number | null>(null)
+  const [saveLabel, setSaveLabel] = useState('')
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY)
+      if (!raw) return
+      const parsed = JSON.parse(raw) as { context?: GrantContext; messages?: ChatMessage[] }
+      if (parsed.context) setContext({ ...INITIAL_CONTEXT, ...parsed.context })
+      if (Array.isArray(parsed.messages) && parsed.messages.length > 0) setMessages(parsed.messages)
+    } catch {
+      // ignore malformed local cache
+    }
+  }, [])
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const payload = JSON.stringify({ context, messages })
+    localStorage.setItem(STORAGE_KEY, payload)
+    setSaveLabel(`Saved ${new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`)
+  }, [context, messages])
 
   const canGenerate = useMemo(() => {
     return Boolean(context.grantProgram && context.goals.trim() && context.scope.trim()) && !isWorking
   }, [context.grantProgram, context.goals, context.scope, isWorking])
+
+  const missingRequirements = [
+    !context.goals.trim() ? 'Project goals' : null,
+    !context.scope.trim() ? 'Project scope' : null,
+  ].filter(Boolean) as string[]
 
   async function requestAssistant(nextMessages: ChatMessage[], mode: 'draft' | 'chat') {
     setError(null)
@@ -131,7 +177,11 @@ export default function GrantLabPage() {
         body: JSON.stringify({
           visitorId: ensureVisitorId(),
           mode,
-          context,
+          context: {
+            ...context,
+            targetWordCount: context.targetWordCount || undefined,
+            sectionFocus: context.sectionFocus || undefined,
+          },
           messages: nextMessages.slice(-20),
         }),
       })
@@ -140,7 +190,7 @@ export default function GrantLabPage() {
 
       if (!response.ok || !data.ok) {
         if (data.requiresSignup) {
-          setError('You reached the guest usage limit. Create a free account to keep working.')
+          setError('Your free guest session has ended. Create a free account to continue this thread and keep your draft context.')
           return
         }
         throw new Error(data.message || 'Grant assistant is currently unavailable.')
@@ -180,6 +230,60 @@ export default function GrantLabPage() {
     await requestAssistant(nextMessages, 'chat')
   }
 
+  async function onQuickRevision(prompt: string) {
+    if (isWorking) return
+    const nextMessages: ChatMessage[] = [...messages, { role: 'user', content: prompt }]
+    setMessages(nextMessages)
+    await requestAssistant(nextMessages, 'chat')
+  }
+
+  function resetWorkspace() {
+    setContext(INITIAL_CONTEXT)
+    setMessages([GREETING_MESSAGE])
+    setChatDraft('')
+    setError(null)
+  }
+
+  function loadSampleProject() {
+    setContext({
+      ...INITIAL_CONTEXT,
+      grantProgram: 'ATP (Active Transportation Program)',
+      applicantName: 'Sample City of Sierra Valley',
+      location: 'Sierra Valley, California',
+      applicantType: 'City / County',
+      projectName: 'Main St Safe Routes Corridor',
+      fundingNeed: '$2.8M',
+      localMatch: '$420k local + in-kind staff support',
+      goals: 'Reduce severe injury risk for students and seniors while increasing safe walking/biking access to schools and downtown services.',
+      scope:
+        'Install high-visibility crossings, close 0.8 miles of sidewalk gaps, add curb ramps, speed feedback signs, and traffic calming at school-adjacent segments.',
+      equitySafetyNeed:
+        'Corridor serves low-income households and students with limited transportation options; current walking paths require crossing high-speed segments.',
+      readiness: 'Concept alignment complete, outreach underway, ROW largely public, design can start within 90 days.',
+      risks: 'Seasonal construction window and utility coordination timing.',
+      scoringPriorities: 'School safety, disadvantaged community benefit, deliverability, and measurable mode-shift/safety outcomes.',
+      tone: 'balanced',
+      targetWordCount: 900,
+      sectionFocus: '',
+      extraNotes: 'Board wants phased implementation fallback if bids come in high.',
+    })
+  }
+
+  function exportMarkdown() {
+    const body = messages
+      .map((message) => `## ${message.role === 'assistant' ? 'Assistant' : 'User'}\n\n${message.content}`)
+      .join('\n\n---\n\n')
+
+    const header = `# Grant AI Lab Export\n\nGenerated: ${new Date().toISOString()}\n\n`
+    const blob = new Blob([header + body], { type: 'text/markdown;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `grant-lab-export-${new Date().toISOString().slice(0, 10)}.md`
+    link.click()
+    URL.revokeObjectURL(url)
+  }
+
   return (
     <>
       <Section spacing="lg" className="hero-mesh text-white">
@@ -196,6 +300,24 @@ export default function GrantLabPage() {
 
       <Section spacing="xl">
         <Container>
+          <div className="mb-4 flex flex-wrap items-center gap-3 text-xs text-[color:var(--foreground)]/70">
+            <span>{saveLabel || 'Draft auto-save active'}</span>
+            <button
+              type="button"
+              onClick={resetWorkspace}
+              className="inline-flex items-center gap-1 rounded-full border border-[color:var(--line)] px-3 py-1 hover:border-[color:var(--pine)] hover:text-[color:var(--pine)]"
+            >
+              Reset workspace
+            </button>
+            <button
+              type="button"
+              onClick={exportMarkdown}
+              className="inline-flex items-center gap-1 rounded-full border border-[color:var(--line)] px-3 py-1 hover:border-[color:var(--pine)] hover:text-[color:var(--pine)]"
+            >
+              <Download className="h-3.5 w-3.5" /> Export .md
+            </button>
+          </div>
+
           <div className="grid grid-cols-1 gap-6 xl:grid-cols-[1.05fr_0.95fr]">
             <Card className="p-0">
               <CardContent className="p-6">
@@ -205,6 +327,7 @@ export default function GrantLabPage() {
                 </p>
 
                 <form className="mt-5 space-y-4" onSubmit={onGenerateDraft}>
+                  <p className="text-xs uppercase tracking-[0.12em] text-[color:var(--foreground)]/60">Step 1 of 3 — Program + Applicant Context</p>
                   <div>
                     <label className="mb-1.5 block text-sm font-medium text-[color:var(--ink)]">Grant program</label>
                     <select
@@ -227,6 +350,45 @@ export default function GrantLabPage() {
                     <Input label="Project name" value={context.projectName} onChange={(event) => setContext((prev) => ({ ...prev, projectName: event.target.value }))} />
                     <Input label="Funding need" value={context.fundingNeed} onChange={(event) => setContext((prev) => ({ ...prev, fundingNeed: event.target.value }))} />
                     <Input label="Local match" value={context.localMatch} onChange={(event) => setContext((prev) => ({ ...prev, localMatch: event.target.value }))} />
+                  </div>
+
+                  <p className="pt-1 text-xs uppercase tracking-[0.12em] text-[color:var(--foreground)]/60">Step 2 of 3 — Need, Scope, and Readiness</p>
+                  <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+                    <label className="text-sm text-[color:var(--foreground)]/80">
+                      Tone
+                      <select
+                        value={context.tone}
+                        onChange={(event) => setContext((prev) => ({ ...prev, tone: event.target.value as GrantContext['tone'] }))}
+                        className="mt-1 h-10 w-full rounded-xl border border-[color:var(--line)] bg-[color:var(--background)] px-3 text-sm"
+                      >
+                        <option value="balanced">Balanced</option>
+                        <option value="technical">Technical</option>
+                        <option value="executive">Executive</option>
+                      </select>
+                    </label>
+
+                    <label className="text-sm text-[color:var(--foreground)]/80">
+                      Target word count
+                      <Input
+                        type="number"
+                        min={150}
+                        max={1800}
+                        value={context.targetWordCount}
+                        onChange={(event) =>
+                          setContext((prev) => ({
+                            ...prev,
+                            targetWordCount: event.target.value ? Number(event.target.value) : '',
+                          }))
+                        }
+                      />
+                    </label>
+
+                    <Input
+                      label="Section focus"
+                      placeholder="e.g., Equity + Safety"
+                      value={context.sectionFocus}
+                      onChange={(event) => setContext((prev) => ({ ...prev, sectionFocus: event.target.value }))}
+                    />
                   </div>
 
                   <textarea
@@ -257,6 +419,13 @@ export default function GrantLabPage() {
                     className="min-h-[80px] w-full rounded-xl border border-[color:var(--line)] bg-[color:var(--background)] px-3.5 py-2.5 text-sm text-[color:var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[color:var(--pine)]"
                   />
 
+                  <textarea
+                    value={context.scoringPriorities}
+                    onChange={(event) => setContext((prev) => ({ ...prev, scoringPriorities: event.target.value }))}
+                    placeholder="Scoring priorities (e.g., disadvantaged communities, school safety, state of readiness)"
+                    className="min-h-[80px] w-full rounded-xl border border-[color:var(--line)] bg-[color:var(--background)] px-3.5 py-2.5 text-sm text-[color:var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[color:var(--pine)]"
+                  />
+
                   <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
                     <textarea
                       value={context.risks}
@@ -272,28 +441,26 @@ export default function GrantLabPage() {
                     />
                   </div>
 
+                  <p className="pt-1 text-xs uppercase tracking-[0.12em] text-[color:var(--foreground)]/60">Step 3 of 3 — Generate and Refine</p>
+                  {missingRequirements.length > 0 && (
+                    <p className="text-xs text-[color:var(--foreground)]/70">
+                      To generate a draft, add: {missingRequirements.join(' and ')}.
+                    </p>
+                  )}
+
                   <div className="flex flex-wrap items-center gap-3">
                     <Button type="submit" disabled={!canGenerate}>
                       {isWorking ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
                       Generate grant narrative draft
                     </Button>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      onClick={() => {
-                        setContext(INITIAL_CONTEXT)
-                        setMessages([
-                          {
-                            role: 'assistant',
-                            content:
-                              'Welcome to the Grant Narrative Lab. Fill in the form, generate a first draft, then chat with me to tighten competitiveness, clarity, and delivery readiness.',
-                          },
-                        ])
-                        setError(null)
-                      }}
-                      disabled={isWorking}
-                    >
+                    <Button type="button" variant="outline" onClick={loadSampleProject} disabled={isWorking}>
+                      Load sample ATP project
+                    </Button>
+                    <Button type="button" variant="ghost" onClick={resetWorkspace} disabled={isWorking}>
                       Reset
+                    </Button>
+                    <Button type="button" variant="outline" onClick={exportMarkdown} disabled={messages.length < 2}>
+                      <Save className="mr-2 h-4 w-4" /> Export draft
                     </Button>
                   </div>
                 </form>
@@ -305,13 +472,29 @@ export default function GrantLabPage() {
                 <div className="flex items-center justify-between gap-3">
                   <h2 className="text-2xl font-semibold text-[color:var(--ink)]">Narrative Chat Editor</h2>
                   {typeof remainingBudget === 'number' && typeof budgetCap === 'number' ? (
-                    <span className="text-xs text-[color:var(--foreground)]/65">Usage left: {remainingBudget.toLocaleString()} / {budgetCap.toLocaleString()}</span>
+                    <span className="text-xs text-[color:var(--foreground)]/65">
+                      Daily AI credits remaining: {remainingBudget.toLocaleString()} / {budgetCap.toLocaleString()}
+                    </span>
                   ) : null}
                 </div>
 
                 <p className="mt-2 text-sm text-[color:var(--foreground)]/78">
                   Ask for revisions like “make this more competitive for ATP scoring,” “tighten to 350 words,” or “strengthen rural safety framing.”
                 </p>
+
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {REVISION_CHIPS.map((chip) => (
+                    <button
+                      key={chip}
+                      type="button"
+                      onClick={() => void onQuickRevision(chip)}
+                      disabled={isWorking}
+                      className="rounded-full border border-[color:var(--line)] bg-[color:var(--fog)] px-3 py-1.5 text-xs text-[color:var(--foreground)]/80 transition hover:border-[color:var(--pine)]/60 hover:text-[color:var(--pine)] disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      {chip}
+                    </button>
+                  ))}
+                </div>
 
                 <div className="mt-4 max-h-[560px] space-y-3 overflow-y-auto rounded-2xl border border-[color:var(--line)] bg-[color:var(--background)]/80 p-3">
                   {messages.map((message, index) => (
@@ -337,6 +520,12 @@ export default function GrantLabPage() {
                   <textarea
                     value={chatDraft}
                     onChange={(event) => setChatDraft(event.target.value)}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter' && !event.shiftKey) {
+                        event.preventDefault()
+                        void onSendChat()
+                      }
+                    }}
                     rows={4}
                     placeholder="Ask for edits, tone changes, section additions, or stronger score alignment..."
                     className="min-h-[96px] flex-1 resize-none rounded-xl border border-[color:var(--line)] bg-[color:var(--background)] px-3 py-2 text-sm text-[color:var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[color:var(--pine)]"
@@ -346,10 +535,16 @@ export default function GrantLabPage() {
                   </Button>
                 </div>
 
+                <p className="mt-2 text-xs text-[color:var(--foreground)]/60">Enter to send • Shift+Enter for a new line</p>
+
                 {error && <p className="mt-3 text-sm text-red-600 dark:text-red-400">{error}</p>}
 
                 <div className="mt-4 rounded-xl border border-[color:var(--line)] bg-[color:var(--fog)] p-3 text-sm text-[color:var(--foreground)]/78">
-                  Need longer sessions? <Link href="/signup?redirect=/grant-lab" className="font-semibold text-[color:var(--pine)]">Create a free account</Link> for higher usage limits.
+                  Need longer sessions?{' '}
+                  <Link href="/signup?redirect=/grant-lab" className="font-semibold text-[color:var(--pine)]">
+                    Create a free account
+                  </Link>{' '}
+                  for higher usage limits.
                 </div>
               </CardContent>
             </Card>

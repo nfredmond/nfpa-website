@@ -44,8 +44,16 @@ Safety and scope:
 - If uncertain, state uncertainty clearly.
 - This is planning support, not legal advice.`
 
+const preferenceSchema = z
+  .object({
+    geographyFocus: z.enum(['rural-norcal', 'bay-area', 'mixed']).optional(),
+    responseStyle: z.enum(['quick-take', 'deep-dive', 'board-memo']).optional(),
+  })
+  .optional()
+
 const requestSchema = z.object({
   visitorId: z.string().trim().max(120).optional(),
+  preferences: preferenceSchema,
   messages: z
     .array(
       z.object({
@@ -144,6 +152,29 @@ function extractOutputText(payload: unknown): string {
   return parts.join('\n\n').trim()
 }
 
+function buildPreferenceInstruction(preferences?: z.infer<typeof preferenceSchema>): string {
+  const geographyMap = {
+    'rural-norcal': 'Prioritize rural Northern California operating realities by default.',
+    'bay-area': 'Prioritize Bay Area policy, delivery constraints, and interagency realities by default.',
+    mixed: 'Blend Northern California rural and Bay Area context as needed.',
+  } as const
+
+  const responseStyleMap = {
+    'quick-take': 'Keep responses concise and highly actionable unless user asks for more depth.',
+    'deep-dive': 'Provide deeper analysis, alternatives, and step-by-step implementation detail.',
+    'board-memo': 'Format responses in a board-memo style with crisp headings and decision language.',
+  } as const
+
+  const geography = preferences?.geographyFocus
+    ? geographyMap[preferences.geographyFocus]
+    : 'Use mixed NorCal + Bay Area context when relevant.'
+  const style = preferences?.responseStyle
+    ? responseStyleMap[preferences.responseStyle]
+    : 'Use balanced depth: concise first, then detail.'
+
+  return `User preference guidance:\n- ${geography}\n- ${style}`
+}
+
 export async function POST(req: NextRequest) {
   try {
     const parsed = requestSchema.safeParse(await req.json())
@@ -151,7 +182,7 @@ export async function POST(req: NextRequest) {
       return jsonError('Invalid chat payload.', 400)
     }
 
-    const { visitorId, messages } = parsed.data
+    const { visitorId, messages, preferences } = parsed.data
     const inputChars = messages.reduce((sum, message) => sum + message.content.length, 0)
 
     if (inputChars > MAX_TOTAL_INPUT_CHARS) {
@@ -203,6 +234,8 @@ export async function POST(req: NextRequest) {
       return jsonError('Chat API is not configured yet.', 503)
     }
 
+    const preferenceInstruction = buildPreferenceInstruction(preferences)
+
     const openAiResponse = await fetch('https://api.openai.com/v1/responses', {
       method: 'POST',
       headers: {
@@ -216,6 +249,10 @@ export async function POST(req: NextRequest) {
           {
             role: 'system',
             content: SYSTEM_PROMPT,
+          },
+          {
+            role: 'system',
+            content: preferenceInstruction,
           },
           ...messages.map((message) => ({
             role: message.role,
