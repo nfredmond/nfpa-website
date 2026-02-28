@@ -18,7 +18,7 @@ const products = [
     id: 'openplan',
     name: 'OpenPlan',
     icon: Map,
-    stage: 'Active build',
+    stage: 'Coming March 2026',
     description:
       'Transportation analysis platform for corridor-level diagnostics, equity/safety context, and grant-ready outputs.',
     capabilities: [
@@ -79,6 +79,8 @@ const products = [
     demoLabel: null,
   },
 ]
+
+const OPENPLAN_PRELAUNCH_DISCOUNT = 0.15
 
 const principles = [
   {
@@ -187,38 +189,57 @@ export default function ProductsPage() {
           </div>
 
           <div className="mt-8 space-y-8">
-            {offerCatalog.map((product) => (
-              <div key={product.id} className="space-y-4">
-                <div>
-                  <h3 className="text-2xl font-semibold text-[color:var(--ink)]">{product.name}</h3>
-                  <p className="mt-1 text-sm text-[color:var(--foreground)]/76">{product.description}</p>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {product.tiers.map((tier) => (
-                    <Card key={tier.id} className="p-5 border border-[color:var(--line)] bg-[color:var(--background)]">
-                      <p className="text-xs font-semibold uppercase tracking-[0.13em] text-[color:var(--foreground)]/62">{tier.name}</p>
-                      <p className="mt-2 text-3xl font-semibold text-[color:var(--ink)]">
-                        ${tier.monthlyUsd}
-                        <span className="text-base font-medium text-[color:var(--foreground)]/62"> {product.priceSuffix ?? '/mo'}</span>
-                      </p>
-                      <p className="mt-2 text-sm text-[color:var(--foreground)]/75">{tier.summary}</p>
-                      <ul className="mt-4 space-y-1.5 text-sm text-[color:var(--foreground)]/78">
-                        {tier.features.map((feature) => (
-                          <li key={feature}>• {feature}</li>
-                        ))}
-                      </ul>
-                      <div className="mt-5">
-                        <Button asChild size="sm" className="w-full">
-                          <Link href={`/api/commerce/checkout?tier=${tier.id}`}>
-                            {product.checkoutCtaLabel ?? 'Subscribe'} <ArrowRight className="ml-2 h-4 w-4" />
-                          </Link>
-                        </Button>
+            {offerCatalog.map((product) => {
+              const isOpenPlan = product.id === 'openplan'
+
+              return (
+                <div key={product.id} className="space-y-4">
+                  <div>
+                    <h3 className="text-2xl font-semibold text-[color:var(--ink)]">{product.name}</h3>
+                    <p className="mt-1 text-sm text-[color:var(--foreground)]/76">{product.description}</p>
+                    {isOpenPlan ? (
+                      <div className="mt-3 rounded-xl border border-[color:var(--pine)]/25 bg-[color:var(--sand)]/35 px-4 py-3 text-sm text-[color:var(--foreground)]/85">
+                        <p className="font-semibold text-[color:var(--pine)]">Coming March 2026</p>
+                        <p className="mt-1">Pre-launch offer: 15% off all OpenPlan tiers before launch. Discount is auto-applied at checkout.</p>
                       </div>
-                    </Card>
-                  ))}
+                    ) : null}
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {product.tiers.map((tier) => {
+                      const discountedPrice = isOpenPlan ? Math.round(tier.monthlyUsd * (1 - OPENPLAN_PRELAUNCH_DISCOUNT)) : tier.monthlyUsd
+
+                      return (
+                        <Card key={tier.id} className="p-5 border border-[color:var(--line)] bg-[color:var(--background)]">
+                          <p className="text-xs font-semibold uppercase tracking-[0.13em] text-[color:var(--foreground)]/62">{tier.name}</p>
+                          <p className="mt-2 text-3xl font-semibold text-[color:var(--ink)]">
+                            ${discountedPrice}
+                            <span className="text-base font-medium text-[color:var(--foreground)]/62"> {product.priceSuffix ?? '/mo'}</span>
+                          </p>
+                          {isOpenPlan ? (
+                            <p className="mt-1 text-xs text-[color:var(--foreground)]/60">
+                              <span className="line-through">${tier.monthlyUsd}/mo</span> standard price
+                            </p>
+                          ) : null}
+                          <p className="mt-2 text-sm text-[color:var(--foreground)]/75">{tier.summary}</p>
+                          <ul className="mt-4 space-y-1.5 text-sm text-[color:var(--foreground)]/78">
+                            {tier.features.map((feature) => (
+                              <li key={feature}>• {feature}</li>
+                            ))}
+                          </ul>
+                          <div className="mt-5">
+                            <Button asChild size="sm" className="w-full">
+                              <Link href={`/api/commerce/checkout?tier=${tier.id}`}>
+                                {product.checkoutCtaLabel ?? 'Subscribe'} <ArrowRight className="ml-2 h-4 w-4" />
+                              </Link>
+                            </Button>
+                          </div>
+                        </Card>
+                      )
+                    })}
+                  </div>
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </Container>
       </Section>

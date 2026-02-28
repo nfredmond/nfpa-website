@@ -57,7 +57,7 @@ const products = [
   {
     name: 'OpenPlan',
     icon: Map,
-    description: 'Corridor analysis + equity/safety diagnostics + grant-ready report generation in one operational flow.',
+    description: 'Coming March 2026 — corridor analysis + equity/safety diagnostics + grant-ready report generation in one operational flow (15% pre-launch pricing now live).',
     href: '/products#openplan',
   },
   {
