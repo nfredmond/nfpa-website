@@ -12,6 +12,8 @@ export type OfferProduct = {
   name: string;
   description: string;
   tiers: OfferTier[];
+  priceSuffix?: string;
+  checkoutCtaLabel?: string;
 };
 
 export const offerCatalog: OfferProduct[] = [
@@ -63,7 +65,7 @@ export const offerCatalog: OfferProduct[] = [
   },
   {
     id: "ads-automation",
-    name: "Mike Ads App (Ads Automation)",
+    name: "Marketing & Planning Analytics Software",
     description: "Cross-channel campaign operations, reporting hygiene, and AI-assisted ad workflow acceleration.",
     tiers: [
       {
@@ -150,6 +152,54 @@ export const offerCatalog: OfferProduct[] = [
           "Dedicated coordination lane",
         ],
         stripePaymentLinkEnv: "STRIPE_LINK_DRONE_ENTERPRISE",
+      },
+    ],
+  },
+  {
+    id: "vibe-coding-for-planners",
+    name: "Vibe Coding for Planners (PDF Guide)",
+    description: "Practical AI workflow guide for planners who need faster drafting, cleaner QA, and defensible deliverables.",
+    priceSuffix: "one-time",
+    checkoutCtaLabel: "Subscribe",
+    tiers: [
+      {
+        id: "vibe-coding-planners-starter",
+        name: "Starter",
+        monthlyUsd: 29,
+        summary: "Core playbook for solo planners implementing a clean vibe-coding workflow.",
+        features: [
+          "Full PDF guide",
+          "Prompt structure templates",
+          "Daily planning sprint checklist",
+          "Immediate digital access",
+        ],
+        stripePaymentLinkEnv: "STRIPE_LINK_VIBE_CODING_PLANNERS_29",
+      },
+      {
+        id: "vibe-coding-planners-practitioner",
+        name: "Practitioner",
+        monthlyUsd: 39,
+        summary: "Adds quality controls for planners shipping client-facing technical deliverables.",
+        features: [
+          "Everything in Starter",
+          "QA and review rubric",
+          "Scope-to-deliverable prompt pack",
+          "Revision loop playbook",
+        ],
+        stripePaymentLinkEnv: "STRIPE_LINK_VIBE_CODING_PLANNERS_39",
+      },
+      {
+        id: "vibe-coding-planners-team",
+        name: "Team",
+        monthlyUsd: 49,
+        summary: "Best for teams standardizing methods and handoffs across multiple planners.",
+        features: [
+          "Everything in Practitioner",
+          "Team handoff workflow template",
+          "Manager review checklist",
+          "Launch planning worksheet",
+        ],
+        stripePaymentLinkEnv: "STRIPE_LINK_VIBE_CODING_PLANNERS_49",
       },
     ],
   },

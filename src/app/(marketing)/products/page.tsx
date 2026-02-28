@@ -10,7 +10,7 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Products',
   description:
-    'OpenPlan, Ads Automation, DroneOps Intelligence, and Vibe Coding for Planners: delivery-ready products with transparent Stripe checkout lanes.',
+    'OpenPlan, Marketing & Planning Analytics Software, DroneOps Intelligence, and Vibe Coding for Planners: delivery-ready products with transparent Stripe checkout lanes.',
 }
 
 const products = [
@@ -32,7 +32,7 @@ const products = [
   },
   {
     id: 'ads-automation',
-    name: 'Ads Automation',
+    name: 'Marketing & Planning Analytics Software',
     icon: Bot,
     stage: 'Client-proven v1',
     description:
@@ -115,12 +115,12 @@ export default function ProductsPage() {
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[color:var(--pine)]">Live Demo</p>
                 <p className="mt-1 text-sm text-[color:var(--foreground)]/80">
-                  Want a quick proof point? Launch Mike&apos;s Ads Automation demo in one click.
+                  Want a quick proof point? Launch the Marketing &amp; Planning Analytics Software demo in one click.
                 </p>
               </div>
               <Button asChild>
                 <a href="https://ads-chatbot.vercel.app" target="_blank" rel="noopener noreferrer">
-                  Open Mike&apos;s Demo <ArrowRight className="ml-2 h-4 w-4" />
+                  Open Live Demo <ArrowRight className="ml-2 h-4 w-4" />
                 </a>
               </Button>
             </div>
@@ -210,7 +210,7 @@ export default function ProductsPage() {
                       <div className="mt-5">
                         <Button asChild size="sm" className="w-full">
                           <Link href={`/api/commerce/checkout?tier=${tier.id}`}>
-                            {product.checkoutCtaLabel ?? 'Subscribe via Stripe'} <ArrowRight className="ml-2 h-4 w-4" />
+                            {product.checkoutCtaLabel ?? 'Subscribe'} <ArrowRight className="ml-2 h-4 w-4" />
                           </Link>
                         </Button>
                       </div>

@@ -61,9 +61,9 @@ const products = [
     href: '/products#openplan',
   },
   {
-    name: 'Ads Automation',
+    name: 'Marketing & Planning Analytics Software',
     icon: Bot,
-    description: 'A client-proven automation system evolving into a multi-industry SaaS operations platform.',
+    description: 'A client-proven analytics and automation platform for campaign and planning operations.',
     href: '/products#ads-automation',
   },
   {
@@ -144,7 +144,7 @@ export default function HomePage() {
                   rel="noopener noreferrer"
                   className="inline-flex items-center justify-center rounded-full border border-[color:var(--copper)]/70 bg-[color:var(--copper)]/15 px-6 py-3 text-[0.98rem] font-semibold text-white transition hover:bg-[color:var(--copper)]/25"
                 >
-                  Try Mike&apos;s Ads Demo
+                  Try Analytics Software Demo
                 </a>
               </div>
             </div>
