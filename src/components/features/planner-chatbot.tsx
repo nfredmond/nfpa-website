@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
-import { Bot, Loader2, RotateCcw, Send, ShieldCheck, Sparkles } from 'lucide-react'
+import { Bot, Copy, Loader2, RotateCcw, Send, ShieldCheck, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 type ChatRole = 'user' | 'assistant'
@@ -30,16 +30,23 @@ const VISITOR_ID_KEY = 'nfpa_planner_chat_visitor_id'
 const GUEST_GRACE_MS = 10 * 60 * 1000
 
 const STARTER_PROMPTS = [
-  'How can a small NorCal city strengthen ATP scoring for school access improvements?',
-  'Compare HSIP vs ATP fit for a corridor with severe pedestrian safety issues.',
-  'Build a 6-month implementation roadmap for a rural downtown complete streets package.',
-  'Draft a board-ready summary of tradeoffs between quick-build safety pilots and full capital delivery.',
+  'Prioritize ATP strategies for school corridors',
+  'HSIP fit check: severe pedestrian crash corridor',
+  'Build a 6-month complete streets action plan',
+  'Draft board-ready tradeoffs summary',
+]
+
+const REVISION_CHIPS = [
+  'Format as: Executive summary (150 words)',
+  'Format as: Board memo with recommendation + tradeoffs',
+  'Format as: 30/90/180-day implementation plan',
+  'List assumptions and missing data that would strengthen this strategy.',
 ]
 
 const GREETING_MESSAGE: ChatMessage = {
   role: 'assistant',
   content:
-    "Hi — I’m your Northern California + Bay Area planning copilot. Ask me about corridor safety, ATP/RTP strategy, VMT framing, implementation phasing, or grant competitiveness.",
+    "Hi — I’m your Northern California & Bay Area planning copilot. Ask me about corridor safety, ATP/RTP strategy, VMT framing, implementation phasing, or grant competitiveness.",
 }
 
 function ensureVisitorId() {
@@ -98,6 +105,13 @@ export function PlannerChatbot() {
     setError(null)
   }
 
+  async function copyLatestDraft() {
+    const latestAssistant = [...messages].reverse().find((message) => message.role === 'assistant')
+    if (!latestAssistant?.content || typeof navigator === 'undefined') return
+
+    await navigator.clipboard.writeText(latestAssistant.content)
+  }
+
   async function sendMessage(userText: string) {
     if (!userText.trim() || isSending || requiresSignup) return
 
@@ -114,7 +128,8 @@ export function PlannerChatbot() {
         body: JSON.stringify({
           visitorId: ensureVisitorId(),
           preferences,
-          messages: nextMessages.slice(-14),
+          // Integrity hardening: only user turns are sent from client; assistant turns are generated server-side.
+          messages: nextMessages.filter((message) => message.role === 'user').slice(-14),
         }),
       })
 
@@ -154,6 +169,11 @@ export function PlannerChatbot() {
     await sendMessage(prompt)
   }
 
+  async function onRevisionChip(prompt: string) {
+    if (isSending || requiresSignup) return
+    await sendMessage(prompt)
+  }
+
   return (
     <div className="soft-card rounded-3xl p-6 md:p-8">
       <div className="flex flex-wrap items-center gap-2 text-xs uppercase tracking-[0.18em] text-[color:var(--foreground)]/60">
@@ -166,7 +186,7 @@ export function PlannerChatbot() {
           <Bot className="h-5 w-5" />
         </div>
         <div>
-          <h3 className="section-title text-3xl text-[color:var(--ink)]">Ask the NorCal + Bay Area Urban Planning AI</h3>
+          <h3 className="section-title text-3xl text-[color:var(--ink)]">Ask the NorCal & Bay Area Urban Planning AI</h3>
           <p className="mt-2 text-[color:var(--foreground)]/78">
             Built for planners who need decision-grade guidance fast: concrete steps, explicit tradeoffs, and funding-aware recommendations.
           </p>
@@ -216,6 +236,26 @@ export function PlannerChatbot() {
               className="rounded-full border border-[color:var(--line)] bg-[color:var(--fog)] px-3 py-1.5 text-xs text-[color:var(--foreground)]/80 transition hover:border-[color:var(--pine)]/60 hover:text-[color:var(--pine)] disabled:cursor-not-allowed disabled:opacity-50"
             >
               {prompt}
+            </button>
+          ))}
+        </div>
+
+        {!requiresSignup && guestRemainingMs > 0 && guestRemainingMs <= 2 * 60 * 1000 && (
+          <div className="mb-3 rounded-xl border border-amber-300/70 bg-amber-50 px-3 py-2 text-xs text-amber-900">
+            You have about 2 minutes left in guest mode—save or create a free account to continue without interruption.
+          </div>
+        )}
+
+        <div className="mb-3 flex flex-wrap gap-2">
+          {REVISION_CHIPS.map((chip) => (
+            <button
+              key={chip}
+              type="button"
+              onClick={() => void onRevisionChip(chip)}
+              disabled={isSending || requiresSignup}
+              className="rounded-full border border-[color:var(--line)] bg-[color:var(--fog)] px-3 py-1.5 text-[11px] text-[color:var(--foreground)]/80 transition hover:border-[color:var(--pine)]/60 hover:text-[color:var(--pine)] disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {chip}
             </button>
           ))}
         </div>
@@ -272,18 +312,27 @@ export function PlannerChatbot() {
           <div className="flex flex-wrap items-center gap-3">
             <span className="inline-flex items-center gap-1.5">
               <ShieldCheck className="h-3.5 w-3.5" />
-              Free guest session: 10 minutes before signup
+              Guest access: 10-minute trial session
             </span>
-            {!requiresSignup && guestRemainingMs > 0 && <span>~{guestMinutesLeft} min left as guest</span>}
+            {!requiresSignup && guestRemainingMs > 0 && <span>Guest session: about {guestMinutesLeft} min remaining</span>}
           </div>
 
-          <button
-            type="button"
-            onClick={resetChat}
-            className="inline-flex items-center gap-1 text-[color:var(--foreground)]/70 hover:text-[color:var(--pine)]"
-          >
-            <RotateCcw className="h-3.5 w-3.5" /> New chat
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => void copyLatestDraft()}
+              className="inline-flex items-center gap-1 text-[color:var(--foreground)]/70 hover:text-[color:var(--pine)]"
+            >
+              <Copy className="h-3.5 w-3.5" /> Copy latest draft
+            </button>
+            <button
+              type="button"
+              onClick={resetChat}
+              className="inline-flex items-center gap-1 text-[color:var(--foreground)]/70 hover:text-[color:var(--pine)]"
+            >
+              <RotateCcw className="h-3.5 w-3.5" /> New chat
+            </button>
+          </div>
         </div>
 
         {error && <p className="mt-3 text-sm text-red-600 dark:text-red-400">{error}</p>}
@@ -291,7 +340,7 @@ export function PlannerChatbot() {
         {requiresSignup && (
           <div className="mt-4 rounded-2xl border border-[color:var(--line)] bg-[color:var(--fog)] p-4">
             <p className="text-sm text-[color:var(--foreground)]/80">
-              To continue the planning chat, please create a free account. This keeps usage generous for real planners while reducing abuse.
+              Your free guest session ended. Create a free account to continue this thread and keep your planning context.
             </p>
             <div className="mt-3 flex flex-wrap gap-2">
               <Button asChild>

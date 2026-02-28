@@ -1,12 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { createClient } from '@/lib/supabase/server'
+import { getSupabaseAdminClient } from '@/lib/supabase/admin'
+import { buildScopeKey, fetchUsageSnapshot, logUsageEvent } from '@/lib/ai-usage'
 
 export const runtime = 'nodejs'
 
 // OpenAI Responses API expects provider-native model IDs.
 // OpenClaw alias `openai-codex/gpt-5.3-codex` maps to `gpt-5.3-codex` here.
 const CHAT_MODEL = 'gpt-5.3-codex'
+const ROUTE_KEY = 'grant-lab'
 const MAX_CONTEXT_MESSAGES = 20
 const MAX_MESSAGE_CHARS = 5000
 const MAX_TOTAL_INPUT_CHARS = 32000
@@ -80,27 +83,6 @@ const requestSchema = z.object({
     .max(MAX_CONTEXT_MESSAGES),
 })
 
-type VisitorState = {
-  windowStartedAt: number
-  lastRequestAt: number
-  requests: number[]
-  tokenBudgetUsed: number
-}
-
-type GrantStateStore = Map<string, VisitorState>
-
-declare global {
-  // eslint-disable-next-line no-var
-  var __grantLabState: GrantStateStore | undefined
-}
-
-function getStateStore(): GrantStateStore {
-  if (!globalThis.__grantLabState) {
-    globalThis.__grantLabState = new Map<string, VisitorState>()
-  }
-  return globalThis.__grantLabState
-}
-
 function jsonError(message: string, status = 400, extras: Record<string, unknown> = {}) {
   return NextResponse.json({ ok: false, message, ...extras }, { status })
 }
@@ -112,21 +94,7 @@ function getRequesterIp(req: NextRequest): string {
 }
 
 function estimateTokens(text: string): number {
-  const chars = text.length
-  return Math.ceil(chars / 4)
-}
-
-function normalizeRateWindow(state: VisitorState, now: number, windowMs = 60 * 60 * 1000) {
-  state.requests = state.requests.filter((timestamp) => now - timestamp <= windowMs)
-}
-
-function normalizeDailyBudget(state: VisitorState, now: number) {
-  if (now - state.windowStartedAt >= 24 * 60 * 60 * 1000) {
-    state.windowStartedAt = now
-    state.tokenBudgetUsed = 0
-    state.requests = []
-    state.lastRequestAt = 0
-  }
+  return Math.ceil(text.length / 4)
 }
 
 function extractOutputText(payload: unknown): string {
@@ -186,6 +154,8 @@ function formatGrantContext(context: z.infer<typeof grantContextSchema>): string
 }
 
 export async function POST(req: NextRequest) {
+  let admin = getSupabaseAdminClient()
+
   try {
     const parsed = requestSchema.safeParse(await req.json())
     if (!parsed.success) {
@@ -193,8 +163,14 @@ export async function POST(req: NextRequest) {
     }
 
     const { visitorId, mode, context, messages } = parsed.data
+    const userMessages = messages.filter((message) => message.role === 'user').slice(-MAX_CONTEXT_MESSAGES)
+
+    if (userMessages.length === 0) {
+      return jsonError('Please send at least one user message.', 400)
+    }
+
     const contextText = formatGrantContext(context)
-    const messageText = messages.map((message) => `[${message.role}] ${message.content}`).join('\n\n')
+    const messageText = userMessages.map((message) => `[user] ${message.content}`).join('\n\n')
     const totalChars = contextText.length + messageText.length
 
     if (totalChars > MAX_TOTAL_INPUT_CHARS) {
@@ -208,51 +184,71 @@ export async function POST(req: NextRequest) {
 
     const now = Date.now()
     const ip = getRequesterIp(req)
-    const requesterKey = user?.id ? `user:${user.id}` : `guest:${visitorId || ip}`
-
-    const stateStore = getStateStore()
-    const state =
-      stateStore.get(requesterKey) ||
-      ({
-        windowStartedAt: now,
-        lastRequestAt: 0,
-        requests: [],
-        tokenBudgetUsed: 0,
-      } satisfies VisitorState)
-
-    stateStore.set(requesterKey, state)
-    normalizeDailyBudget(state, now)
-    normalizeRateWindow(state, now)
+    const scopeKey = buildScopeKey(user?.id, visitorId, ip)
+    const requesterKind = user ? 'member' : 'guest'
 
     const maxPerHour = user ? MEMBER_MAX_REQUESTS_PER_HOUR : GUEST_MAX_REQUESTS_PER_HOUR
     const minIntervalMs = user ? MEMBER_MIN_INTERVAL_MS : GUEST_MIN_INTERVAL_MS
-
-    if (state.lastRequestAt && now - state.lastRequestAt < minIntervalMs) {
-      return jsonError('You are sending messages too quickly. Please wait a moment.', 429)
-    }
-
-    if (state.requests.length >= maxPerHour) {
-      return jsonError('You have reached the hourly limit for this tool. Please retry shortly.', 429)
-    }
-
     const budgetCap = user ? MEMBER_DAILY_TOKEN_BUDGET : GUEST_DAILY_TOKEN_BUDGET
+
+    let tokensUsed24h = 0
+
+    if (admin) {
+      try {
+        const snapshot = await fetchUsageSnapshot(admin, scopeKey, ROUTE_KEY, now)
+        tokensUsed24h = snapshot.tokensUsed24h
+
+        if (snapshot.lastRequestAtMs && now - snapshot.lastRequestAtMs < minIntervalMs) {
+          await logUsageEvent(admin, {
+            scopeKey,
+            route: ROUTE_KEY,
+            requesterKind,
+            userId: user?.id,
+            visitorId: visitorId ?? null,
+            ip,
+            status: 'rate_limited',
+            metadata: { reason: 'min_interval' },
+          })
+          return jsonError('You are sending messages too quickly. Please wait a moment.', 429)
+        }
+
+        if (snapshot.requestsLastHour >= maxPerHour) {
+          await logUsageEvent(admin, {
+            scopeKey,
+            route: ROUTE_KEY,
+            requesterKind,
+            userId: user?.id,
+            visitorId: visitorId ?? null,
+            ip,
+            status: 'rate_limited',
+            metadata: { reason: 'hourly_limit' },
+          })
+          return jsonError('You have reached the hourly limit for this tool. Please retry shortly.', 429)
+        }
+      } catch (usageError) {
+        console.error('Grant usage snapshot failed; continuing without persistent limits', usageError)
+        admin = null
+      }
+    }
+
     const estimatedInputTokens = estimateTokens(`${contextText}\n\n${messageText}`)
 
-    if (state.tokenBudgetUsed + estimatedInputTokens > budgetCap) {
+    if (tokensUsed24h + estimatedInputTokens > budgetCap) {
       return jsonError('Daily AI usage budget reached for this session. Please continue tomorrow or sign in for higher limits.', 429, {
         requiresSignup: !user,
-        remainingBudget: Math.max(0, budgetCap - state.tokenBudgetUsed),
+        remainingBudget: Math.max(0, budgetCap - tokensUsed24h),
       })
     }
-
-    state.lastRequestAt = now
-    state.requests.push(now)
-    state.tokenBudgetUsed += estimatedInputTokens
 
     const apiKey = process.env.OPENAI_API_KEY
     if (!apiKey) {
       return jsonError('Grant AI is not configured yet.', 503)
     }
+
+    const modeInstruction =
+      mode === 'draft'
+        ? 'The user is requesting a first full narrative draft. Use the default structure unless section focus says otherwise.'
+        : 'The user is revising an existing draft. Preserve strong material and apply requested edits precisely.'
 
     const maxOutputTokens = user ? MAX_OUTPUT_TOKENS_MEMBER : MAX_OUTPUT_TOKENS_GUEST
 
@@ -272,10 +268,14 @@ export async function POST(req: NextRequest) {
           },
           {
             role: 'system',
-            content: `Current workflow mode: ${mode}.\nGrant context:\n${contextText}`,
+            content: modeInstruction,
           },
-          ...messages.map((message) => ({
-            role: message.role,
+          {
+            role: 'system',
+            content: `Grant context:\n${contextText}`,
+          },
+          ...userMessages.map((message) => ({
+            role: 'user',
             content: message.content,
           })),
         ],
@@ -288,6 +288,25 @@ export async function POST(req: NextRequest) {
         status: openAiResponse.status,
         details,
       })
+
+      if (admin) {
+        try {
+          await logUsageEvent(admin, {
+            scopeKey,
+            route: ROUTE_KEY,
+            requesterKind,
+            userId: user?.id,
+            visitorId: visitorId ?? null,
+            ip,
+            inputTokens: estimatedInputTokens,
+            status: 'upstream_error',
+            metadata: { status: openAiResponse.status },
+          })
+        } catch (logError) {
+          console.error('Grant usage log failed (upstream error)', logError)
+        }
+      }
+
       return jsonError('Grant assistant is temporarily unavailable. Please retry in a minute.', 502)
     }
 
@@ -299,13 +318,36 @@ export async function POST(req: NextRequest) {
     }
 
     const outputTokens = estimateTokens(reply)
-    state.tokenBudgetUsed += outputTokens
+    const totalUsed = tokensUsed24h + estimatedInputTokens + outputTokens
+
+    if (admin) {
+      try {
+        await logUsageEvent(admin, {
+          scopeKey,
+          route: ROUTE_KEY,
+          requesterKind,
+          userId: user?.id,
+          visitorId: visitorId ?? null,
+          ip,
+          inputTokens: estimatedInputTokens,
+          outputTokens,
+          status: 'completed',
+          metadata: {
+            model: CHAT_MODEL,
+            mode,
+            messageCount: userMessages.length,
+          },
+        })
+      } catch (logError) {
+        console.error('Grant usage log failed (completed)', logError)
+      }
+    }
 
     return NextResponse.json({
       ok: true,
       reply,
       model: CHAT_MODEL,
-      remainingBudget: Math.max(0, budgetCap - state.tokenBudgetUsed),
+      remainingBudget: Math.max(0, budgetCap - totalUsed),
       budgetCap,
       isAuthenticated: !!user,
     })

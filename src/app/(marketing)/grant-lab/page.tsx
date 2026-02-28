@@ -2,7 +2,7 @@
 
 import { FormEvent, useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
-import { ArrowRight, Download, Loader2, Save, Sparkles } from 'lucide-react'
+import { ArrowRight, Copy, Download, Loader2, Save, Sparkles } from 'lucide-react'
 import { Container } from '@/components/layout/container'
 import { Section } from '@/components/layout/section'
 import { Card, CardContent } from '@/components/ui/card'
@@ -88,6 +88,7 @@ const REVISION_CHIPS = [
   'Rewrite this in a concise executive tone for city council review.',
   'Strengthen equity + safety argument with clearer implementation signals.',
   'Add a stronger risk/mitigation section for delivery credibility.',
+  'List assumptions and missing data that would improve scoring strength.',
 ]
 
 const VISITOR_ID_KEY = 'nfpa_grant_lab_visitor_id'
@@ -103,29 +104,6 @@ function ensureVisitorId() {
   return id
 }
 
-function buildDraftPrompt(context: GrantContext) {
-  return [
-    `Please draft a competitive narrative for this grant application using the supplied details.`,
-    `Grant program: ${context.grantProgram}`,
-    `Applicant: ${context.applicantName || 'Not provided'}`,
-    `Location: ${context.location || 'Not provided'}`,
-    `Applicant type: ${context.applicantType || 'Not provided'}`,
-    `Project name: ${context.projectName || 'Not provided'}`,
-    `Funding need: ${context.fundingNeed || 'Not provided'}`,
-    `Local match: ${context.localMatch || 'Not provided'}`,
-    `Goals: ${context.goals || 'Not provided'}`,
-    `Scope: ${context.scope || 'Not provided'}`,
-    `Equity and safety need: ${context.equitySafetyNeed || 'Not provided'}`,
-    `Readiness: ${context.readiness || 'Not provided'}`,
-    `Risks: ${context.risks || 'Not provided'}`,
-    `Scoring priorities: ${context.scoringPriorities || 'Not provided'}`,
-    `Tone: ${context.tone}`,
-    `Target word count: ${context.targetWordCount || 'Not specified'}`,
-    `Section focus: ${context.sectionFocus || 'Full narrative'}`,
-    `Extra notes: ${context.extraNotes || 'Not provided'}`,
-    `Return a polished draft with clear section headings and practical language.`,
-  ].join('\n')
-}
 
 export default function GrantLabPage() {
   const [context, setContext] = useState<GrantContext>(INITIAL_CONTEXT)
@@ -154,7 +132,7 @@ export default function GrantLabPage() {
     if (typeof window === 'undefined') return
     const payload = JSON.stringify({ context, messages })
     localStorage.setItem(STORAGE_KEY, payload)
-    setSaveLabel(`Saved ${new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`)
+    setSaveLabel(`Auto-saved locally on this device at ${new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`)
   }, [context, messages])
 
   const canGenerate = useMemo(() => {
@@ -165,6 +143,19 @@ export default function GrantLabPage() {
     !context.goals.trim() ? 'Project goals' : null,
     !context.scope.trim() ? 'Project scope' : null,
   ].filter(Boolean) as string[]
+
+  const grantProgramTip = useMemo(() => {
+    if (context.grantProgram.includes('ATP')) {
+      return 'Tip: Highlight school access, disadvantaged communities, and measurable safety/mode-shift outcomes.'
+    }
+    if (context.grantProgram.includes('HSIP')) {
+      return 'Tip: Include collision patterns, severity trends, and countermeasure logic tied to crash reduction.'
+    }
+    if (context.grantProgram.includes('SS4A')) {
+      return 'Tip: Show Safety Action Plan alignment and implementation readiness for near-term delivery.'
+    }
+    return 'Tip: Be explicit about readiness, local match strategy, and measurable outcomes.'
+  }, [context.grantProgram])
 
   async function requestAssistant(nextMessages: ChatMessage[], mode: 'draft' | 'chat') {
     setError(null)
@@ -182,7 +173,8 @@ export default function GrantLabPage() {
             targetWordCount: context.targetWordCount || undefined,
             sectionFocus: context.sectionFocus || undefined,
           },
-          messages: nextMessages.slice(-20),
+          // Integrity hardening: only user turns are sent from client.
+          messages: nextMessages.filter((message) => message.role === 'user').slice(-20),
         }),
       })
 
@@ -214,8 +206,7 @@ export default function GrantLabPage() {
     event.preventDefault()
     if (!canGenerate) return
 
-    const prompt = buildDraftPrompt(context)
-    const nextMessages: ChatMessage[] = [...messages, { role: 'user', content: prompt }]
+    const nextMessages: ChatMessage[] = [...messages, { role: 'user', content: 'Generate first draft using current form context.' }]
     setMessages(nextMessages)
     await requestAssistant(nextMessages, 'draft')
   }
@@ -284,6 +275,24 @@ export default function GrantLabPage() {
     URL.revokeObjectURL(url)
   }
 
+  async function copyLatestDraft() {
+    const latestAssistant = [...messages].reverse().find((message) => message.role === 'assistant')
+    if (!latestAssistant?.content || typeof navigator === 'undefined') return
+
+    await navigator.clipboard.writeText(latestAssistant.content)
+    setSaveLabel('Copied latest draft')
+  }
+
+  async function copyExecutiveSummary() {
+    const latestAssistant = [...messages].reverse().find((message) => message.role === 'assistant')
+    if (!latestAssistant?.content || typeof navigator === 'undefined') return
+
+    const summarySource = latestAssistant.content.slice(0, 1400)
+    const summary = summarySource.length > 420 ? `${summarySource.slice(0, 420)}…` : summarySource
+    await navigator.clipboard.writeText(summary)
+    setSaveLabel('Copied executive summary')
+  }
+
   return (
     <>
       <Section spacing="lg" className="hero-mesh text-white">
@@ -301,7 +310,7 @@ export default function GrantLabPage() {
       <Section spacing="xl">
         <Container>
           <div className="mb-4 flex flex-wrap items-center gap-3 text-xs text-[color:var(--foreground)]/70">
-            <span>{saveLabel || 'Draft auto-save active'}</span>
+            <span>{saveLabel || 'Auto-save active'}</span>
             <button
               type="button"
               onClick={resetWorkspace}
@@ -329,7 +338,7 @@ export default function GrantLabPage() {
                 <form className="mt-5 space-y-4" onSubmit={onGenerateDraft}>
                   <p className="text-xs uppercase tracking-[0.12em] text-[color:var(--foreground)]/60">Step 1 of 3 — Program + Applicant Context</p>
                   <div>
-                    <label className="mb-1.5 block text-sm font-medium text-[color:var(--ink)]">Grant program</label>
+                    <label className="mb-1.5 block text-sm font-medium text-[color:var(--ink)]">Grant program *</label>
                     <select
                       value={context.grantProgram}
                       onChange={(event) => setContext((prev) => ({ ...prev, grantProgram: event.target.value }))}
@@ -341,6 +350,7 @@ export default function GrantLabPage() {
                         </option>
                       ))}
                     </select>
+                    <p className="mt-1 text-xs text-[color:var(--foreground)]/70">{grantProgramTip}</p>
                   </div>
 
                   <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
@@ -349,7 +359,7 @@ export default function GrantLabPage() {
                     <Input label="Applicant type" value={context.applicantType} onChange={(event) => setContext((prev) => ({ ...prev, applicantType: event.target.value }))} />
                     <Input label="Project name" value={context.projectName} onChange={(event) => setContext((prev) => ({ ...prev, projectName: event.target.value }))} />
                     <Input label="Funding need" value={context.fundingNeed} onChange={(event) => setContext((prev) => ({ ...prev, fundingNeed: event.target.value }))} />
-                    <Input label="Local match" value={context.localMatch} onChange={(event) => setContext((prev) => ({ ...prev, localMatch: event.target.value }))} />
+                    <Input label="Local match capacity" value={context.localMatch} onChange={(event) => setContext((prev) => ({ ...prev, localMatch: event.target.value }))} />
                   </div>
 
                   <p className="pt-1 text-xs uppercase tracking-[0.12em] text-[color:var(--foreground)]/60">Step 2 of 3 — Need, Scope, and Readiness</p>
@@ -391,55 +401,71 @@ export default function GrantLabPage() {
                     />
                   </div>
 
-                  <textarea
-                    value={context.goals}
-                    onChange={(event) => setContext((prev) => ({ ...prev, goals: event.target.value }))}
-                    placeholder="Project goals and outcomes (required for draft generation)"
-                    className="min-h-[88px] w-full rounded-xl border border-[color:var(--line)] bg-[color:var(--background)] px-3.5 py-2.5 text-sm text-[color:var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[color:var(--pine)]"
-                  />
-
-                  <textarea
-                    value={context.scope}
-                    onChange={(event) => setContext((prev) => ({ ...prev, scope: event.target.value }))}
-                    placeholder="Scope, location details, phases, and delivery plan (required for draft generation)"
-                    className="min-h-[104px] w-full rounded-xl border border-[color:var(--line)] bg-[color:var(--background)] px-3.5 py-2.5 text-sm text-[color:var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[color:var(--pine)]"
-                  />
-
-                  <textarea
-                    value={context.equitySafetyNeed}
-                    onChange={(event) => setContext((prev) => ({ ...prev, equitySafetyNeed: event.target.value }))}
-                    placeholder="Safety and equity context"
-                    className="min-h-[88px] w-full rounded-xl border border-[color:var(--line)] bg-[color:var(--background)] px-3.5 py-2.5 text-sm text-[color:var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[color:var(--pine)]"
-                  />
-
-                  <textarea
-                    value={context.readiness}
-                    onChange={(event) => setContext((prev) => ({ ...prev, readiness: event.target.value }))}
-                    placeholder="Readiness: outreach completed, CEQA/NEPA status, right-of-way, design progress"
-                    className="min-h-[80px] w-full rounded-xl border border-[color:var(--line)] bg-[color:var(--background)] px-3.5 py-2.5 text-sm text-[color:var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[color:var(--pine)]"
-                  />
-
-                  <textarea
-                    value={context.scoringPriorities}
-                    onChange={(event) => setContext((prev) => ({ ...prev, scoringPriorities: event.target.value }))}
-                    placeholder="Scoring priorities (e.g., disadvantaged communities, school safety, state of readiness)"
-                    className="min-h-[80px] w-full rounded-xl border border-[color:var(--line)] bg-[color:var(--background)] px-3.5 py-2.5 text-sm text-[color:var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[color:var(--pine)]"
-                  />
-
-                  <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                  <label className="text-sm text-[color:var(--foreground)]/80">
+                    Project goals (required)
                     <textarea
-                      value={context.risks}
-                      onChange={(event) => setContext((prev) => ({ ...prev, risks: event.target.value }))}
-                      placeholder="Risks and constraints"
-                      className="min-h-[80px] w-full rounded-xl border border-[color:var(--line)] bg-[color:var(--background)] px-3.5 py-2.5 text-sm text-[color:var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[color:var(--pine)]"
+                      value={context.goals}
+                      onChange={(event) => setContext((prev) => ({ ...prev, goals: event.target.value }))}
+                      placeholder="State outcomes, target users, and why this investment is needed now."
+                      className="mt-1 min-h-[88px] w-full rounded-xl border border-[color:var(--line)] bg-[color:var(--background)] px-3.5 py-2.5 text-sm text-[color:var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[color:var(--pine)]"
                     />
+                  </label>
+
+                  <label className="text-sm text-[color:var(--foreground)]/80">
+                    Project scope (required)
                     <textarea
-                      value={context.extraNotes}
-                      onChange={(event) => setContext((prev) => ({ ...prev, extraNotes: event.target.value }))}
-                      placeholder="Extra notes, political context, board priorities"
-                      className="min-h-[80px] w-full rounded-xl border border-[color:var(--line)] bg-[color:var(--background)] px-3.5 py-2.5 text-sm text-[color:var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[color:var(--pine)]"
+                      value={context.scope}
+                      onChange={(event) => setContext((prev) => ({ ...prev, scope: event.target.value }))}
+                      placeholder="Describe location, design elements, delivery phases, and implementation timeline."
+                      className="mt-1 min-h-[104px] w-full rounded-xl border border-[color:var(--line)] bg-[color:var(--background)] px-3.5 py-2.5 text-sm text-[color:var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[color:var(--pine)]"
                     />
-                  </div>
+                  </label>
+
+                  <label className="text-sm text-[color:var(--foreground)]/80">
+                    Equity + safety need
+                    <textarea
+                      value={context.equitySafetyNeed}
+                      onChange={(event) => setContext((prev) => ({ ...prev, equitySafetyNeed: event.target.value }))}
+                      placeholder="Who benefits most, what safety gaps exist, and what harms are being reduced?"
+                      className="mt-1 min-h-[88px] w-full rounded-xl border border-[color:var(--line)] bg-[color:var(--background)] px-3.5 py-2.5 text-sm text-[color:var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[color:var(--pine)]"
+                    />
+                  </label>
+
+                  <details className="rounded-xl border border-[color:var(--line)] bg-[color:var(--fog)]/55 p-3">
+                    <summary className="cursor-pointer text-sm font-semibold text-[color:var(--ink)]">Advanced project details (optional)</summary>
+                    <p className="mt-1 text-xs text-[color:var(--foreground)]/70">Open this section for readiness, scoring strategy, risk, and political/board context.</p>
+
+                    <div className="mt-3 space-y-3">
+                      <textarea
+                        value={context.readiness}
+                        onChange={(event) => setContext((prev) => ({ ...prev, readiness: event.target.value }))}
+                        placeholder="Readiness: outreach completed, CEQA/NEPA status, right-of-way, design progress"
+                        className="min-h-[80px] w-full rounded-xl border border-[color:var(--line)] bg-[color:var(--background)] px-3.5 py-2.5 text-sm text-[color:var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[color:var(--pine)]"
+                      />
+
+                      <textarea
+                        value={context.scoringPriorities}
+                        onChange={(event) => setContext((prev) => ({ ...prev, scoringPriorities: event.target.value }))}
+                        placeholder="Scoring priorities (e.g., disadvantaged communities, school safety, state of readiness)"
+                        className="min-h-[80px] w-full rounded-xl border border-[color:var(--line)] bg-[color:var(--background)] px-3.5 py-2.5 text-sm text-[color:var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[color:var(--pine)]"
+                      />
+
+                      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                        <textarea
+                          value={context.risks}
+                          onChange={(event) => setContext((prev) => ({ ...prev, risks: event.target.value }))}
+                          placeholder="Risks and constraints"
+                          className="min-h-[80px] w-full rounded-xl border border-[color:var(--line)] bg-[color:var(--background)] px-3.5 py-2.5 text-sm text-[color:var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[color:var(--pine)]"
+                        />
+                        <textarea
+                          value={context.extraNotes}
+                          onChange={(event) => setContext((prev) => ({ ...prev, extraNotes: event.target.value }))}
+                          placeholder="Additional context / board priorities"
+                          className="min-h-[80px] w-full rounded-xl border border-[color:var(--line)] bg-[color:var(--background)] px-3.5 py-2.5 text-sm text-[color:var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[color:var(--pine)]"
+                        />
+                      </div>
+                    </div>
+                  </details>
 
                   <p className="pt-1 text-xs uppercase tracking-[0.12em] text-[color:var(--foreground)]/60">Step 3 of 3 — Generate and Refine</p>
                   {missingRequirements.length > 0 && (
@@ -469,13 +495,21 @@ export default function GrantLabPage() {
 
             <Card className="p-0">
               <CardContent className="p-6">
-                <div className="flex items-center justify-between gap-3">
+                <div className="flex flex-wrap items-center justify-between gap-3">
                   <h2 className="text-2xl font-semibold text-[color:var(--ink)]">Narrative Chat Editor</h2>
-                  {typeof remainingBudget === 'number' && typeof budgetCap === 'number' ? (
-                    <span className="text-xs text-[color:var(--foreground)]/65">
-                      Daily AI credits remaining: {remainingBudget.toLocaleString()} / {budgetCap.toLocaleString()}
-                    </span>
-                  ) : null}
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Button type="button" variant="outline" onClick={() => void copyLatestDraft()} disabled={messages.length < 2 || isWorking}>
+                      <Copy className="mr-1.5 h-3.5 w-3.5" /> Copy latest draft
+                    </Button>
+                    <Button type="button" variant="outline" onClick={() => void copyExecutiveSummary()} disabled={messages.length < 2 || isWorking}>
+                      Copy executive summary
+                    </Button>
+                    {typeof remainingBudget === 'number' && typeof budgetCap === 'number' ? (
+                      <span className="text-xs text-[color:var(--foreground)]/65">
+                        Daily AI credits remaining: {remainingBudget.toLocaleString()} of {budgetCap.toLocaleString()}
+                      </span>
+                    ) : null}
+                  </div>
                 </div>
 
                 <p className="mt-2 text-sm text-[color:var(--foreground)]/78">
@@ -540,11 +574,11 @@ export default function GrantLabPage() {
                 {error && <p className="mt-3 text-sm text-red-600 dark:text-red-400">{error}</p>}
 
                 <div className="mt-4 rounded-xl border border-[color:var(--line)] bg-[color:var(--fog)] p-3 text-sm text-[color:var(--foreground)]/78">
-                  Need longer sessions?{' '}
+                  Save your narrative drafts and unlock unlimited AI revisions with a{' '}
                   <Link href="/signup?redirect=/grant-lab" className="font-semibold text-[color:var(--pine)]">
-                    Create a free account
-                  </Link>{' '}
-                  for higher usage limits.
+                    free account
+                  </Link>
+                  .
                 </div>
               </CardContent>
             </Card>

@@ -1,12 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { createClient } from '@/lib/supabase/server'
+import { getSupabaseAdminClient } from '@/lib/supabase/admin'
+import { buildScopeKey, fetchUsageSnapshot, logUsageEvent } from '@/lib/ai-usage'
 
 export const runtime = 'nodejs'
 
 // OpenAI Responses API expects provider-native model IDs.
 // OpenClaw alias `openai-codex/gpt-5.3-codex` maps to `gpt-5.3-codex` here.
 const CHAT_MODEL = 'gpt-5.3-codex'
+const ROUTE_KEY = 'planner-chat'
 const MAX_CONTEXT_MESSAGES = 16
 const MAX_MESSAGE_CHARS = 4000
 const MAX_TOTAL_INPUT_CHARS = 24000
@@ -95,11 +98,15 @@ function getRequesterIp(req: NextRequest): string {
   return forwarded || realIp || 'unknown-ip'
 }
 
+function estimateTokens(text: string): number {
+  return Math.ceil(text.length / 4)
+}
+
 function normalizeRateWindow(state: VisitorState, now: number, windowMs = 60 * 60 * 1000) {
   state.requests = state.requests.filter((timestamp) => now - timestamp <= windowMs)
 }
 
-function enforceRateLimits(
+function enforceFallbackRateLimit(
   state: VisitorState,
   now: number,
   maxPerHour: number,
@@ -176,6 +183,8 @@ function buildPreferenceInstruction(preferences?: z.infer<typeof preferenceSchem
 }
 
 export async function POST(req: NextRequest) {
+  let admin = getSupabaseAdminClient()
+
   try {
     const parsed = requestSchema.safeParse(await req.json())
     if (!parsed.success) {
@@ -183,7 +192,13 @@ export async function POST(req: NextRequest) {
     }
 
     const { visitorId, messages, preferences } = parsed.data
-    const inputChars = messages.reduce((sum, message) => sum + message.content.length, 0)
+    const userMessages = messages.filter((message) => message.role === 'user').slice(-MAX_CONTEXT_MESSAGES)
+
+    if (userMessages.length === 0) {
+      return jsonError('Please send a user message before requesting a response.', 400)
+    }
+
+    const inputChars = userMessages.reduce((sum, message) => sum + message.content.length, 0)
 
     if (inputChars > MAX_TOTAL_INPUT_CHARS) {
       return jsonError('Your message history is too long. Please start a new thread.', 413)
@@ -196,36 +211,93 @@ export async function POST(req: NextRequest) {
 
     const now = Date.now()
     const ip = getRequesterIp(req)
-    const requesterKey = user?.id ? `user:${user.id}` : `guest:${visitorId || ip}`
+    const scopeKey = buildScopeKey(user?.id, visitorId, ip)
+    const requesterKind = user ? 'member' : 'guest'
 
-    const stateStore = getStateStore()
-    const state =
-      stateStore.get(requesterKey) ||
-      ({
-        firstSeenAt: now,
-        lastRequestAt: 0,
-        requests: [],
-      } satisfies VisitorState)
+    const maxPerHour = user ? MEMBER_MAX_REQUESTS_PER_HOUR : GUEST_MAX_REQUESTS_PER_HOUR
+    const minIntervalMs = user ? MEMBER_MIN_INTERVAL_MS : GUEST_MIN_INTERVAL_MS
 
-    stateStore.set(requesterKey, state)
+    let guestExpiresAt: number | null = null
 
+    // Guest grace remains in-memory to keep UX consistent even if usage events table is unavailable.
     if (!user) {
-      const elapsed = now - state.firstSeenAt
-      if (elapsed > GUEST_GRACE_MS) {
+      const stateStore = getStateStore()
+      const state =
+        stateStore.get(scopeKey) ||
+        ({
+          firstSeenAt: now,
+          lastRequestAt: 0,
+          requests: [],
+        } satisfies VisitorState)
+      stateStore.set(scopeKey, state)
+      guestExpiresAt = state.firstSeenAt + GUEST_GRACE_MS
+
+      if (now - state.firstSeenAt > GUEST_GRACE_MS) {
+        if (admin) {
+          try {
+            await logUsageEvent(admin, {
+              scopeKey,
+              route: ROUTE_KEY,
+              requesterKind,
+              userId: user?.id,
+              visitorId: visitorId ?? null,
+              ip,
+              status: 'guest_expired',
+              metadata: { reason: 'guest_grace_expired' },
+            })
+          } catch {
+            admin = null
+          }
+        }
+
         return jsonError('Signup required to continue this chat.', 401, {
           requiresSignup: true,
-          guestExpiresAt: state.firstSeenAt + GUEST_GRACE_MS,
+          guestExpiresAt,
         })
       }
 
-      const rateError = enforceRateLimits(state, now, GUEST_MAX_REQUESTS_PER_HOUR, GUEST_MIN_INTERVAL_MS)
-      if (rateError) {
-        return jsonError(rateError, 429)
+      if (!admin) {
+        const fallbackRateError = enforceFallbackRateLimit(state, now, maxPerHour, minIntervalMs)
+        if (fallbackRateError) {
+          return jsonError(fallbackRateError, 429)
+        }
       }
-    } else {
-      const rateError = enforceRateLimits(state, now, MEMBER_MAX_REQUESTS_PER_HOUR, MEMBER_MIN_INTERVAL_MS)
-      if (rateError) {
-        return jsonError(rateError, 429)
+    }
+
+    if (admin) {
+      try {
+        const snapshot = await fetchUsageSnapshot(admin, scopeKey, ROUTE_KEY, now)
+
+        if (snapshot.lastRequestAtMs && now - snapshot.lastRequestAtMs < minIntervalMs) {
+          await logUsageEvent(admin, {
+            scopeKey,
+            route: ROUTE_KEY,
+            requesterKind,
+            userId: user?.id,
+            visitorId: visitorId ?? null,
+            ip,
+            status: 'rate_limited',
+            metadata: { reason: 'min_interval' },
+          })
+          return jsonError('You are sending messages too quickly. Please wait a moment.', 429)
+        }
+
+        if (snapshot.requestsLastHour >= maxPerHour) {
+          await logUsageEvent(admin, {
+            scopeKey,
+            route: ROUTE_KEY,
+            requesterKind,
+            userId: user?.id,
+            visitorId: visitorId ?? null,
+            ip,
+            status: 'rate_limited',
+            metadata: { reason: 'hourly_limit' },
+          })
+          return jsonError('You have hit the hourly message limit. Please try again shortly.', 429)
+        }
+      } catch (usageError) {
+        console.error('Planner usage snapshot failed; falling back to in-memory limits', usageError)
+        admin = null
       }
     }
 
@@ -235,6 +307,9 @@ export async function POST(req: NextRequest) {
     }
 
     const preferenceInstruction = buildPreferenceInstruction(preferences)
+    const estimatedInputTokens = estimateTokens(
+      `${preferenceInstruction}\n\n${userMessages.map((message) => message.content).join('\n\n')}`
+    )
 
     const openAiResponse = await fetch('https://api.openai.com/v1/responses', {
       method: 'POST',
@@ -254,8 +329,8 @@ export async function POST(req: NextRequest) {
             role: 'system',
             content: preferenceInstruction,
           },
-          ...messages.map((message) => ({
-            role: message.role,
+          ...userMessages.map((message) => ({
+            role: 'user',
             content: message.content,
           })),
         ],
@@ -268,7 +343,27 @@ export async function POST(req: NextRequest) {
         status: openAiResponse.status,
         details,
       })
-      return jsonError('The planning assistant is temporarily unavailable. Please retry in a minute.', 502)
+
+      if (admin) {
+        try {
+          await logUsageEvent(admin, {
+            scopeKey,
+            route: ROUTE_KEY,
+            requesterKind,
+            userId: user?.id,
+            visitorId: visitorId ?? null,
+            ip,
+            inputTokens: estimatedInputTokens,
+            outputTokens: 0,
+            status: 'upstream_error',
+            metadata: { status: openAiResponse.status },
+          })
+        } catch (logError) {
+          console.error('Planner usage log failed (upstream error)', logError)
+        }
+      }
+
+      return jsonError('We couldn\'t generate a response right now. Please retry in 30 seconds.', 502)
     }
 
     const payload = (await openAiResponse.json()) as unknown
@@ -278,11 +373,35 @@ export async function POST(req: NextRequest) {
       return jsonError('No response generated. Please try again.', 502)
     }
 
+    const outputTokens = estimateTokens(reply)
+
+    if (admin) {
+      try {
+        await logUsageEvent(admin, {
+          scopeKey,
+          route: ROUTE_KEY,
+          requesterKind,
+          userId: user?.id,
+          visitorId: visitorId ?? null,
+          ip,
+          inputTokens: estimatedInputTokens,
+          outputTokens,
+          status: 'completed',
+          metadata: {
+            model: CHAT_MODEL,
+            messageCount: userMessages.length,
+          },
+        })
+      } catch (logError) {
+        console.error('Planner usage log failed (completed)', logError)
+      }
+    }
+
     return NextResponse.json({
       ok: true,
       reply,
       model: CHAT_MODEL,
-      guestExpiresAt: !user ? state.firstSeenAt + GUEST_GRACE_MS : null,
+      guestExpiresAt: !user ? guestExpiresAt : null,
     })
   } catch (error) {
     console.error('Planner chat route error', error)
