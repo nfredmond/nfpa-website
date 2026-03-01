@@ -100,7 +100,7 @@ export function Footer() {
           </div>
 
           <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-white/15 pt-7 md:flex-row">
-            <p className="text-sm text-white/72">© {currentYear} Nat Ford LLC. All rights reserved.</p>
+            <p className="text-sm text-white/72">© {currentYear} Nat Ford. All rights reserved.</p>
             <div className="flex gap-6">
               <Link href="/privacy" className="text-sm text-white/72 transition-colors duration-300 hover:text-white">
                 Privacy

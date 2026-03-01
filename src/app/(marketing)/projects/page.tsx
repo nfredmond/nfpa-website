@@ -72,7 +72,7 @@ export default function ProjectsPage() {
             <h1 className="section-title mt-5 text-5xl md:text-6xl leading-[0.96] text-white">Representative prior-employment project history.</h1>
             <p className="mt-5 text-lg text-white/82 max-w-3xl">
               This page is included for experience attribution and technical context. These items are not presented as Nat
-              Ford LLC company portfolio projects.
+              Ford company portfolio projects.
             </p>
           </div>
         </Container>
