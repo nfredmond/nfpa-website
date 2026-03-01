@@ -351,21 +351,23 @@ export default function GrantLabPage() {
       <Section spacing="lg" className="hero-mesh text-white">
         <Container>
           <div className="max-w-4xl">
-            <span className="pill">New · Grant AI</span>
-            <h1 className="section-title mt-5 text-5xl md:text-6xl leading-[0.96] text-white">AI Grant Narrative Lab</h1>
-            <p className="mt-5 text-lg text-white/84 max-w-3xl">
-              Choose a grant program, enter your criteria, generate a narrative draft, then refine it by chat. Built for U.S. small towns, tribes, counties, RTPAs, transportation commissions, and state agencies that need practical, fundable language.
-            </p>
-            <p className="mt-3 max-w-3xl text-sm text-white/80">
-              Want unlimited access? This workflow is included in OpenPlan subscriptions, and can also be custom-built into client-specific delivery systems.
-            </p>
-            <div className="mt-4 flex flex-wrap gap-3 text-sm">
-              <Link href="/products#openplan" className="inline-flex items-center rounded-full border border-white/35 bg-white/10 px-4 py-2 font-semibold text-white hover:bg-white/18">
-                See OpenPlan inclusion <ArrowRight className="ml-1.5 h-4 w-4" />
-              </Link>
-              <Link href="/contact?inquiry=custom-grant-ai" className="inline-flex items-center rounded-full border border-white/28 px-4 py-2 font-semibold text-white/90 hover:bg-white/10">
-                Request custom build
-              </Link>
+            <div className="max-w-3xl rounded-2xl border border-white/20 bg-black/20 p-5 shadow-[0_10px_30px_rgba(0,0,0,0.28)] backdrop-blur-[1px] sm:p-6">
+              <span className="pill">New · Grant AI</span>
+              <h1 className="section-title mt-5 text-5xl leading-[0.96] !text-white [text-shadow:0_2px_10px_rgba(0,0,0,0.55)] md:text-6xl">AI Grant Narrative Lab</h1>
+              <p className="mt-5 max-w-3xl text-lg text-white [text-shadow:0_1px_6px_rgba(0,0,0,0.45)]">
+                Choose a grant program, enter your criteria, generate a narrative draft, then refine it by chat. Built for U.S. small towns, tribes, counties, RTPAs, transportation commissions, and state agencies that need practical, fundable language.
+              </p>
+              <p className="mt-3 max-w-3xl text-sm text-white/95 [text-shadow:0_1px_6px_rgba(0,0,0,0.45)]">
+                Want unlimited access? This workflow is included in OpenPlan subscriptions, and can also be custom-built into client-specific delivery systems.
+              </p>
+              <div className="mt-4 flex flex-wrap gap-3 text-sm">
+                <Link href="/products#openplan" className="inline-flex items-center rounded-full border border-white/45 bg-white/14 px-4 py-2 font-semibold text-white hover:bg-white/22">
+                  See OpenPlan inclusion <ArrowRight className="ml-1.5 h-4 w-4" />
+                </Link>
+                <Link href="/contact?inquiry=custom-grant-ai" className="inline-flex items-center rounded-full border border-white/40 bg-black/10 px-4 py-2 font-semibold text-white/95 hover:bg-white/12">
+                  Request custom build
+                </Link>
+              </div>
             </div>
           </div>
         </Container>
