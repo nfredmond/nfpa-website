@@ -114,22 +114,22 @@ export default function AboutPage() {
             <Card className="bg-white/95">
               <CardContent className="p-6 space-y-4">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.15em] text-[color:var(--foreground)]/55">Base</p>
+                  <p className="text-xs uppercase tracking-[0.15em] text-[color:var(--foreground)]/68">Base</p>
                   <p className="mt-1 font-semibold text-[color:var(--ink)]">Sierra Foothills · Near Grass Valley, CA</p>
                 </div>
                 <div className="h-px bg-[color:var(--line)]" />
                 <div>
-                  <p className="text-xs uppercase tracking-[0.15em] text-[color:var(--foreground)]/55">Email</p>
+                  <p className="text-xs uppercase tracking-[0.15em] text-[color:var(--foreground)]/68">Email</p>
                   <a className="mt-1 inline-block font-semibold text-[color:var(--pine)] hover:underline" href="mailto:nathaniel@natfordplanning.com">
                     nathaniel@natfordplanning.com
                   </a>
                 </div>
                 <div>
-                  <p className="text-xs uppercase tracking-[0.15em] text-[color:var(--foreground)]/55">Phone</p>
+                  <p className="text-xs uppercase tracking-[0.15em] text-[color:var(--foreground)]/68">Phone</p>
                   <p className="mt-1 font-semibold text-[color:var(--ink)]">530-492-9775</p>
                 </div>
                 <div>
-                  <p className="text-xs uppercase tracking-[0.15em] text-[color:var(--foreground)]/55">Coverage</p>
+                  <p className="text-xs uppercase tracking-[0.15em] text-[color:var(--foreground)]/68">Coverage</p>
                   <p className="mt-1 text-sm text-[color:var(--foreground)]/78">
                     Remote-first across the United States with in-person facilitation and field work when needed.
                   </p>

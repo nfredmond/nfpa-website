@@ -156,7 +156,7 @@ export default function ResourcesPage() {
                       )}
                     </>
                   ) : (
-                    <div className="mt-5 rounded-full border border-[color:var(--line)] px-4 py-2 text-center text-xs uppercase tracking-[0.15em] text-[color:var(--foreground)]/55">
+                    <div className="mt-5 rounded-full border border-[color:var(--line)] px-4 py-2 text-center text-xs uppercase tracking-[0.15em] text-[color:var(--foreground)]/68">
                       Coming soon
                     </div>
                   )}
@@ -180,7 +180,7 @@ export default function ResourcesPage() {
             </p>
 
             <div className="relative max-w-md mb-6">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[color:var(--foreground)]/45" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[color:var(--foreground)]/58" />
               <Input
                 type="text"
                 placeholder="Search programs..."
@@ -207,15 +207,15 @@ export default function ResourcesPage() {
                   <CardContent>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
                       <div>
-                        <p className="text-[color:var(--foreground)]/55 text-xs uppercase tracking-[0.12em]">Category</p>
+                        <p className="text-[color:var(--foreground)]/68 text-xs uppercase tracking-[0.12em]">Category</p>
                         <p className="mt-1 text-[color:var(--foreground)]/82">{program.category}</p>
                       </div>
                       <div>
-                        <p className="text-[color:var(--foreground)]/55 text-xs uppercase tracking-[0.12em]">Cycle</p>
+                        <p className="text-[color:var(--foreground)]/68 text-xs uppercase tracking-[0.12em]">Cycle</p>
                         <p className="mt-1 text-[color:var(--foreground)]/82">{program.cycle}</p>
                       </div>
                       <div>
-                        <p className="text-[color:var(--foreground)]/55 text-xs uppercase tracking-[0.12em]">Local match</p>
+                        <p className="text-[color:var(--foreground)]/68 text-xs uppercase tracking-[0.12em]">Local match</p>
                         <p className="mt-1 text-[color:var(--foreground)]/82">{program.localMatch}</p>
                       </div>
                     </div>

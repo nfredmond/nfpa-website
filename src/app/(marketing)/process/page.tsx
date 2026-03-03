@@ -92,7 +92,7 @@ export default function ProcessPage() {
                   <CardContent className="p-0">
                     <div className="grid grid-cols-1 md:grid-cols-[0.24fr_0.76fr] gap-6">
                       <div>
-                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--foreground)]/55">Step {step.number}</p>
+                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--foreground)]/68">Step {step.number}</p>
                         <div className="mt-3 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-[color:var(--sand)] text-[color:var(--pine)]">
                           <Icon className="h-5 w-5" />
                         </div>

@@ -223,7 +223,7 @@ export default function ProductsPage() {
                             <span className="text-base font-medium text-[color:var(--foreground)]/62"> {product.priceSuffix ?? '/mo'}</span>
                           </p>
                           {isOpenPlan ? (
-                            <p className="mt-1 text-xs text-[color:var(--foreground)]/60">
+                            <p className="mt-1 text-xs text-[color:var(--foreground)]/72">
                               <span className="line-through">${tier.monthlyUsd}/mo</span> standard price
                             </p>
                           ) : null}

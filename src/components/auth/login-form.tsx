@@ -103,7 +103,7 @@ export function LoginForm({ redirectPath, infoMessage }: LoginFormProps) {
         {isGoogleLoading ? 'Connecting to Google…' : 'Continue with Google'}
       </Button>
 
-      <div className="flex items-center gap-3 text-xs uppercase tracking-[0.12em] text-[color:var(--foreground)]/55">
+      <div className="flex items-center gap-3 text-xs uppercase tracking-[0.12em] text-[color:var(--foreground)]/68">
         <span className="h-px flex-1 bg-[color:var(--line)]" />
         <span>Email login</span>
         <span className="h-px flex-1 bg-[color:var(--line)]" />

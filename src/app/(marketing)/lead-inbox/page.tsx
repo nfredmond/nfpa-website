@@ -348,21 +348,21 @@ export default async function LeadInboxPage({
                         >
                           {lead.status}
                         </span>
-                        <p className="mt-2 text-xs text-[color:var(--foreground)]/55">{formatDate(lead.created_at)}</p>
+                        <p className="mt-2 text-xs text-[color:var(--foreground)]/68">{formatDate(lead.created_at)}</p>
                       </div>
                     </div>
 
                     <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
                       <div>
-                        <p className="text-[color:var(--foreground)]/55 text-xs uppercase tracking-[0.12em]">Inquiry Type</p>
+                        <p className="text-[color:var(--foreground)]/68 text-xs uppercase tracking-[0.12em]">Inquiry Type</p>
                         <p className="mt-1 text-[color:var(--foreground)]/82">{lead.inquiry_type}</p>
                       </div>
                       <div>
-                        <p className="text-[color:var(--foreground)]/55 text-xs uppercase tracking-[0.12em]">Timeline</p>
+                        <p className="text-[color:var(--foreground)]/68 text-xs uppercase tracking-[0.12em]">Timeline</p>
                         <p className="mt-1 text-[color:var(--foreground)]/82">{lead.timeline}</p>
                       </div>
                       <div>
-                        <p className="text-[color:var(--foreground)]/55 text-xs uppercase tracking-[0.12em]">Source</p>
+                        <p className="text-[color:var(--foreground)]/68 text-xs uppercase tracking-[0.12em]">Source</p>
                         <p className="mt-1 text-[color:var(--foreground)]/82">{lead.source_path || '/contact'}</p>
                       </div>
                     </div>
@@ -395,7 +395,7 @@ export default async function LeadInboxPage({
                       <input type="hidden" name="leadId" value={lead.id} />
                       <input type="hidden" name="returnTo" value={returnTo} />
                       <div>
-                        <label className="mb-1 block text-xs uppercase tracking-[0.12em] text-[color:var(--foreground)]/55">Owner</label>
+                        <label className="mb-1 block text-xs uppercase tracking-[0.12em] text-[color:var(--foreground)]/68">Owner</label>
                         <input
                           name="ownerName"
                           defaultValue={lead.owner_name || ''}
@@ -404,7 +404,7 @@ export default async function LeadInboxPage({
                         />
                       </div>
                       <div>
-                        <label className="mb-1 block text-xs uppercase tracking-[0.12em] text-[color:var(--foreground)]/55">Notes</label>
+                        <label className="mb-1 block text-xs uppercase tracking-[0.12em] text-[color:var(--foreground)]/68">Notes</label>
                         <textarea
                           name="notes"
                           defaultValue={lead.notes || ''}

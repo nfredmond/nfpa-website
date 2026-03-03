@@ -175,17 +175,17 @@ export default function HomePage() {
 
               <div className="mt-3 grid grid-cols-2 gap-3">
                 <div className="signal-tile rounded-2xl p-3.5">
-                  <p className="text-xs uppercase tracking-wide text-[color:var(--foreground)]/55">Focus region</p>
+                  <p className="text-xs uppercase tracking-wide text-[color:var(--foreground)]/68">Focus region</p>
                   <p className="mt-1 font-semibold">U.S. small towns + tribal + county agencies</p>
                 </div>
                 <div className="signal-tile rounded-2xl p-3.5">
-                  <p className="text-xs uppercase tracking-wide text-[color:var(--foreground)]/55">Operating model</p>
+                  <p className="text-xs uppercase tracking-wide text-[color:var(--foreground)]/68">Operating model</p>
                   <p className="mt-1 font-semibold">Consulting + SaaS</p>
                 </div>
               </div>
 
               <div className="mt-4 rounded-2xl border border-[color:var(--line)] bg-[color:var(--sand)]/40 p-4">
-                <p className="text-xs uppercase tracking-wide text-[color:var(--foreground)]/55">Promise</p>
+                <p className="text-xs uppercase tracking-wide text-[color:var(--foreground)]/68">Promise</p>
                 <p className="mt-1 text-sm leading-relaxed">
                   No hype. No hidden assumptions. No burden-shifting recommendations. Every deliverable is built to be
                   client-safe, review-ready, and implementation-aware.
@@ -218,7 +218,7 @@ export default function HomePage() {
 
       <Section spacing="md" className="border-y border-[color:var(--line)] bg-[color:var(--background)]/80">
         <Container>
-          <p className="text-center text-[0.76rem] uppercase tracking-[0.18em] text-[color:var(--foreground)]/55">
+          <p className="text-center text-[0.76rem] uppercase tracking-[0.18em] text-[color:var(--foreground)]/68">
             Agencies served by Nathaniel in prior roles
           </p>
           <div className="mt-4 flex flex-wrap justify-center gap-x-8 gap-y-3 text-sm text-[color:var(--foreground)]/75">
@@ -331,7 +331,7 @@ export default function HomePage() {
               return (
                 <div key={step.title} className="rounded-2xl border border-[color:var(--line)] bg-[color:var(--background)] p-6">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--foreground)]/50">
+                    <span className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--foreground)]/62">
                       Step {idx + 1}
                     </span>
                     <Icon className="h-5 w-5 text-[color:var(--pine)]" />

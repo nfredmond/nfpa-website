@@ -186,7 +186,7 @@ export function PlannerChatbot() {
 
   return (
     <div className="soft-card rounded-3xl p-6 md:p-8">
-      <div className="flex flex-wrap items-center gap-2 text-xs uppercase tracking-[0.18em] text-[color:var(--foreground)]/60">
+      <div className="flex flex-wrap items-center gap-2 text-xs uppercase tracking-[0.18em] text-[color:var(--foreground)]/72">
         <Sparkles className="h-3.5 w-3.5" />
         AI Planning Copilot
       </div>
@@ -336,7 +336,7 @@ export function PlannerChatbot() {
           </Button>
         </div>
 
-        <p className="mt-2 text-xs text-[color:var(--foreground)]/60">Enter to send • Shift+Enter for a new line</p>
+        <p className="mt-2 text-xs text-[color:var(--foreground)]/72">Enter to send • Shift+Enter for a new line</p>
 
         <div className="mt-3 flex flex-wrap items-center justify-between gap-3 text-xs text-[color:var(--foreground)]/65">
           <div className="flex flex-wrap items-center gap-3">

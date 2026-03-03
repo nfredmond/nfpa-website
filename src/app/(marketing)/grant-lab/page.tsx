@@ -409,7 +409,7 @@ export default function GrantLabPage() {
                 </p>
 
                 <form className="mt-5 space-y-4" onSubmit={onGenerateDraft}>
-                  <p className="text-xs uppercase tracking-[0.12em] text-[color:var(--foreground)]/60">Step 1 of 3 — Program + Applicant Context</p>
+                  <p className="text-xs uppercase tracking-[0.12em] text-[color:var(--foreground)]/72">Step 1 of 3 — Program + Applicant Context</p>
                   <div>
                     <label className="mb-1.5 block text-sm font-medium text-[color:var(--ink)]">Grant program *</label>
                     <select
@@ -458,11 +458,11 @@ export default function GrantLabPage() {
                             : 'Loading map preview…'}
                         </div>
                       )}
-                      <p className="mt-1 text-[11px] text-[color:var(--foreground)]/60">Map tiles © Mapbox © OpenStreetMap.</p>
+                      <p className="mt-1 text-[11px] text-[color:var(--foreground)]/72">Map tiles © Mapbox © OpenStreetMap.</p>
                     </div>
                   ) : null}
 
-                  <p className="pt-1 text-xs uppercase tracking-[0.12em] text-[color:var(--foreground)]/60">Step 2 of 3 — Need, Scope, and Readiness</p>
+                  <p className="pt-1 text-xs uppercase tracking-[0.12em] text-[color:var(--foreground)]/72">Step 2 of 3 — Need, Scope, and Readiness</p>
                   <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
                     <label className="text-sm text-[color:var(--foreground)]/80">
                       Tone
@@ -567,7 +567,7 @@ export default function GrantLabPage() {
                     </div>
                   </details>
 
-                  <p className="pt-1 text-xs uppercase tracking-[0.12em] text-[color:var(--foreground)]/60">Step 3 of 3 — Generate and Refine</p>
+                  <p className="pt-1 text-xs uppercase tracking-[0.12em] text-[color:var(--foreground)]/72">Step 3 of 3 — Generate and Refine</p>
                   {missingRequirements.length > 0 && (
                     <p className="text-xs text-[color:var(--foreground)]/70">
                       To generate a draft, add: {missingRequirements.join(' and ')}.
@@ -672,7 +672,7 @@ export default function GrantLabPage() {
                   </Button>
                 </div>
 
-                <p className="mt-2 text-xs text-[color:var(--foreground)]/60">Enter to send • Shift+Enter for a new line</p>
+                <p className="mt-2 text-xs text-[color:var(--foreground)]/72">Enter to send • Shift+Enter for a new line</p>
 
                 {error && <p className="mt-3 text-sm text-red-600 dark:text-red-400">{error}</p>}
 

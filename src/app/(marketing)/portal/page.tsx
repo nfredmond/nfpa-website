@@ -68,25 +68,25 @@ export default async function PortalPage() {
               <h2 className="text-lg font-semibold text-[color:var(--ink)]">Account snapshot</h2>
               <dl className="mt-4 grid gap-3 sm:grid-cols-2">
                 <div>
-                  <dt className="text-xs uppercase tracking-[0.12em] text-[color:var(--foreground)]/60">Email</dt>
+                  <dt className="text-xs uppercase tracking-[0.12em] text-[color:var(--foreground)]/72">Email</dt>
                   <dd className="mt-1 text-sm text-[color:var(--foreground)]">{user.email}</dd>
                 </div>
                 <div>
-                  <dt className="text-xs uppercase tracking-[0.12em] text-[color:var(--foreground)]/60">Joined</dt>
+                  <dt className="text-xs uppercase tracking-[0.12em] text-[color:var(--foreground)]/72">Joined</dt>
                   <dd className="mt-1 text-sm text-[color:var(--foreground)]">{formatJoinedDate(user.created_at)}</dd>
                 </div>
                 <div>
-                  <dt className="text-xs uppercase tracking-[0.12em] text-[color:var(--foreground)]/60">User ID</dt>
+                  <dt className="text-xs uppercase tracking-[0.12em] text-[color:var(--foreground)]/72">User ID</dt>
                   <dd className="mt-1 break-all text-sm text-[color:var(--foreground)]">{user.id}</dd>
                 </div>
                 <div>
-                  <dt className="text-xs uppercase tracking-[0.12em] text-[color:var(--foreground)]/60">Email confirmed</dt>
+                  <dt className="text-xs uppercase tracking-[0.12em] text-[color:var(--foreground)]/72">Email confirmed</dt>
                   <dd className="mt-1 text-sm text-[color:var(--foreground)]">
                     {user.email_confirmed_at ? 'Yes' : 'Pending confirmation'}
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-xs uppercase tracking-[0.12em] text-[color:var(--foreground)]/60">Portal role</dt>
+                  <dt className="text-xs uppercase tracking-[0.12em] text-[color:var(--foreground)]/72">Portal role</dt>
                   <dd className="mt-1 text-sm capitalize text-[color:var(--foreground)]">{role}</dd>
                 </div>
               </dl>

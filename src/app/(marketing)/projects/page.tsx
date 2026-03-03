@@ -92,8 +92,8 @@ export default function ProjectsPage() {
               <Card key={`${project.title}-${project.year}`} hover>
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between mb-3">
-                    <span className="text-xs uppercase tracking-[0.12em] text-[color:var(--foreground)]/55">{project.county}</span>
-                    <span className="text-xs font-semibold text-[color:var(--foreground)]/55">{project.year}</span>
+                    <span className="text-xs uppercase tracking-[0.12em] text-[color:var(--foreground)]/68">{project.county}</span>
+                    <span className="text-xs font-semibold text-[color:var(--foreground)]/68">{project.year}</span>
                   </div>
 
                   <h2 className="text-2xl font-semibold text-[color:var(--ink)] leading-tight">{project.title}</h2>
