@@ -5,6 +5,9 @@
 
 @theme {
   --color-*: initial;
+  /* Keep core utility colors available after reset */
+  --color-white: #ffffff;
+  --color-black: #000000;
 }
 
 :root {
