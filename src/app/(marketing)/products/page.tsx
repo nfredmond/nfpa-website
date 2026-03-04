@@ -181,6 +181,24 @@ export default function ProductsPage() {
         </Container>
       </Section>
 
+      <Section spacing="md" className="border-y border-[color:var(--line)] bg-[color:var(--background)]/85">
+        <Container>
+          <Card className="border border-[color:var(--line)] bg-[color:var(--background)] p-6 md:p-7">
+            <h2 className="text-2xl font-semibold text-[color:var(--ink)]">Custom software for any domain</h2>
+            <p className="mt-3 text-[color:var(--foreground)]/80">
+              Our product stack is intentionally modular. We can adapt workflows, UI, automations, and QA controls for any profession,
+              including law, science, education, engineering, real estate, and other specialized sectors.
+            </p>
+            <ul className="mt-4 grid gap-2 text-sm text-[color:var(--foreground)]/78 md:grid-cols-2">
+              <li>• Domain-specific terminology and decision workflows</li>
+              <li>• Role-based access + delivery automations</li>
+              <li>• Branded client portals, reports, and QA gates</li>
+              <li>• Sector-specific analytics and compliance framing</li>
+            </ul>
+          </Card>
+        </Container>
+      </Section>
+
       <Section spacing="xl" className="bg-[color:var(--fog)]/65 border-y border-[color:var(--line)]">
         <Container>
           <div className="space-y-3">

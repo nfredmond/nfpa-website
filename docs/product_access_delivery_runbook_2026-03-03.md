@@ -7,10 +7,12 @@ Owner: Bartholomew
 Deliver account access immediately when a customer buys OpenPlan, DroneOps, or other product tiers.
 
 ## System Components
-1. `commerce_fulfillment_ledger` (existing): Stripe event ledger
-2. `customer_product_access` (new): product/tier entitlement state by customer email
-3. Portal view (`/portal`): displays purchased product access tied to signed-in user email
-4. Webhook sync (`/api/commerce/webhook`): updates entitlement table + user metadata
+1. `commerce_fulfillment_ledger`: Stripe event ledger
+2. `customer_product_access`: product/tier entitlement state by customer email
+3. `customer_onboarding_events`: post-purchase onboarding and welcome-email delivery state
+4. Portal view (`/portal`): displays purchased product access tied to signed-in user email
+5. Webhook sync (`/api/commerce/webhook`): updates entitlement table + user metadata + onboarding trigger
+6. Webhook health monitor (`scripts/check-commerce-webhook-health.mjs` + `/api/admin/commerce/webhook-health`)
 
 ## Auto Provisioning Flow
 1. Stripe sends signed webhook event.
@@ -39,6 +41,22 @@ node scripts/provision-product-access.mjs \
 ## Immediate Delivery Promise
 For paid customers, the account access lane must be activated same-day via webhook or manual fallback.
 
+## Webhook Failure Monitor
+Use this command to alert when no successful webhook deliveries occurred in the monitoring window:
+
+```bash
+node scripts/check-commerce-webhook-health.mjs --windowMinutes=120
+```
+
+- Exit code `0` = healthy
+- Exit code `2` = alert condition (no successful deliveries in window)
+
+## Post-Purchase Welcome Trigger
+- On `checkout.session.completed`, webhook automation now records onboarding state in `customer_onboarding_events`.
+- If `RESEND_API_KEY` and `ONBOARDING_FROM_EMAIL` are configured, a welcome/provisioning email is sent automatically.
+- If email provider config is missing, event status is still queued with actionable metadata.
+
 ## Safety Notes
 - Never expose service-role keys client-side.
 - All role/entitlement writes happen in backend routes or local operator scripts.
+- Keep manual fallback (`provision-product-access.mjs`) as the recovery path if webhook or email automation degrades.

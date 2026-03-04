@@ -5,6 +5,8 @@ import { findTierById } from '@/lib/commerce/offers'
 
 export const runtime = 'nodejs'
 
+const WELCOME_EVENT_TYPES = new Set(['checkout.session.completed'])
+
 type StripeEvent = {
   id: string
   type: string
@@ -92,6 +94,112 @@ function accessStatusForEventType(eventType: string): string {
 
 function normalizeEmail(value: string | null): string | null {
   return value ? value.trim().toLowerCase() : null
+}
+
+function shouldTriggerWelcome(eventType: string, accessStatus: string) {
+  return WELCOME_EVENT_TYPES.has(eventType) && accessStatus === 'active'
+}
+
+async function maybeSendWelcomeEmail(params: {
+  to: string
+  productId: string
+  tierId: string
+}) {
+  const apiKey = (process.env.RESEND_API_KEY ?? '').trim()
+  const from = (process.env.ONBOARDING_FROM_EMAIL ?? '').trim()
+
+  if (!apiKey || !from) {
+    return {
+      status: 'pending_email_config' as const,
+      providerMessageId: null,
+      providerError: 'Missing RESEND_API_KEY or ONBOARDING_FROM_EMAIL',
+    }
+  }
+
+  const { to, productId, tierId } = params
+
+  const response = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from,
+      to: [to],
+      subject: `Welcome — your ${productId} access is active`,
+      html: `<p>Your <strong>${productId}</strong> access is now active.</p>
+<p>Tier: <strong>${tierId}</strong></p>
+<p>You can sign in at <a href="https://www.natfordplanning.com/login">https://www.natfordplanning.com/login</a>.</p>
+<p>If you need support, reply to this email and we will provision updates quickly.</p>`,
+    }),
+    cache: 'no-store',
+  })
+
+  const body = (await response.json()) as { id?: string; message?: string }
+
+  if (!response.ok) {
+    return {
+      status: 'email_failed' as const,
+      providerMessageId: null,
+      providerError: body?.message ?? `Resend request failed (${response.status})`,
+    }
+  }
+
+  return {
+    status: 'email_sent' as const,
+    providerMessageId: body?.id ?? null,
+    providerError: null,
+  }
+}
+
+async function queueOnboardingEvent(params: {
+  admin: NonNullable<ReturnType<typeof getSupabaseAdminClient>>
+  stripeEventId: string
+  customerEmail: string
+  productId: string
+  tierId: string
+  eventType: string
+  metadata: Record<string, unknown>
+}) {
+  const { admin, stripeEventId, customerEmail, productId, tierId, eventType, metadata } = params
+
+  const sendResult = await maybeSendWelcomeEmail({
+    to: customerEmail,
+    productId,
+    tierId,
+  })
+
+  const status = sendResult.status === 'email_sent' ? 'sent' : sendResult.status
+
+  const { error } = await (admin as any)
+    .from('customer_onboarding_events')
+    .upsert(
+      {
+        stripe_event_id: stripeEventId,
+        customer_email: customerEmail,
+        product_id: productId,
+        tier_id: tierId,
+        event_type: eventType,
+        status,
+        provider_message_id: sendResult.providerMessageId,
+        provider_error: sendResult.providerError,
+        sent_at: sendResult.status === 'email_sent' ? new Date().toISOString() : null,
+        metadata,
+      },
+      { onConflict: 'stripe_event_id' }
+    )
+
+  if (error) {
+    console.error('onboarding event upsert failed', {
+      stripeEventId,
+      customerEmail,
+      productId,
+      tierId,
+      eventType,
+      error: error.message,
+    })
+  }
 }
 
 function inferProductAndTier(clientReferenceId: string | null) {
@@ -300,6 +408,22 @@ export async function POST(request: NextRequest) {
         tierId,
         accessStatus,
       })
+
+      if (shouldTriggerWelcome(event.type, accessStatus)) {
+        await queueOnboardingEvent({
+          admin,
+          stripeEventId: event.id,
+          customerEmail,
+          productId,
+          tierId,
+          eventType: event.type,
+          metadata: {
+            source: 'stripe_webhook',
+            checkoutSessionId,
+            clientReferenceId,
+          },
+        })
+      }
     }
   }
 

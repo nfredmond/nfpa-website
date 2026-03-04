@@ -86,7 +86,8 @@ export default function ServicesPage() {
             <h1 className="section-title mt-5 text-5xl md:text-6xl leading-[0.96] text-white">Integrated services built for real public-sector execution.</h1>
             <p className="mt-5 text-lg text-white/82 max-w-3xl">
               We combine planning, GIS, funding strategy, and production systems so agencies can make clear decisions and
-              move projects forward with less rework.
+              move projects forward with less rework. This architecture is customizable for any profession, including
+              law, science, education, engineering, and real estate.
             </p>
           </div>
         </Container>
