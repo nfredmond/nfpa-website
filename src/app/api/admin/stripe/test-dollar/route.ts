@@ -46,6 +46,9 @@ export async function POST(request: NextRequest) {
   }
 
   const formData = await request.formData()
+  const mode = String(formData.get('mode') ?? 'test')
+  const isLive = mode === 'live'
+
   const recipientEmail = String(formData.get('email') ?? user.email).trim().toLowerCase()
   if (!recipientEmail) {
     await logAdminAction({
@@ -64,9 +67,11 @@ export async function POST(request: NextRequest) {
     action: 'stripe_test_dollar_checkout',
     target: recipientEmail,
     status: 'started',
+    metadata: { env: isLive ? 'live' : 'test' },
   })
 
-  const stripeSecretKey = (process.env.STRIPE_SECRET_KEY ?? '').trim()
+  const envKey = isLive ? 'STRIPE_SECRET_KEY' : 'STRIPE_TEST_SECRET_KEY'
+  const stripeSecretKey = (process.env[envKey] ?? '').trim()
   if (!stripeSecretKey) {
     await logAdminAction({
       actorUserId: user.id,
@@ -74,10 +79,10 @@ export async function POST(request: NextRequest) {
       action: 'stripe_test_dollar_checkout',
       target: recipientEmail,
       status: 'error',
-      metadata: { reason: 'missing_stripe_secret_key' },
+      metadata: { reason: `missing_${envKey}` },
     })
     return NextResponse.redirect(
-      buildAdminRedirect(request, 'error', 'Missing STRIPE_SECRET_KEY in environment config'),
+      buildAdminRedirect(request, 'error', `Missing ${envKey} in environment config`),
       { status: 302 }
     )
   }

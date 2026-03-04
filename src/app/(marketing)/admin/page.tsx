@@ -230,7 +230,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                     Launches a one-time $1 hosted checkout session for quick payment-flow testing and webhook verification.
                   </p>
                   <form method="post" action="/api/admin/stripe/test-dollar" className="space-y-3">
-                    <label className="block text-sm text-[color:var(--foreground)]">
+                    <label className="block text-sm font-medium text-[color:var(--foreground)]">
                       Recipient email
                       <input
                         className="mt-1 w-full rounded-lg border border-[color:var(--line)] bg-white/90 px-3 py-2 text-sm text-[color:var(--ink)]"
@@ -240,7 +240,22 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                         required
                       />
                     </label>
-                    <Button type="submit" className="w-full">Create $1 Stripe test checkout</Button>
+
+                    <fieldset className="space-y-1">
+                      <legend className="text-sm font-medium text-[color:var(--foreground)]">Environment</legend>
+                      <div className="flex gap-4">
+                        <label className="flex items-center gap-2 text-sm">
+                          <input type="radio" name="mode" value="test" defaultChecked className="accent-[color:var(--pine)]" />
+                          Test Mode (default)
+                        </label>
+                        <label className="flex items-center gap-2 text-sm">
+                          <input type="radio" name="mode" value="live" className="accent-[color:var(--pine)]" />
+                          Live Mode
+                        </label>
+                      </div>
+                    </fieldset>
+
+                    <Button type="submit" className="w-full">Create $1 Stripe checkout</Button>
                   </form>
                 </CardContent>
               </Card>
