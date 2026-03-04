@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { SignOutButton } from '@/components/auth/signout-button'
 import { createClient } from '@/lib/supabase/server'
 import { getSupabaseAdminClient } from '@/lib/supabase/admin'
-import { getAdminAllowlist, isAdminAllowlistedEmail } from '@/lib/auth/admin-access'
+import { evaluateAdminAccess, getAdminAllowlist } from '@/lib/auth/admin-access'
 
 export const dynamic = 'force-dynamic'
 
@@ -17,6 +17,7 @@ const tabs = [
   { id: 'stripe', label: 'Stripe Tests' },
   { id: 'pages', label: 'Pages' },
   { id: 'settings', label: 'Settings' },
+  { id: 'audit', label: 'Audit Log' },
 ] as const
 
 type TabId = (typeof tabs)[number]['id']
@@ -57,17 +58,25 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
     redirect('/login?redirect=/admin')
   }
 
-  const email = user.email?.toLowerCase() ?? ''
-  if (!isAdminAllowlistedEmail(email)) {
+  const adminAccess = await evaluateAdminAccess({ supabase, user })
+  if (!adminAccess.ok) {
+    const reasonMessage =
+      adminAccess.reason === 'google_required'
+        ? 'Admin access requires Google-authenticated identity.'
+        : adminAccess.reason === 'mfa_required'
+          ? 'Admin access requires MFA (AAL2).'
+          : 'This admin surface is restricted to the allowlist.'
+
     return (
       <Section spacing="xl">
         <Container>
           <div className="mx-auto max-w-2xl rounded-2xl border border-red-300/70 bg-red-50 p-6">
             <h1 className="section-title text-3xl text-red-800">Admin access blocked</h1>
             <p className="mt-3 text-sm text-red-700">
-              This admin surface is restricted to the allowlist. Current account: <strong>{user.email}</strong>
+              {reasonMessage} Current account: <strong>{user.email}</strong>
             </p>
             <p className="mt-2 text-xs text-red-700/80">Allowed: {getAdminAllowlist().join(', ')}</p>
+            <p className="mt-1 text-xs text-red-700/80">Current auth assurance level: {adminAccess.currentAal ?? 'unknown'}</p>
           </div>
         </Container>
       </Section>
@@ -80,6 +89,14 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
   let accessCount = 0
   let recentDeliveryAt: string | null = null
   let customerCount = 0
+  let auditRows: Array<{
+    id: string
+    actor_email: string
+    action: string
+    target: string | null
+    status: string
+    created_at: string
+  }> = []
 
   if (admin) {
     const [{ count: entitlementCount }, { data: latestDelivery }, { count: ledgerCustomers }] = await Promise.all([
@@ -101,6 +118,16 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
     accessCount = entitlementCount ?? 0
     customerCount = ledgerCustomers ?? 0
     recentDeliveryAt = latestDelivery?.created_at ?? null
+
+    if (currentTab === 'audit') {
+      const { data: logs } = await (admin as any)
+        .from('admin_action_log')
+        .select('id, actor_email, action, target, status, created_at')
+        .order('created_at', { ascending: false })
+        .limit(25)
+
+      auditRows = (logs ?? []) as typeof auditRows
+    }
   }
 
   return (
@@ -114,7 +141,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                 Auth-restricted command center for Stripe tests, page controls, and delivery operations.
               </p>
               <p className="mt-1 text-xs uppercase tracking-[0.12em] text-[color:var(--foreground)]/64">
-                Signed in as {user.email}
+                Signed in as {user.email} · AAL2 verified
               </p>
             </div>
             <SignOutButton />
@@ -272,6 +299,34 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                     <p className="mt-1 text-sm text-[color:var(--foreground)]/76">Control welcome email + provisioning workflow behavior by tier.</p>
                   </div>
                 </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {currentTab === 'audit' && (
+            <Card className="border border-[color:var(--line)] bg-[color:var(--background)]">
+              <CardContent className="space-y-4 p-6">
+                <h2 className="text-xl font-semibold text-[color:var(--ink)]">Admin action audit log</h2>
+                <p className="text-sm text-[color:var(--foreground)]/78">
+                  Recent admin actions (Stripe tests, health checks, and gated operation attempts).
+                </p>
+                {auditRows.length === 0 ? (
+                  <p className="text-sm text-[color:var(--foreground)]/72">No actions logged yet.</p>
+                ) : (
+                  <ul className="space-y-2">
+                    {auditRows.map((entry) => (
+                      <li key={entry.id} className="rounded-lg border border-[color:var(--line)] bg-[color:var(--fog)]/40 px-3 py-2 text-sm">
+                        <p className="font-medium text-[color:var(--ink)]">
+                          {entry.action} · {entry.status}
+                        </p>
+                        <p className="text-[color:var(--foreground)]/76">
+                          {entry.actor_email} {entry.target ? `→ ${entry.target}` : ''}
+                        </p>
+                        <p className="text-xs text-[color:var(--foreground)]/68">{formatDate(entry.created_at)}</p>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </CardContent>
             </Card>
           )}

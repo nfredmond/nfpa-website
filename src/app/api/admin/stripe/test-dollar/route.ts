@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
-import { isAdminAllowlistedEmail } from '@/lib/auth/admin-access'
+import { evaluateAdminAccess } from '@/lib/auth/admin-access'
+import { logAdminAction } from '@/lib/auth/admin-audit'
 
 export const runtime = 'nodejs'
 
@@ -22,18 +23,59 @@ export async function POST(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  if (!user?.email || !isAdminAllowlistedEmail(user.email)) {
+  if (!user?.email) {
+    await logAdminAction({
+      actorEmail: 'unknown',
+      action: 'stripe_test_dollar_checkout',
+      status: 'denied',
+      metadata: { reason: 'no_user' },
+    })
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  const adminAccess = await evaluateAdminAccess({ supabase, user })
+  if (!adminAccess.ok) {
+    await logAdminAction({
+      actorUserId: user.id,
+      actorEmail: user.email,
+      action: 'stripe_test_dollar_checkout',
+      status: 'denied',
+      metadata: { reason: adminAccess.reason, currentAal: adminAccess.currentAal },
+    })
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
   const formData = await request.formData()
   const recipientEmail = String(formData.get('email') ?? user.email).trim().toLowerCase()
   if (!recipientEmail) {
+    await logAdminAction({
+      actorUserId: user.id,
+      actorEmail: user.email,
+      action: 'stripe_test_dollar_checkout',
+      status: 'error',
+      metadata: { reason: 'missing_recipient_email' },
+    })
     return NextResponse.redirect(buildAdminRedirect(request, 'error', 'Missing recipient email'), { status: 302 })
   }
 
+  await logAdminAction({
+    actorUserId: user.id,
+    actorEmail: user.email,
+    action: 'stripe_test_dollar_checkout',
+    target: recipientEmail,
+    status: 'started',
+  })
+
   const stripeSecretKey = (process.env.STRIPE_SECRET_KEY ?? '').trim()
   if (!stripeSecretKey) {
+    await logAdminAction({
+      actorUserId: user.id,
+      actorEmail: user.email,
+      action: 'stripe_test_dollar_checkout',
+      target: recipientEmail,
+      status: 'error',
+      metadata: { reason: 'missing_stripe_secret_key' },
+    })
     return NextResponse.redirect(
       buildAdminRedirect(request, 'error', 'Missing STRIPE_SECRET_KEY in environment config'),
       { status: 302 }
@@ -64,12 +106,29 @@ export async function POST(request: NextRequest) {
     cache: 'no-store',
   })
 
-  const body = (await stripeResponse.json()) as { url?: string; error?: { message?: string } }
+  const body = (await stripeResponse.json()) as { id?: string; url?: string; error?: { message?: string } }
 
   if (!stripeResponse.ok || !body.url) {
     const message = body.error?.message ?? `Stripe request failed (${stripeResponse.status})`
+    await logAdminAction({
+      actorUserId: user.id,
+      actorEmail: user.email,
+      action: 'stripe_test_dollar_checkout',
+      target: recipientEmail,
+      status: 'error',
+      metadata: { stripeStatus: stripeResponse.status, stripeMessage: message },
+    })
     return NextResponse.redirect(buildAdminRedirect(request, 'error', message), { status: 302 })
   }
+
+  await logAdminAction({
+    actorUserId: user.id,
+    actorEmail: user.email,
+    action: 'stripe_test_dollar_checkout',
+    target: recipientEmail,
+    status: 'success',
+    metadata: { checkoutSessionId: body.id ?? null },
+  })
 
   return NextResponse.redirect(body.url, { status: 303 })
 }

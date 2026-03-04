@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { getSupabaseAdminClient } from '@/lib/supabase/admin'
-import { isAdminAllowlistedEmail } from '@/lib/auth/admin-access'
+import { evaluateAdminAccess } from '@/lib/auth/admin-access'
+import { logAdminAction } from '@/lib/auth/admin-audit'
 
 export const runtime = 'nodejs'
 
@@ -13,7 +14,19 @@ export async function GET(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  if (!user?.email || !isAdminAllowlistedEmail(user.email)) {
+  if (!user?.email) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  const adminAccess = await evaluateAdminAccess({ supabase, user })
+  if (!adminAccess.ok) {
+    await logAdminAction({
+      actorUserId: user.id,
+      actorEmail: user.email,
+      action: 'webhook_health_check',
+      status: 'denied',
+      metadata: { reason: adminAccess.reason, currentAal: adminAccess.currentAal },
+    })
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
@@ -22,6 +35,13 @@ export async function GET(request: NextRequest) {
 
   const admin = getSupabaseAdminClient()
   if (!admin) {
+    await logAdminAction({
+      actorUserId: user.id,
+      actorEmail: user.email,
+      action: 'webhook_health_check',
+      status: 'error',
+      metadata: { reason: 'supabase_admin_unavailable' },
+    })
     return NextResponse.json({ error: 'Supabase admin client unavailable' }, { status: 500 })
   }
 
@@ -36,11 +56,30 @@ export async function GET(request: NextRequest) {
     .limit(1)
 
   if (error) {
+    await logAdminAction({
+      actorUserId: user.id,
+      actorEmail: user.email,
+      action: 'webhook_health_check',
+      status: 'error',
+      metadata: { reason: 'query_failed', message: error.message },
+    })
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
   const latest = data?.[0] ?? null
   const ok = !!latest
+
+  await logAdminAction({
+    actorUserId: user.id,
+    actorEmail: user.email,
+    action: 'webhook_health_check',
+    status: ok ? 'success' : 'error',
+    metadata: {
+      windowMinutes: thresholdMinutes,
+      latestEventId: latest?.stripe_event_id ?? null,
+      latestEventType: latest?.stripe_event_type ?? null,
+    },
+  })
 
   return NextResponse.json({
     ok,
