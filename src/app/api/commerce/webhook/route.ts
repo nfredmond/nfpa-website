@@ -15,13 +15,14 @@ type StripeEvent = {
   }
 }
 
-function getWebhookSecret() {
-  return (
-    process.env.STRIPE_WEBHOOK_SECRET ||
-    process.env.COMMERCE_STRIPE_WEBHOOK_SECRET ||
-    process.env.OPENPLAN_STRIPE_WEBHOOK_SECRET ||
-    ''
-  ).trim()
+function getWebhookSecrets(): string[] {
+  const secrets = [
+    process.env.STRIPE_WEBHOOK_SECRET,
+    process.env.STRIPE_TEST_WEBHOOK_SECRET,
+    process.env.COMMERCE_STRIPE_WEBHOOK_SECRET,
+    process.env.OPENPLAN_STRIPE_WEBHOOK_SECRET,
+  ]
+  return secrets.filter((s) => s && s.trim().length > 0) as string[]
 }
 
 function parseStripeSignature(signatureHeader: string) {
@@ -296,13 +297,19 @@ async function syncEntitlementToUserMetadata(params: {
 export async function POST(request: NextRequest) {
   const rawBody = await request.text()
   const signatureHeader = request.headers.get('stripe-signature')
-  const webhookSecret = getWebhookSecret()
+  const webhookSecrets = getWebhookSecrets()
 
-  if (!webhookSecret) {
+  if (webhookSecrets.length === 0) {
     return NextResponse.json({ error: 'Missing webhook secret configuration' }, { status: 500 })
   }
 
-  if (!signatureHeader || !verifyStripeSignature(rawBody, signatureHeader, webhookSecret)) {
+  if (!signatureHeader) {
+    return NextResponse.json({ error: 'Missing stripe signature' }, { status: 400 })
+  }
+
+  const isValid = webhookSecrets.some((secret) => verifyStripeSignature(rawBody, signatureHeader, secret.trim()))
+
+  if (!isValid) {
     return NextResponse.json({ error: 'Stripe signature verification failed' }, { status: 400 })
   }
 
