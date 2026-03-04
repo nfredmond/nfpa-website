@@ -1,6 +1,6 @@
 /**
  * Theme Toggle Component
- * Switches between light and dark mode
+ * Defaults to system color scheme and allows manual override.
  */
 
 'use client'
@@ -9,30 +9,51 @@ import * as React from 'react'
 import { Moon, Sun } from 'lucide-react'
 import { Button } from './button'
 
+const THEME_OVERRIDE_KEY = 'themeOverride'
+
+type Theme = 'light' | 'dark'
+
 export function ThemeToggle() {
-  const [theme, setTheme] = React.useState<'light' | 'dark'>('light')
+  const [theme, setTheme] = React.useState<Theme>('light')
   const [mounted, setMounted] = React.useState(false)
 
-  // Load theme from localStorage on mount
   React.useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+
+    const applyResolvedTheme = (override: Theme | null) => {
+      const resolvedTheme: Theme = override ?? (mediaQuery.matches ? 'dark' : 'light')
+      setTheme(resolvedTheme)
+      document.documentElement.classList.toggle('dark', resolvedTheme === 'dark')
+    }
+
+    const storedOverride = localStorage.getItem(THEME_OVERRIDE_KEY) as Theme | null
+
+    // Migration cleanup: ignore any legacy key and follow system unless explicit override exists.
+    if (!storedOverride) {
+      localStorage.removeItem('theme')
+    }
+
+    applyResolvedTheme(storedOverride)
     setMounted(true)
-    const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-    const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light')
-    
-    setTheme(initialTheme)
-    document.documentElement.classList.toggle('dark', initialTheme === 'dark')
+
+    const handleSystemThemeChange = () => {
+      const currentOverride = localStorage.getItem(THEME_OVERRIDE_KEY) as Theme | null
+      if (!currentOverride) {
+        applyResolvedTheme(null)
+      }
+    }
+
+    mediaQuery.addEventListener('change', handleSystemThemeChange)
+    return () => mediaQuery.removeEventListener('change', handleSystemThemeChange)
   }, [])
 
-  // Toggle theme
   const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light'
-    setTheme(newTheme)
-    localStorage.setItem('theme', newTheme)
-    document.documentElement.classList.toggle('dark', newTheme === 'dark')
+    const nextTheme: Theme = theme === 'light' ? 'dark' : 'light'
+    setTheme(nextTheme)
+    localStorage.setItem(THEME_OVERRIDE_KEY, nextTheme)
+    document.documentElement.classList.toggle('dark', nextTheme === 'dark')
   }
 
-  // Prevent flash of wrong theme
   if (!mounted) {
     return (
       <Button
@@ -62,4 +83,3 @@ export function ThemeToggle() {
     </Button>
   )
 }
-

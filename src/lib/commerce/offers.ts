@@ -19,7 +19,7 @@ export type OfferProduct = {
 export const offerCatalog: OfferProduct[] = [
   {
     id: "openplan",
-    name: "OpenPlan SaaS",
+    name: "OpenPlan Software",
     description: "Corridor analysis, funding-ready reporting, and operational planning intelligence.",
     tiers: [
       {

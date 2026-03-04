@@ -37,7 +37,7 @@ const checkoutInquiryByProduct: Record<string, string> = {
 }
 
 const checkoutProductLabel: Record<string, string> = {
-  openplan: 'OpenPlan SaaS',
+  openplan: 'OpenPlan Software',
   'ads-automation': 'Marketing & Planning Analytics Software',
   'drone-ops': 'DroneOps Intelligence',
   'vibe-coding-for-planners': 'Vibe Coding for Planners (PDF Guide)',

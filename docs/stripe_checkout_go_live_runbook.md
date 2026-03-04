@@ -4,9 +4,9 @@
 
 | Tier ID | Product | Env Key |
 |---|---|---|
-| `openplan-starter` | OpenPlan SaaS | `STRIPE_LINK_OPENPLAN_STARTER` |
-| `openplan-professional` | OpenPlan SaaS | `STRIPE_LINK_OPENPLAN_PROFESSIONAL` |
-| `openplan-agency` | OpenPlan SaaS | `STRIPE_LINK_OPENPLAN_AGENCY` |
+| `openplan-starter` | OpenPlan Software | `STRIPE_LINK_OPENPLAN_STARTER` |
+| `openplan-professional` | OpenPlan Software | `STRIPE_LINK_OPENPLAN_PROFESSIONAL` |
+| `openplan-agency` | OpenPlan Software | `STRIPE_LINK_OPENPLAN_AGENCY` |
 | `ads-essentials` | Marketing & Planning Analytics Software | `STRIPE_LINK_ADS_ESSENTIALS` |
 | `ads-growth` | Marketing & Planning Analytics Software | `STRIPE_LINK_ADS_GROWTH` |
 | `ads-scale` | Marketing & Planning Analytics Software | `STRIPE_LINK_ADS_SCALE` |

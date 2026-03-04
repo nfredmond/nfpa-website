@@ -117,8 +117,7 @@ export default function HomePage() {
         <Container size="xl">
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1.2fr_0.8fr] items-center">
             <div>
-              <span className="pill">United States · Planning + Software</span>
-              <h1 className="section-title mt-5 text-5xl sm:text-6xl lg:text-7xl leading-[0.96] text-[color:var(--ink)] dark:text-white">
+              <h1 className="section-title text-5xl sm:text-6xl lg:text-7xl leading-[0.96] text-[color:var(--ink)] dark:text-white">
                 Practical planning intelligence built for agencies that need to move.
               </h1>
               <p className="mt-6 max-w-2xl text-lg sm:text-xl text-[color:var(--foreground)]/82 dark:text-white/85">
@@ -152,13 +151,6 @@ export default function HomePage() {
             </div>
 
             <div className="soft-card float-slow rounded-3xl bg-white/92 p-5 text-[color:var(--ink)] dark:bg-[#101b24]/92 dark:text-white sm:p-6">
-              <div className="mb-4 flex items-center justify-between">
-                <p className="font-semibold tracking-wide text-[0.8rem] uppercase text-[color:var(--pine)]">
-                  Delivery Signal Panel
-                </p>
-                <span className="text-xs font-semibold text-[color:var(--pine)]">Live Working Style</span>
-              </div>
-
               <div className="relative h-44 w-full overflow-hidden rounded-2xl border border-[color:var(--line)]">
                 <Image
                   src="/images/site/hero-corridor.jpg"
@@ -181,7 +173,7 @@ export default function HomePage() {
                 </div>
                 <div className="signal-tile rounded-2xl p-3.5">
                   <p className="text-xs uppercase tracking-wide text-[color:var(--foreground)]/68">Operating model</p>
-                  <p className="mt-1 font-semibold">Consulting + SaaS</p>
+                  <p className="mt-1 font-semibold">Consulting + Software</p>
                 </div>
               </div>
 
@@ -200,7 +192,6 @@ export default function HomePage() {
       <Section spacing="lg" className="border-y border-[color:var(--line)] bg-[color:var(--fog)]/55">
         <Container>
           <div className="mb-6 max-w-3xl">
-            <p className="pill mb-4">New · AI Expert Chat</p>
             <h2 className="section-title text-4xl text-[color:var(--ink)] md:text-5xl">
               Get instant planning strategy for U.S. small towns, tribes, counties, RTPAs, and state agencies.
             </h2>
@@ -209,7 +200,7 @@ export default function HomePage() {
             </p>
             <div className="mt-4">
               <Link href="/grant-lab" className="inline-flex items-center text-sm font-semibold text-[color:var(--pine)]">
-                Try the new AI Grant Narrative Lab <ArrowRight className="ml-1.5 h-4 w-4" />
+                Try the AI Grant Narrative Lab <ArrowRight className="ml-1.5 h-4 w-4" />
               </Link>
             </div>
           </div>

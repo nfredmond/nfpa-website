@@ -352,7 +352,7 @@ export default function GrantLabPage() {
         <Container>
           <div className="max-w-4xl">
             <div className="max-w-3xl rounded-2xl border border-white/20 bg-black/20 p-5 shadow-[0_10px_30px_rgba(0,0,0,0.28)] backdrop-blur-[1px] sm:p-6">
-              <span className="pill">New · Grant AI</span>
+              <span className="pill">Grant AI Lab</span>
               <h1 className="section-title mt-5 text-5xl leading-[0.96] !text-white [text-shadow:0_2px_10px_rgba(0,0,0,0.55)] md:text-6xl">AI Grant Narrative Lab</h1>
               <p className="mt-5 max-w-3xl text-lg text-white [text-shadow:0_1px_6px_rgba(0,0,0,0.45)]">
                 Choose a grant program, enter your criteria, generate a narrative draft, then refine it by chat. Built for U.S. small towns, tribes, counties, RTPAs, transportation commissions, and state agencies that need practical, fundable language.

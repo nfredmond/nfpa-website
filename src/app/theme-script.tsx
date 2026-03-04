@@ -7,15 +7,11 @@ export function ThemeScript() {
   const themeScript = `
     (function() {
       try {
-        const theme = localStorage.getItem('theme');
+        const themeOverride = localStorage.getItem('themeOverride');
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const isDark = theme === 'dark' || (!theme && prefersDark);
-        
-        if (isDark) {
-          document.documentElement.classList.add('dark');
-        } else {
-          document.documentElement.classList.remove('dark');
-        }
+        const isDark = themeOverride ? themeOverride === 'dark' : prefersDark;
+
+        document.documentElement.classList.toggle('dark', isDark);
       } catch (e) {}
     })();
   `;
