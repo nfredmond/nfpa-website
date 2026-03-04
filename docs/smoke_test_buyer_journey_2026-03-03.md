@@ -42,6 +42,10 @@ Scope: checkout event -> entitlement write -> portal visibility -> manual fallba
 3. Re-ran webhook probes:
    - bad-signature probe -> `400`
    - signed event -> `200`, with verified `commerce_fulfillment_ledger` and `customer_product_access` writes.
+4. Final verification run (2026-03-03 19:00 PT):
+   - event id: `evt_prod_final_1772593245160`
+   - endpoint response: `200 {"ok":true}`
+   - ledger + entitlement writes: PASS
 
 ## Operational fallback (already available)
 Use manual provisioning script for same-day customer delivery until webhook secret is set:
