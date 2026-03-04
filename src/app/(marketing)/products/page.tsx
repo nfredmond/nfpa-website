@@ -10,7 +10,7 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Products',
   description:
-    'OpenPlan, Marketing & Planning Analytics Software, DroneOps Intelligence, and Vibe Coding for Planners: delivery-ready products with transparent Stripe checkout lanes and customization paths for any profession.',
+    'OpenPlan, Marketing & Planning Analytics Software, DroneOps Intelligence, and Vibe Coding for Planners: delivery-ready products with transparent Stripe checkout links and customization paths for any profession.',
 }
 
 const products = [
@@ -52,12 +52,12 @@ const products = [
     icon: PlaneTakeoff,
     stage: 'Pilot packaging',
     description:
-      'Field-to-map drone workflow lane for infrastructure and planning teams that need dependable QA, reproducible deliverables, and authenticated customer access delivery after purchase.',
+      'Field-to-map drone workflow for infrastructure and planning teams that need dependable QA, reproducible deliverables, and authenticated customer access delivery after purchase.',
     capabilities: [
       'Mission intake + capture checklist discipline',
       'Map-ready export handoff patterns',
       'QA issue tagging and repeatability controls',
-      'Authenticated customer access lane tied to product purchase workflows',
+      'Authenticated customer access workflow tied to product purchase',
     ],
     demoUrl: null,
     demoLabel: null,
@@ -105,10 +105,10 @@ export default function ProductsPage() {
       <Section spacing="lg" className="hero-mesh text-white">
         <Container>
           <div className="max-w-4xl">
-            <span className="pill">Product Suite</span>
-            <h1 className="section-title mt-5 text-5xl md:text-6xl leading-[0.96] text-white">Focused products. Transparent pricing lanes.</h1>
+            <span className="pill">Software Products</span>
+            <h1 className="section-title mt-5 text-5xl md:text-6xl leading-[0.96] text-white">Focused products. Transparent pricing.</h1>
             <p className="mt-5 text-lg text-white/82 max-w-3xl">
-              Built for practical operations, budget realism, and measurable outcomes. Published lanes use secure Stripe-hosted checkout; unpublished lanes route to scoped contact intake. Core product architecture is customizable to any profession, including law, science, education, engineering, and real estate.
+              Built for practical operations, budget realism, and measurable outcomes. Published products use secure Stripe-hosted checkout; products still being finalized route to scoped contact intake. Core product architecture is customizable to any profession, including law, science, education, engineering, and real estate.
             </p>
           </div>
         </Container>
@@ -205,7 +205,7 @@ export default function ProductsPage() {
             <span className="pill">Pricing & Checkout</span>
             <h2 className="section-title text-4xl md:text-5xl text-[color:var(--ink)]">Launch-ready pricing tiers</h2>
             <p className="max-w-4xl text-[color:var(--foreground)]/80">
-              Choose the lane that matches your operational need. Published tiers route through Stripe-hosted links; tiers still being finalized route
+              Choose the option that matches your operational need. Published tiers route through Stripe-hosted links; tiers still being finalized route
               to a scoped contact workflow with product/tier context attached. Pricing is transparent, assumptions are explicit, and checkout language is
               aligned with our ethics policy (no hidden fees, no guaranteed funding/approval claims, and human-reviewed analysis at critical gates).
             </p>
@@ -284,7 +284,7 @@ export default function ProductsPage() {
       <Section spacing="lg" className="bg-[color:var(--fog)]/65 border-y border-[color:var(--line)]">
         <Container>
           <div className="max-w-5xl">
-            <span className="pill">Build Principles</span>
+            <span className="pill">Product Principles</span>
             <div className="mt-5 grid grid-cols-1 md:grid-cols-2 gap-5">
               {principles.map((item) => {
                 const Icon = item.icon
@@ -306,7 +306,7 @@ export default function ProductsPage() {
       <Section spacing="lg" className="border-y border-[color:var(--line)] bg-[color:var(--fog)]/78 text-[color:var(--ink)] dark:bg-[#101c27] dark:text-white">
         <Container>
           <div className="mx-auto max-w-3xl text-center">
-            <h2 className="section-title text-4xl text-[color:var(--ink)] dark:text-white md:text-5xl">Need a custom lane before subscribing?</h2>
+            <h2 className="section-title text-4xl text-[color:var(--ink)] dark:text-white md:text-5xl">Need a custom setup before subscribing?</h2>
             <p className="mt-4 text-lg text-[color:var(--foreground)]/82 dark:text-white/80">
               We can scope a bounded implementation plan first, then convert to a recurring subscription when value is proven.
             </p>

@@ -6,7 +6,7 @@ import { ArrowLeft } from 'lucide-react'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Del Norte County ATP (Experience Archive)',
+  title: 'Del Norte County ATP (Project Experience)',
   description: 'Prior-employment experience summary for Del Norte County ATP support.',
 }
 
@@ -15,7 +15,7 @@ export default function DelNorteATPPage() {
     <>
       <Section spacing="lg" className="hero-mesh text-white">
         <Container>
-          <p className="pill">Experience Archive</p>
+          <p className="pill">Project Experience</p>
           <h1 className="section-title mt-5 text-5xl md:text-6xl leading-[0.96] text-white">Del Norte County ATP</h1>
           <p className="mt-5 max-w-3xl text-lg text-white/82">
             Prior-employment project support focused on converting active transportation network gaps into grant-ready,
@@ -32,7 +32,7 @@ export default function DelNorteATPPage() {
           <Button asChild variant="outline" className="mt-5">
             <Link href="/projects">
               <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Experience Archive
+              Back to Project Experience
             </Link>
           </Button>
         </Container>

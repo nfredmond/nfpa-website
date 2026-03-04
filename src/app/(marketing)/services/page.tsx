@@ -147,7 +147,7 @@ export default function ServicesPage() {
 
                     <div className="flex lg:justify-end lg:items-start">
                       <Button asChild variant="outline" className="w-full lg:w-auto">
-                        <Link href={service.href}>View Service Detail</Link>
+                        <Link href={service.href}>View Service Overview</Link>
                       </Button>
                     </div>
                   </div>

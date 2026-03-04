@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Experience Archive',
+  title: 'Project Experience',
   description:
     'Representative prior-employment project history demonstrating planning and GIS execution experience.',
 }
@@ -68,7 +68,7 @@ export default function ProjectsPage() {
       <Section spacing="lg" className="hero-mesh text-white">
         <Container>
           <div className="max-w-4xl">
-            <span className="pill">Experience Archive</span>
+            <span className="pill">Project Experience</span>
             <h1 className="section-title mt-5 text-5xl md:text-6xl leading-[0.96] text-white">Representative prior-employment project history.</h1>
             <p className="mt-5 text-lg text-white/82 max-w-3xl">
               This page is included for experience attribution and technical context. These items are not presented as Nat

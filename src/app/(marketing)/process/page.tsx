@@ -54,7 +54,7 @@ export default function ProcessPage() {
       <Section spacing="lg" className="hero-mesh text-white">
         <Container>
           <div className="max-w-4xl">
-            <span className="pill">Delivery Method</span>
+            <span className="pill">How We Work</span>
             <h1 className="section-title mt-5 text-5xl md:text-6xl leading-[0.96] text-white">Capture → Compute → Communicate.</h1>
             <p className="mt-5 text-lg text-white/82 max-w-3xl">
               A disciplined three-stage workflow that keeps technical quality high while preserving momentum to funding

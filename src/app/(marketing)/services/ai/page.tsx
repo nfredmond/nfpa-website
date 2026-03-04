@@ -23,7 +23,7 @@ export default function AIServicePage() {
     <>
       <Section spacing="lg" className="hero-mesh text-white">
         <Container>
-          <span className="pill">Service Detail</span>
+          <span className="pill">Service Overview</span>
           <h1 className="section-title mt-5 text-5xl md:text-6xl leading-[0.96] text-white">AI-Enabled Documentation</h1>
           <p className="mt-5 max-w-3xl text-lg text-white/82">
             Use automation to move faster on drafting and packaging while preserving human accountability for decisions.

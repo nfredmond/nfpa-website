@@ -122,7 +122,7 @@ export default function HomePage() {
               </h1>
               <p className="mt-6 max-w-2xl text-lg sm:text-xl text-[color:var(--foreground)]/82 dark:text-white/85">
                 Nat Ford combines transportation planning expertise with production-grade tools so agencies, tribes, and
-                consultancies can move from analysis to funded implementation with less friction. Our software lanes can
+                consultancies can move from analysis to funded implementation with less friction. Our software tools can
                 also be customized for any profession, including law, science, education, engineering, and real estate.
               </p>
 
@@ -168,17 +168,17 @@ export default function HomePage() {
 
               <div className="mt-3 grid grid-cols-2 gap-3">
                 <div className="signal-tile rounded-2xl p-3.5">
-                  <p className="text-xs uppercase tracking-wide text-[color:var(--foreground)]/68">Focus region</p>
+                  <p className="text-xs uppercase tracking-wide text-[color:var(--foreground)]/68">Primary clients</p>
                   <p className="mt-1 font-semibold">U.S. small towns + tribal + county agencies</p>
                 </div>
                 <div className="signal-tile rounded-2xl p-3.5">
-                  <p className="text-xs uppercase tracking-wide text-[color:var(--foreground)]/68">Operating model</p>
+                  <p className="text-xs uppercase tracking-wide text-[color:var(--foreground)]/68">Delivery model</p>
                   <p className="mt-1 font-semibold">Consulting + Software</p>
                 </div>
               </div>
 
               <div className="mt-4 rounded-2xl border border-[color:var(--line)] bg-[color:var(--sand)]/40 p-4">
-                <p className="text-xs uppercase tracking-wide text-[color:var(--foreground)]/68">Promise</p>
+                <p className="text-xs uppercase tracking-wide text-[color:var(--foreground)]/68">What to expect</p>
                 <p className="mt-1 text-sm leading-relaxed">
                   No hype. No hidden assumptions. No burden-shifting recommendations. Every deliverable is built to be
                   client-safe, review-ready, and implementation-aware.
@@ -260,11 +260,11 @@ export default function HomePage() {
         <Container>
           <div className="grid grid-cols-1 lg:grid-cols-[0.95fr_1.05fr] gap-10 items-start">
             <div>
-              <p className="pill mb-4">Product Layer</p>
+              <p className="pill mb-4">Software Products</p>
               <h2 className="section-title text-4xl md:text-5xl text-[color:var(--ink)]">Software that compounds consulting impact.</h2>
               <p className="mt-4 text-lg text-[color:var(--foreground)]/80">
                 We are not building software for software&apos;s sake. Each product shortens cycle time, hardens quality,
-                and makes results easier to explain and defend. Architecture is modular so we can customize these lanes
+                and makes results easier to explain and defend. Architecture is modular so we can customize these tools
                 for any profession when clients need domain-specific workflows.
               </p>
               <div className="mt-6 flex flex-col sm:flex-row gap-3">

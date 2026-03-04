@@ -6,7 +6,7 @@ import { ArrowLeft } from 'lucide-react'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Tehama County VMT & CIP (Experience Archive)',
+  title: 'Tehama County VMT & CIP (Project Experience)',
   description: 'Prior-employment experience summary for Tehama County VMT/CIP integration work.',
 }
 
@@ -15,7 +15,7 @@ export default function TehamaVMTPage() {
     <>
       <Section spacing="lg" className="hero-mesh text-white">
         <Container>
-          <p className="pill">Experience Archive</p>
+          <p className="pill">Project Experience</p>
           <h1 className="section-title mt-5 text-5xl md:text-6xl leading-[0.96] text-white">Tehama County VMT & CIP</h1>
           <p className="mt-5 max-w-3xl text-lg text-white/82">
             Prior-employment work connecting VMT reduction strategy with implementation-ready capital improvement sequencing.
@@ -31,7 +31,7 @@ export default function TehamaVMTPage() {
           <Button asChild variant="outline" className="mt-5">
             <Link href="/projects">
               <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Experience Archive
+              Back to Project Experience
             </Link>
           </Button>
         </Container>

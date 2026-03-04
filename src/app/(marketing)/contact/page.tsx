@@ -150,7 +150,7 @@ export default function ContactPage() {
         <Container>
           <div className="max-w-4xl">
             <span className="pill">Contact</span>
-            <h1 className="section-title mt-5 text-5xl md:text-6xl leading-[0.96] text-white">Let’s scope the right project lane.</h1>
+            <h1 className="section-title mt-5 text-5xl md:text-6xl leading-[0.96] text-white">Let’s scope the right project.</h1>
             <p className="mt-5 text-lg text-white/82 max-w-3xl">
               Start with a focused intake. We’ll align scope, timeline, and delivery model before work begins.
             </p>
@@ -172,7 +172,7 @@ export default function ContactPage() {
                       <div className="mb-6 rounded-xl border border-[color:var(--pine)]/25 bg-[color:var(--sand)]/35 px-4 py-3 text-sm text-[color:var(--foreground)]/85">
                         <p className="font-semibold text-[color:var(--pine)]">Subscription request detected</p>
                         <p className="mt-1">
-                          We captured your product lane from the pricing page{checkoutTier ? ` (${checkoutTier})` : ''}. Complete the form and we’ll send scoped checkout/onboarding next steps.
+                          We captured your selected product from the pricing page{checkoutTier ? ` (${checkoutTier})` : ''}. Complete the form and we’ll send scoped checkout/onboarding next steps.
                         </p>
                       </div>
                     ) : null}

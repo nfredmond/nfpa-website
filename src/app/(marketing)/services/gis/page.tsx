@@ -23,7 +23,7 @@ export default function GISServicePage() {
     <>
       <Section spacing="lg" className="hero-mesh text-white">
         <Container>
-          <span className="pill">Service Detail</span>
+          <span className="pill">Service Overview</span>
           <h1 className="section-title mt-5 text-5xl md:text-6xl leading-[0.96] text-white">GIS & Spatial Analysis</h1>
           <p className="mt-5 max-w-3xl text-lg text-white/82">
             Build decision-quality spatial intelligence from fragmented datasets and convert it into clear planning action.
