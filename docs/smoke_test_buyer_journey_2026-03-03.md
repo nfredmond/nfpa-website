@@ -29,15 +29,19 @@ Scope: checkout event -> entitlement write -> portal visibility -> manual fallba
    - `scripts/provision-product-access.mjs` updated entitlement to `drone-enterprise`
    - User-visible row reflected updated tier
 
-## Critical production finding
-- `POST https://www.natfordplanning.com/api/commerce/webhook` currently returns:
-  - `500 {"error":"Missing webhook secret configuration"}`
-- This means production auto-webhook processing is not active until a webhook secret is configured.
+## Critical production finding (resolved)
+- Initial probe showed missing secret (`500`), then resolved by configuring webhook secret.
+- Current production behavior:
+  - unsigned probe returns `400` (expected bad signature)
+  - signed test event returns `200 {"ok":true}`
+  - ledger + entitlement rows now update in production
 
-## Immediate remediation
-1. Add `STRIPE_WEBHOOK_SECRET` in Vercel production env for `nat-ford-website`.
-2. Re-run production webhook probe and confirm `400` on bad signature (expected) instead of `500`.
-3. Trigger Stripe test event and confirm ledger + entitlement update in production.
+## Remediation executed
+1. Added `STRIPE_WEBHOOK_SECRET` to Vercel production env for `nat-ford-website`.
+2. Redeployed production.
+3. Re-ran webhook probes:
+   - bad-signature probe -> `400`
+   - signed event -> `200`, with verified `commerce_fulfillment_ledger` and `customer_product_access` writes.
 
 ## Operational fallback (already available)
 Use manual provisioning script for same-day customer delivery until webhook secret is set:
