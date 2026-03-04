@@ -4,6 +4,7 @@ import { Section } from '@/components/layout/section'
 import { Card, CardContent } from '@/components/ui/card'
 import { SignOutButton } from '@/components/auth/signout-button'
 import { createClient } from '@/lib/supabase/server'
+import { offerCatalog } from '@/lib/commerce/offers'
 
 export const dynamic = 'force-dynamic'
 
@@ -21,6 +22,19 @@ function formatJoinedDate(dateInput?: string | null) {
 }
 
 type PortalRole = 'customer' | 'planner' | 'admin'
+
+type ProductAccessRow = {
+  product_id: string
+  tier_id: string
+  status: string
+  updated_at: string
+}
+
+const productNameById = new Map(offerCatalog.map((offer) => [offer.id, offer.name]))
+
+function formatAccessStatus(status: string) {
+  return status.replace(/_/g, ' ')
+}
 
 function resolvePortalRole(user: {
   app_metadata?: Record<string, unknown>
@@ -48,6 +62,13 @@ export default async function PortalPage() {
   }
 
   const role = resolvePortalRole(user)
+
+  const { data: accessRows } = await supabase
+    .from('customer_product_access')
+    .select('product_id, tier_id, status, updated_at')
+    .order('updated_at', { ascending: false })
+
+  const productAccess = (accessRows ?? []) as ProductAccessRow[]
 
   return (
     <Section spacing="xl">
@@ -90,6 +111,28 @@ export default async function PortalPage() {
                   <dd className="mt-1 text-sm capitalize text-[color:var(--foreground)]">{role}</dd>
                 </div>
               </dl>
+            </CardContent>
+          </Card>
+
+          <Card className="border border-[color:var(--line)] bg-[color:var(--background)]">
+            <CardContent className="p-6">
+              <h2 className="text-lg font-semibold text-[color:var(--ink)]">Purchased product access</h2>
+              {productAccess.length > 0 ? (
+                <ul className="mt-4 space-y-3">
+                  {productAccess.map((item) => (
+                    <li key={`${item.product_id}-${item.tier_id}`} className="rounded-xl border border-[color:var(--line)] bg-[color:var(--fog)]/45 p-3">
+                      <p className="text-sm font-semibold text-[color:var(--ink)]">{productNameById.get(item.product_id) ?? item.product_id}</p>
+                      <p className="mt-1 text-xs text-[color:var(--foreground)]/75">Tier: {item.tier_id}</p>
+                      <p className="text-xs text-[color:var(--foreground)]/75">Status: {formatAccessStatus(item.status)}</p>
+                      <p className="text-xs text-[color:var(--foreground)]/68">Updated: {formatJoinedDate(item.updated_at)}</p>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="mt-2 text-sm text-[color:var(--foreground)]/78">
+                  No active product entitlements are linked to this account yet.
+                </p>
+              )}
             </CardContent>
           </Card>
 

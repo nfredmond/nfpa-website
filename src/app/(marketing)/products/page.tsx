@@ -10,7 +10,7 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Products',
   description:
-    'OpenPlan, Marketing & Planning Analytics Software, DroneOps Intelligence, and Vibe Coding for Planners: delivery-ready products with transparent Stripe checkout lanes.',
+    'OpenPlan, Marketing & Planning Analytics Software, DroneOps Intelligence, and Vibe Coding for Planners: delivery-ready products with transparent Stripe checkout lanes and customization paths for any profession.',
 }
 
 const products = [
@@ -20,7 +20,7 @@ const products = [
     icon: Map,
     stage: 'Coming March 2026',
     description:
-      'Transportation analysis platform for corridor-level diagnostics, equity/safety context, and grant-ready outputs.',
+      'Transportation analysis platform for corridor-level diagnostics, equity/safety context, and grant-ready outputs — with architecture that can be adapted to law, science, education, engineering, real estate, and other professional workflows.',
     capabilities: [
       'Corridor-first workflow for practical project framing',
       'Equity and safety indicators in one operational view',
@@ -52,12 +52,12 @@ const products = [
     icon: PlaneTakeoff,
     stage: 'Pilot packaging',
     description:
-      'Field-to-map drone workflow lane for infrastructure and planning teams that need dependable QA and reproducible deliverables.',
+      'Field-to-map drone workflow lane for infrastructure and planning teams that need dependable QA, reproducible deliverables, and authenticated customer access delivery after purchase.',
     capabilities: [
       'Mission intake + capture checklist discipline',
       'Map-ready export handoff patterns',
       'QA issue tagging and repeatability controls',
-      'Grounded implementation path for low-budget teams',
+      'Authenticated customer access lane tied to product purchase workflows',
     ],
     demoUrl: null,
     demoLabel: null,
@@ -108,7 +108,7 @@ export default function ProductsPage() {
             <span className="pill">Product Suite</span>
             <h1 className="section-title mt-5 text-5xl md:text-6xl leading-[0.96] text-white">Focused products. Transparent pricing lanes.</h1>
             <p className="mt-5 text-lg text-white/82 max-w-3xl">
-              Built for practical operations, budget realism, and measurable outcomes. Published lanes use secure Stripe-hosted checkout; unpublished lanes route to scoped contact intake.
+              Built for practical operations, budget realism, and measurable outcomes. Published lanes use secure Stripe-hosted checkout; unpublished lanes route to scoped contact intake. Core product architecture is customizable to any profession, including law, science, education, engineering, and real estate.
             </p>
           </div>
         </Container>

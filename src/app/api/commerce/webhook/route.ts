@@ -73,6 +73,27 @@ function statusForEventType(eventType: string): string {
   }
 }
 
+function accessStatusForEventType(eventType: string): string {
+  switch (eventType) {
+    case 'checkout.session.completed':
+    case 'invoice.payment_succeeded':
+    case 'customer.subscription.updated':
+      return 'active'
+    case 'invoice.payment_failed':
+      return 'past_due'
+    case 'customer.subscription.deleted':
+      return 'canceled'
+    case 'charge.refunded':
+      return 'refunded'
+    default:
+      return 'pending'
+  }
+}
+
+function normalizeEmail(value: string | null): string | null {
+  return value ? value.trim().toLowerCase() : null
+}
+
 function inferProductAndTier(clientReferenceId: string | null) {
   if (!clientReferenceId) {
     return { productId: null, tierId: null }
@@ -106,6 +127,62 @@ function asString(value: unknown): string | null {
   if (typeof value !== 'string') return null
   const trimmed = value.trim()
   return trimmed.length > 0 ? trimmed : null
+}
+
+async function syncEntitlementToUserMetadata(params: {
+  admin: NonNullable<ReturnType<typeof getSupabaseAdminClient>>
+  email: string
+  productId: string
+  tierId: string
+  accessStatus: string
+}) {
+  const { admin, email, productId, tierId, accessStatus } = params
+
+  try {
+    const listed = await (admin as any).auth.admin.listUsers({ page: 1, perPage: 1000 })
+    if (listed?.error) {
+      throw listed.error
+    }
+
+    const target = (listed?.data?.users ?? []).find(
+      (user: { email?: string | null }) => user.email?.toLowerCase() === email
+    )
+
+    if (!target?.id) {
+      return
+    }
+
+    const existingAccess =
+      target.app_metadata && typeof target.app_metadata.product_access === 'object'
+        ? target.app_metadata.product_access
+        : {}
+
+    const productAccess = {
+      ...(existingAccess as Record<string, unknown>),
+      [productId]: {
+        tierId,
+        status: accessStatus,
+        updatedAt: new Date().toISOString(),
+      },
+    }
+
+    const nextAppMetadata = {
+      ...(target.app_metadata ?? {}),
+      product_access: productAccess,
+    }
+
+    await (admin as any).auth.admin.updateUserById(target.id, {
+      app_metadata: nextAppMetadata,
+    })
+  } catch (error) {
+    console.error('commerce webhook metadata sync failed', {
+      email,
+      productId,
+      tierId,
+      accessStatus,
+      error: error instanceof Error ? error.message : String(error),
+    })
+  }
 }
 
 export async function POST(request: NextRequest) {
@@ -147,6 +224,15 @@ export async function POST(request: NextRequest) {
 
   const inferred = inferProductAndTier(clientReferenceId)
 
+  const customerEmail = normalizeEmail(
+    asString(object.customer_email) ||
+      asString((object.customer_details as Record<string, unknown> | undefined)?.email) ||
+      asString(object.receipt_email)
+  )
+
+  const productId = metadataProductId || inferred.productId
+  const tierId = metadataTierId || inferred.tierId
+
   const row = {
     stripe_event_id: event.id,
     stripe_event_type: event.type,
@@ -155,12 +241,9 @@ export async function POST(request: NextRequest) {
     stripe_invoice_id: asString(object.invoice),
     stripe_subscription_id: asString(object.subscription) || asString(object.id),
     stripe_customer_id: asString(object.customer),
-    customer_email:
-      asString(object.customer_email) ||
-      asString((object.customer_details as Record<string, unknown> | undefined)?.email) ||
-      asString(object.receipt_email),
-    product_id: metadataProductId || inferred.productId,
-    tier_id: metadataTierId || inferred.tierId,
+    customer_email: customerEmail,
+    product_id: productId,
+    tier_id: tierId,
     status: statusForEventType(event.type),
     source: 'stripe_webhook',
     payload: object,
@@ -177,6 +260,47 @@ export async function POST(request: NextRequest) {
       error: error.message,
     })
     return NextResponse.json({ error: 'Ledger upsert failed' }, { status: 500 })
+  }
+
+  if (customerEmail && productId && tierId) {
+    const accessStatus = accessStatusForEventType(event.type)
+    const { error: accessError } = await (admin as any)
+      .from('customer_product_access')
+      .upsert(
+        {
+          email: customerEmail,
+          product_id: productId,
+          tier_id: tierId,
+          status: accessStatus,
+          source: 'stripe_webhook',
+          stripe_event_id: event.id,
+          checkout_session_id: checkoutSessionId,
+          metadata: {
+            stripeEventType: event.type,
+            clientReferenceId,
+          },
+        },
+        { onConflict: 'email,product_id' }
+      )
+
+    if (accessError) {
+      console.error('commerce webhook access upsert failed', {
+        eventId: event.id,
+        eventType: event.type,
+        email: customerEmail,
+        productId,
+        tierId,
+        error: accessError.message,
+      })
+    } else {
+      await syncEntitlementToUserMetadata({
+        admin,
+        email: customerEmail,
+        productId,
+        tierId,
+        accessStatus,
+      })
+    }
   }
 
   return NextResponse.json({ ok: true })

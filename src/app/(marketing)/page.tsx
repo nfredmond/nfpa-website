@@ -58,7 +58,7 @@ const products = [
   {
     name: 'OpenPlan',
     icon: Map,
-    description: 'Coming March 2026 — corridor analysis + equity/safety diagnostics + grant-ready report generation in one operational flow (15% pre-launch pricing now live).',
+    description: 'Coming March 2026 — corridor analysis + equity/safety diagnostics + grant-ready report generation in one operational flow (15% pre-launch pricing now live), with customization paths for law, science, education, engineering, real estate, and other sectors.',
     href: '/products#openplan',
   },
   {
@@ -123,7 +123,8 @@ export default function HomePage() {
               </h1>
               <p className="mt-6 max-w-2xl text-lg sm:text-xl text-[color:var(--foreground)]/82 dark:text-white/85">
                 Nat Ford combines transportation planning expertise with production-grade tools so agencies, tribes, and
-                consultancies can move from analysis to funded implementation with less friction.
+                consultancies can move from analysis to funded implementation with less friction. Our software lanes can
+                also be customized for any profession, including law, science, education, engineering, and real estate.
               </p>
 
               <div className="mt-8 flex flex-col sm:flex-row gap-3">
@@ -272,7 +273,8 @@ export default function HomePage() {
               <h2 className="section-title text-4xl md:text-5xl text-[color:var(--ink)]">Software that compounds consulting impact.</h2>
               <p className="mt-4 text-lg text-[color:var(--foreground)]/80">
                 We are not building software for software&apos;s sake. Each product shortens cycle time, hardens quality,
-                and makes results easier to explain and defend.
+                and makes results easier to explain and defend. Architecture is modular so we can customize these lanes
+                for any profession when clients need domain-specific workflows.
               </p>
               <div className="mt-6 flex flex-col sm:flex-row gap-3">
                 <Link
