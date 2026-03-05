@@ -8,6 +8,7 @@ import { SignOutButton } from '@/components/auth/signout-button'
 import { createClient } from '@/lib/supabase/server'
 import { getSupabaseAdminClient } from '@/lib/supabase/admin'
 import { evaluateAdminAccess, getAdminAllowlist } from '@/lib/auth/admin-access'
+import projectStatusData from '@/data/admin-project-status.json'
 
 export const dynamic = 'force-dynamic'
 
@@ -16,6 +17,7 @@ const tabs = [
   { id: 'users', label: 'Users' },
   { id: 'stripe', label: 'Stripe Tests' },
   { id: 'agent-ops', label: 'Agent Ops' },
+  { id: 'projects', label: 'Projects' },
   { id: 'pages', label: 'Pages' },
   { id: 'settings', label: 'Settings' },
   { id: 'audit', label: 'Audit Log' },
@@ -39,6 +41,36 @@ function formatDate(value?: string | null) {
   } catch {
     return value
   }
+}
+
+type AdminProjectSnapshot = {
+  project: string
+  status: string
+  lastUpdate: string
+  owner: string
+  repoPath: string
+  repoUrl?: string
+  nextMilestone: string
+}
+
+const projectSnapshots = (projectStatusData.projects ?? []) as AdminProjectSnapshot[]
+
+function getProjectStatusStyle(status: string) {
+  const normalized = status.toLowerCase()
+
+  if (normalized.includes('blocked') || normalized.includes('risk')) {
+    return 'border border-red-300/70 bg-red-50 text-red-800'
+  }
+
+  if (normalized.includes('planning')) {
+    return 'border border-amber-300/70 bg-amber-50 text-amber-900'
+  }
+
+  if (normalized.includes('active') || normalized.includes('progress') || normalized.includes('track')) {
+    return 'border border-emerald-300/70 bg-emerald-50 text-emerald-800'
+  }
+
+  return 'border border-[color:var(--line)] bg-[color:var(--fog)]/55 text-[color:var(--foreground)]'
 }
 
 async function getRemoteAgentDashboardSnapshot() {
@@ -444,6 +476,66 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                   </p>
                 </CardContent>
               </Card>
+            </div>
+          )}
+
+          {currentTab === 'projects' && (
+            <div className="space-y-4">
+              <Card className="border border-[color:var(--line)] bg-[color:var(--background)]">
+                <CardContent className="space-y-2 p-6">
+                  <h2 className="text-xl font-semibold text-[color:var(--ink)]">Project status tracker</h2>
+                  <p className="text-sm text-[color:var(--foreground)]/78">
+                    Lightweight cross-project pulse for company initiatives. Source file: <code>src/data/admin-project-status.json</code>
+                  </p>
+                  <p className="text-xs text-[color:var(--foreground)]/64">
+                    Feed timestamp: {formatDate(projectStatusData.generatedAt)}
+                  </p>
+                </CardContent>
+              </Card>
+
+              <div className="grid gap-4 md:grid-cols-2">
+                {projectSnapshots.map((project) => (
+                  <Card key={project.project} className="border border-[color:var(--line)] bg-[color:var(--background)]">
+                    <CardContent className="space-y-4 p-5">
+                      <div className="flex items-start justify-between gap-3">
+                        <h3 className="text-lg font-semibold text-[color:var(--ink)]">{project.project}</h3>
+                        <span className={`rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.08em] ${getProjectStatusStyle(project.status)}`}>
+                          {project.status}
+                        </span>
+                      </div>
+
+                      <dl className="space-y-2 text-sm">
+                        <div>
+                          <dt className="text-xs uppercase tracking-[0.08em] text-[color:var(--foreground)]/62">Last update</dt>
+                          <dd className="text-[color:var(--foreground)]">{formatDate(project.lastUpdate)}</dd>
+                        </div>
+                        <div>
+                          <dt className="text-xs uppercase tracking-[0.08em] text-[color:var(--foreground)]/62">Owner</dt>
+                          <dd className="text-[color:var(--foreground)]">{project.owner}</dd>
+                        </div>
+                        <div>
+                          <dt className="text-xs uppercase tracking-[0.08em] text-[color:var(--foreground)]/62">Repo path/link</dt>
+                          <dd className="break-all text-[color:var(--foreground)]">{project.repoPath}</dd>
+                          {project.repoUrl && (
+                            <a
+                              href={project.repoUrl}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="mt-1 inline-block text-xs font-medium text-[color:var(--pine)] hover:underline"
+                            >
+                              Open repository
+                            </a>
+                          )}
+                        </div>
+                      </dl>
+
+                      <div className="rounded-lg border border-[color:var(--line)] bg-[color:var(--fog)]/35 px-3 py-2 text-sm text-[color:var(--foreground)]">
+                        <span className="font-medium text-[color:var(--ink)]">Next milestone:</span> {project.nextMilestone}
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
             </div>
           )}
 
