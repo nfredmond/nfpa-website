@@ -1,41 +1,41 @@
 {
-  "generatedAt": "2026-03-04T18:00:00-08:00",
+  "generatedAt": "2026-03-04T18:40:00-08:00",
   "projects": [
     {
       "project": "OpenPlan",
       "status": "In Progress",
-      "lastUpdate": "2026-03-04T14:20:00-08:00",
-      "owner": "Nathaniel Ford",
+      "lastUpdate": "2026-03-03T21:40:23-08:00",
+      "owner": "Nathaniel Ford / Iris Chen",
       "repoPath": "/home/nathaniel/.openclaw/workspace/openplan",
-      "repoUrl": "https://github.com/nat-ford/openplan",
-      "nextMilestone": "Finish county dashboard filtering + publish staging walkthrough."
+      "repoUrl": "https://github.com/nfredmond/openplan",
+      "nextMilestone": "Close remaining ship-gate P0 evidence and publish pilot-ready QA packet."
     },
     {
       "project": "DroneOps",
-      "status": "Planning",
-      "lastUpdate": "2026-03-03T16:10:00-08:00",
-      "owner": "Nathaniel Ford",
-      "repoPath": "/home/nathaniel/.openclaw/workspace/droneops",
-      "repoUrl": "https://github.com/nat-ford/droneops",
-      "nextMilestone": "Finalize mission template and QA checklist for first production flight package."
+      "status": "In Progress",
+      "lastUpdate": "2026-03-03T19:30:36-08:00",
+      "owner": "Nathaniel Ford / Iris Chen",
+      "repoPath": "/home/nathaniel/.openclaw/workspace/projects/aerial-intel-platform",
+      "repoUrl": "https://github.com/nfredmond/aerial-intel-platform",
+      "nextMilestone": "Complete entitlement gating + buyer sign-in flow tied to website purchase access."
     },
     {
       "project": "SRF Diary",
       "status": "Active",
-      "lastUpdate": "2026-03-04T09:35:00-08:00",
+      "lastUpdate": "2026-03-03T15:54:33-08:00",
       "owner": "Nathaniel Ford",
-      "repoPath": "/home/nathaniel/.openclaw/workspace/srf-diary",
-      "repoUrl": "https://github.com/nat-ford/srf-diary",
-      "nextMilestone": "Ship quote-image pairing review flow and weekly reflection export."
+      "repoPath": "/home/nathaniel/.openclaw/workspace/projects/srf-spiritual-diary",
+      "repoUrl": "https://github.com/nfredmond/srf-spiritual-diary",
+      "nextMilestone": "Run production daily pipeline validation (render + Drive + channel delivery) with monitoring."
     },
     {
       "project": "Website",
       "status": "On Track",
-      "lastUpdate": "2026-03-04T17:45:00-08:00",
-      "owner": "Nathaniel Ford",
+      "lastUpdate": "2026-03-04T18:33:51-08:00",
+      "owner": "Nathaniel Ford / Bartholomew",
       "repoPath": "/home/nathaniel/.openclaw/workspace/nat-ford-website",
-      "repoUrl": "https://github.com/nat-ford/nat-ford-website",
-      "nextMilestone": "Release admin CRM MVP tab and document CRM phase-two schema decisions."
+      "repoUrl": "https://github.com/nfredmond/nat-ford-website",
+      "nextMilestone": "Expand Admin into CRM Phase 1 (accounts/contacts/tasks/pipeline views with audit-safe writes)."
     }
   ]
 }
