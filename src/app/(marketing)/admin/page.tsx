@@ -15,6 +15,7 @@ const tabs = [
   { id: 'overview', label: 'Overview' },
   { id: 'users', label: 'Users' },
   { id: 'stripe', label: 'Stripe Tests' },
+  { id: 'agent-ops', label: 'Agent Ops' },
   { id: 'pages', label: 'Pages' },
   { id: 'settings', label: 'Settings' },
   { id: 'audit', label: 'Audit Log' },
@@ -37,6 +38,75 @@ function formatDate(value?: string | null) {
     }).format(new Date(value))
   } catch {
     return value
+  }
+}
+
+async function getRemoteAgentDashboardSnapshot() {
+  const base = (process.env.AGENT_DASHBOARD_REMOTE_BASE_URL ?? '').trim().replace(/\/$/, '')
+  const token = (process.env.AGENT_DASHBOARD_REMOTE_READ_TOKEN ?? '').trim()
+
+  if (!base) {
+    return {
+      configured: false,
+      error: 'Set AGENT_DASHBOARD_REMOTE_BASE_URL to enable remote dashboard integration.',
+    }
+  }
+
+  try {
+    const response = await fetch(`${base}/api/status?limit=20&activeMinutes=240`, {
+      method: 'GET',
+      headers: token
+        ? {
+            Authorization: `Bearer ${token}`,
+          }
+        : undefined,
+      cache: 'no-store',
+      next: { revalidate: 0 },
+    })
+
+    const payload = (await response.json().catch(() => null)) as
+      | {
+          ok?: boolean
+          data?: {
+            generatedAt?: string
+            summary?: {
+              totalAgents?: number
+              active?: number
+              warm?: number
+              idle?: number
+              tokenTotal?: string
+            }
+            gateway?: {
+              connected?: boolean
+              healthy?: boolean
+            }
+          }
+          error?: string
+        }
+      | null
+
+    if (!response.ok || !payload?.ok || !payload.data) {
+      return {
+        configured: true,
+        available: false,
+        base,
+        error: payload?.error ?? `Remote dashboard unavailable (${response.status})`,
+      }
+    }
+
+    return {
+      configured: true,
+      available: true,
+      base,
+      data: payload.data,
+    }
+  } catch (error) {
+    return {
+      configured: true,
+      available: false,
+      base,
+      error: error instanceof Error ? error.message : 'Failed to query remote dashboard',
+    }
   }
 }
 
@@ -97,30 +167,32 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
     status: string
     created_at: string
   }> = []
+  const remoteDashboard = await getRemoteAgentDashboardSnapshot()
 
   if (admin) {
     const [{ count: entitlementCount }, { data: latestDelivery }, { count: ledgerCustomers }] = await Promise.all([
-      (admin as any)
+      admin
         .from('customer_product_access')
         .select('*', { count: 'exact', head: true }),
-      (admin as any)
+      admin
         .from('commerce_fulfillment_ledger')
         .select('created_at')
         .in('status', ['checkout_completed', 'invoice_paid'])
         .order('created_at', { ascending: false })
         .limit(1)
         .maybeSingle(),
-      (admin as any)
+      admin
         .from('customer_product_access')
         .select('email', { count: 'exact', head: true }),
     ])
 
     accessCount = entitlementCount ?? 0
     customerCount = ledgerCustomers ?? 0
-    recentDeliveryAt = latestDelivery?.created_at ?? null
+    const latestDeliveryRecord = (latestDelivery as { created_at?: string | null } | null) ?? null
+    recentDeliveryAt = latestDeliveryRecord?.created_at ?? null
 
     if (currentTab === 'audit') {
-      const { data: logs } = await (admin as any)
+      const { data: logs } = await admin
         .from('admin_action_log')
         .select('id, actor_email, action, target, status, created_at')
         .order('created_at', { ascending: false })
@@ -268,6 +340,108 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                     <li>• Writes through normal webhook lane for realistic end-to-end validation.</li>
                     <li>• If `STRIPE_SECRET_KEY` is missing, endpoint returns actionable config guidance.</li>
                   </ul>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
+          {currentTab === 'agent-ops' && (
+            <div className="grid gap-4 lg:grid-cols-2">
+              <Card className="border border-[color:var(--line)] bg-[color:var(--background)]">
+                <CardContent className="space-y-4 p-6">
+                  <h2 className="text-xl font-semibold text-[color:var(--ink)]">Remote Agent Dashboard</h2>
+                  <p className="text-sm text-[color:var(--foreground)]/78">
+                    Secure bridge to the local-first OpenClaw dashboard from the Nat Ford admin surface.
+                  </p>
+
+                  {!remoteDashboard.configured ? (
+                    <p className="rounded-lg border border-amber-300/60 bg-amber-50 px-3 py-2 text-sm text-amber-900">
+                      {remoteDashboard.error}
+                    </p>
+                  ) : remoteDashboard.available ? (
+                    <div className="space-y-2 rounded-lg border border-[color:var(--line)] bg-[color:var(--fog)]/45 p-4 text-sm">
+                      <p>
+                        <strong>Gateway:</strong>{' '}
+                        {remoteDashboard.data?.gateway?.connected
+                          ? remoteDashboard.data?.gateway?.healthy
+                            ? 'Connected + healthy'
+                            : 'Connected (probe warning)'
+                          : 'Disconnected'}
+                      </p>
+                      <p>
+                        <strong>Total agents:</strong> {remoteDashboard.data?.summary?.totalAgents ?? 0}
+                      </p>
+                      <p>
+                        <strong>Active / Warm / Idle:</strong> {remoteDashboard.data?.summary?.active ?? 0} /{' '}
+                        {remoteDashboard.data?.summary?.warm ?? 0} / {remoteDashboard.data?.summary?.idle ?? 0}
+                      </p>
+                      <p>
+                        <strong>Token total:</strong> {remoteDashboard.data?.summary?.tokenTotal ?? '—'}
+                      </p>
+                      <p>
+                        <strong>Snapshot:</strong> {formatDate(remoteDashboard.data?.generatedAt ?? null)}
+                      </p>
+                    </div>
+                  ) : (
+                    <p className="rounded-lg border border-red-300/60 bg-red-50 px-3 py-2 text-sm text-red-800">
+                      {remoteDashboard.error}
+                    </p>
+                  )}
+
+                  {remoteDashboard.configured && (
+                    <a
+                      href={`${remoteDashboard.base}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center justify-center rounded-full border border-[color:var(--pine)] px-4 py-2 text-sm font-semibold text-[color:var(--pine)] transition hover:bg-[color:var(--pine)] hover:text-white"
+                    >
+                      Open full dashboard
+                    </a>
+                  )}
+                </CardContent>
+              </Card>
+
+              <Card className="border border-[color:var(--line)] bg-[color:var(--background)]">
+                <CardContent className="space-y-4 p-6">
+                  <h3 className="text-lg font-semibold text-[color:var(--ink)]">Gated remote actions</h3>
+                  <p className="text-sm text-[color:var(--foreground)]/78">
+                    These controls call a secured proxy endpoint and never expose remote action tokens in the browser.
+                  </p>
+
+                  <form method="post" action="/api/admin/agent-dashboard/action" className="grid gap-2">
+                    <input type="hidden" name="action" value="reset" />
+                    <Button type="submit" className="w-full justify-center">Reset gateway</Button>
+                  </form>
+
+                  <form method="post" action="/api/admin/agent-dashboard/action" className="grid gap-2">
+                    <input type="hidden" name="action" value="restart" />
+                    <Button type="submit" className="w-full justify-center">Restart gateway</Button>
+                  </form>
+
+                  <form method="post" action="/api/admin/agent-dashboard/action" className="grid gap-2">
+                    <input type="hidden" name="action" value="stop" />
+                    <button
+                      type="submit"
+                      className="w-full rounded-lg border border-red-300 bg-red-50 px-3 py-2 text-sm font-semibold text-red-800 hover:bg-red-100"
+                    >
+                      Stop gateway
+                    </button>
+                  </form>
+
+                  <form method="post" action="/api/admin/agent-dashboard/action" className="grid gap-2">
+                    <input type="hidden" name="action" value="doctor-fix" />
+                    <button
+                      type="submit"
+                      className="w-full rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-sm font-semibold text-amber-900 hover:bg-amber-100"
+                    >
+                      Run doctor --fix
+                    </button>
+                  </form>
+
+                  <p className="text-xs text-[color:var(--foreground)]/68">
+                    Configure environment variables: AGENT_DASHBOARD_REMOTE_BASE_URL, AGENT_DASHBOARD_REMOTE_READ_TOKEN,
+                    AGENT_DASHBOARD_REMOTE_ACTION_TOKEN.
+                  </p>
                 </CardContent>
               </Card>
             </div>
