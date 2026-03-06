@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { Container } from '@/components/layout/container'
 import { Section } from '@/components/layout/section'
@@ -111,6 +112,42 @@ export default async function PortalPage() {
                   <dd className="mt-1 text-sm capitalize text-[color:var(--foreground)]">{role}</dd>
                 </div>
               </dl>
+            </CardContent>
+          </Card>
+
+          <Card className="border border-[color:var(--line)] bg-[color:var(--background)]">
+            <CardContent className="p-6">
+              <h2 className="text-lg font-semibold text-[color:var(--ink)]">Quick actions</h2>
+              <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                <Link
+                  href="/products"
+                  className="rounded-xl border border-[color:var(--line)] bg-[color:var(--fog)]/45 px-4 py-3 text-sm font-medium text-[color:var(--foreground)] hover:bg-[color:var(--fog)]"
+                >
+                  Review products + pricing
+                </Link>
+                <Link
+                  href="/contact"
+                  className="rounded-xl border border-[color:var(--line)] bg-[color:var(--fog)]/45 px-4 py-3 text-sm font-medium text-[color:var(--foreground)] hover:bg-[color:var(--fog)]"
+                >
+                  Request support or scope changes
+                </Link>
+                {role !== 'customer' && (
+                  <Link
+                    href="/lead-inbox"
+                    className="rounded-xl border border-[color:var(--line)] bg-[color:var(--fog)]/45 px-4 py-3 text-sm font-medium text-[color:var(--foreground)] hover:bg-[color:var(--fog)]"
+                  >
+                    Open lead inbox
+                  </Link>
+                )}
+                {role === 'admin' && (
+                  <Link
+                    href="/admin?tab=agent-ops"
+                    className="rounded-xl border border-[color:var(--pine)] bg-[color:var(--pine)]/10 px-4 py-3 text-sm font-semibold text-[color:var(--pine)] hover:bg-[color:var(--pine)]/20"
+                  >
+                    Open admin control center
+                  </Link>
+                )}
+              </div>
             </CardContent>
           </Card>
 

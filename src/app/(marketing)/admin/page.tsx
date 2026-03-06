@@ -31,6 +31,58 @@ function resolveTab(raw?: string): TabId {
   return (tabs.find((tab) => tab.id === normalized)?.id ?? 'overview') as TabId
 }
 
+type RemoteActionSpec = {
+  id: 'reset' | 'restart' | 'stop' | 'doctor-fix'
+  label: string
+  description: string
+  risk: 'standard' | 'warning' | 'high'
+  confirmPhrase: string
+}
+
+const remoteActionSpecs: RemoteActionSpec[] = [
+  {
+    id: 'reset',
+    label: 'Reset gateway',
+    description: 'Stops and force-starts the gateway. Use when the relay is wedged.',
+    risk: 'warning',
+    confirmPhrase: 'RESET',
+  },
+  {
+    id: 'restart',
+    label: 'Restart gateway',
+    description: 'Graceful gateway restart for stale connections or env updates.',
+    risk: 'standard',
+    confirmPhrase: 'RESTART',
+  },
+  {
+    id: 'stop',
+    label: 'Stop gateway',
+    description: 'Brings remote control offline until a reset/restart is triggered elsewhere.',
+    risk: 'high',
+    confirmPhrase: 'STOP',
+  },
+  {
+    id: 'doctor-fix',
+    label: 'Run doctor --fix',
+    description: 'Runs OpenClaw doctor fix routine for dependency/config repair.',
+    risk: 'warning',
+    confirmPhrase: 'DOCTOR',
+  },
+]
+
+const remoteCapabilityMatrix = {
+  supported: [
+    'Gateway reset/restart/stop',
+    'Remote doctor --fix',
+    'Read-only status snapshot (agents + gateway health)',
+  ],
+  unsupported: [
+    'Per-agent kill/restart from this panel',
+    'Arbitrary shell command execution',
+    'Direct token visibility in browser',
+  ],
+}
+
 function formatDate(value?: string | null) {
   if (!value) return '—'
   try {
@@ -221,23 +273,64 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
 
   const adminAccess = await evaluateAdminAccess({ supabase, user })
   if (!adminAccess.ok) {
-    const reasonMessage =
+    const blockedGuidance =
       adminAccess.reason === 'google_required'
-        ? 'Admin access requires Google-authenticated identity.'
+        ? {
+            headline: 'Sign in with Google first',
+            body: 'This account is allowlisted, but the current session is not Google-authenticated.',
+            steps: [
+              'Sign out, then select “Continue with Google” on login.',
+              'Use the same allowlisted email address.',
+              'Return to /admin after Google sign-in succeeds.',
+            ],
+          }
         : adminAccess.reason === 'mfa_required'
-          ? 'Admin access requires MFA (AAL2).'
-          : 'This admin surface is restricted to the allowlist.'
+          ? {
+              headline: 'MFA verification is required',
+              body: 'Admin controls require an AAL2 session for sensitive operations.',
+              steps: [
+                'Enable MFA in your account security settings if not already enrolled.',
+                'Re-authenticate to refresh your session assurance level.',
+                `Current assurance level: ${adminAccess.currentAal ?? 'unknown'}.`,
+              ],
+            }
+          : {
+              headline: 'Your account is not allowlisted for admin',
+              body: 'This surface is restricted to approved operator accounts only.',
+              steps: [
+                'Confirm you are signing in with your Nat Ford operations email.',
+                'Request allowlist approval from Nathaniel or Bartholomew.',
+                `Current account: ${user.email ?? 'unknown'}`,
+              ],
+            }
 
     return (
       <Section spacing="xl">
         <Container>
           <div className="mx-auto max-w-2xl rounded-2xl border border-red-300/70 bg-red-50 p-6">
             <h1 className="section-title text-3xl text-red-800">Admin access blocked</h1>
-            <p className="mt-3 text-sm text-red-700">
-              {reasonMessage} Current account: <strong>{user.email}</strong>
-            </p>
-            <p className="mt-2 text-xs text-red-700/80">Allowed: {getAdminAllowlist().join(', ')}</p>
-            <p className="mt-1 text-xs text-red-700/80">Current auth assurance level: {adminAccess.currentAal ?? 'unknown'}</p>
+            <p className="mt-3 text-sm font-semibold text-red-800">{blockedGuidance.headline}</p>
+            <p className="mt-2 text-sm text-red-700">{blockedGuidance.body}</p>
+            <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-red-700">
+              {blockedGuidance.steps.map((step) => (
+                <li key={step}>{step}</li>
+              ))}
+            </ul>
+            <p className="mt-3 text-xs text-red-700/80">Allowed admins: {getAdminAllowlist().join(', ')}</p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              <Link
+                href="/login?redirect=/admin"
+                className="inline-flex items-center justify-center rounded-lg border border-red-300 bg-white px-3 py-2 text-sm font-semibold text-red-800 hover:bg-red-100"
+              >
+                Return to secure login
+              </Link>
+              <Link
+                href="/portal"
+                className="inline-flex items-center justify-center rounded-lg border border-red-300/70 bg-red-100/60 px-3 py-2 text-sm font-semibold text-red-800 hover:bg-red-100"
+              >
+                Open customer portal
+              </Link>
+            </div>
           </div>
         </Container>
       </Section>
@@ -390,6 +483,12 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
             </p>
           )}
 
+          {searchParams?.status === 'error' && (
+            <p className="rounded-xl border border-red-300/60 bg-red-50 px-3 py-2 text-sm text-red-800">
+              Action failed. Review the details below and retry if appropriate.
+            </p>
+          )}
+
           {searchParams?.message && (
             <p className="rounded-xl border border-[color:var(--line)] bg-[color:var(--fog)]/40 px-3 py-2 text-sm text-[color:var(--foreground)]/82">
               {searchParams.message}
@@ -493,97 +592,132 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
           )}
 
           {currentTab === 'agent-ops' && (
-            <div className="grid gap-4 lg:grid-cols-2">
-              <Card className="border border-[color:var(--line)] bg-[color:var(--background)]">
-                <CardContent className="space-y-4 p-6">
-                  <h2 className="text-xl font-semibold text-[color:var(--ink)]">Remote Agent Dashboard</h2>
-                  <p className="text-sm text-[color:var(--foreground)]/78">
-                    Secure bridge to the local-first OpenClaw dashboard from the Nat Ford admin surface.
-                  </p>
-
-                  {!remoteDashboard.configured ? (
-                    <p className="rounded-lg border border-amber-300/60 bg-amber-50 px-3 py-2 text-sm text-amber-900">
-                      {remoteDashboard.error}
+            <div className="space-y-4">
+              <div className="grid gap-4 lg:grid-cols-2">
+                <Card className="border border-[color:var(--line)] bg-[color:var(--background)]">
+                  <CardContent className="space-y-4 p-6">
+                    <h2 className="text-xl font-semibold text-[color:var(--ink)]">Remote Agent Dashboard</h2>
+                    <p className="text-sm text-[color:var(--foreground)]/78">
+                      Secure bridge to the local-first OpenClaw dashboard from the Nat Ford admin surface.
                     </p>
-                  ) : remoteDashboard.available ? (
-                    <div className="space-y-2 rounded-lg border border-[color:var(--line)] bg-[color:var(--fog)]/45 p-4 text-sm">
-                      <p>
-                        <strong>Gateway:</strong>{' '}
-                        {remoteDashboard.data?.gateway?.connected
-                          ? remoteDashboard.data?.gateway?.healthy
-                            ? 'Connected + healthy'
-                            : 'Connected (probe warning)'
-                          : 'Disconnected'}
+
+                    {!remoteDashboard.configured ? (
+                      <p className="rounded-lg border border-amber-300/60 bg-amber-50 px-3 py-2 text-sm text-amber-900">
+                        {remoteDashboard.error}
                       </p>
-                      <p>
-                        <strong>Total agents:</strong> {remoteDashboard.data?.summary?.totalAgents ?? 0}
+                    ) : remoteDashboard.available ? (
+                      <div className="space-y-2 rounded-lg border border-[color:var(--line)] bg-[color:var(--fog)]/45 p-4 text-sm">
+                        <p>
+                          <strong>Gateway:</strong>{' '}
+                          {remoteDashboard.data?.gateway?.connected
+                            ? remoteDashboard.data?.gateway?.healthy
+                              ? 'Connected + healthy'
+                              : 'Connected (probe warning)'
+                            : 'Disconnected'}
+                        </p>
+                        <p>
+                          <strong>Total agents:</strong> {remoteDashboard.data?.summary?.totalAgents ?? 0}
+                        </p>
+                        <p>
+                          <strong>Active / Warm / Idle:</strong> {remoteDashboard.data?.summary?.active ?? 0} /{' '}
+                          {remoteDashboard.data?.summary?.warm ?? 0} / {remoteDashboard.data?.summary?.idle ?? 0}
+                        </p>
+                        <p>
+                          <strong>Token total:</strong> {remoteDashboard.data?.summary?.tokenTotal ?? '—'}
+                        </p>
+                        <p>
+                          <strong>Snapshot:</strong> {formatDate(remoteDashboard.data?.generatedAt ?? null)}
+                        </p>
+                      </div>
+                    ) : (
+                      <p className="rounded-lg border border-red-300/60 bg-red-50 px-3 py-2 text-sm text-red-800">
+                        {remoteDashboard.error}
                       </p>
-                      <p>
-                        <strong>Active / Warm / Idle:</strong> {remoteDashboard.data?.summary?.active ?? 0} /{' '}
-                        {remoteDashboard.data?.summary?.warm ?? 0} / {remoteDashboard.data?.summary?.idle ?? 0}
-                      </p>
-                      <p>
-                        <strong>Token total:</strong> {remoteDashboard.data?.summary?.tokenTotal ?? '—'}
-                      </p>
-                      <p>
-                        <strong>Snapshot:</strong> {formatDate(remoteDashboard.data?.generatedAt ?? null)}
-                      </p>
+                    )}
+
+                    {remoteDashboard.configured && (
+                      <a
+                        href={`${remoteDashboard.base}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center justify-center rounded-full border border-[color:var(--pine)] px-4 py-2 text-sm font-semibold text-[color:var(--pine)] transition hover:bg-[color:var(--pine)] hover:text-white"
+                      >
+                        Open full dashboard
+                      </a>
+                    )}
+                  </CardContent>
+                </Card>
+
+                <Card className="border border-[color:var(--line)] bg-[color:var(--background)]">
+                  <CardContent className="space-y-4 p-6">
+                    <h3 className="text-lg font-semibold text-[color:var(--ink)]">Control capability matrix</h3>
+                    <p className="text-sm text-[color:var(--foreground)]/78">
+                      This admin panel only exposes safe, audited controls. Per-agent controls stay in the full dashboard.
+                    </p>
+
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      <div className="rounded-lg border border-emerald-300/60 bg-emerald-50 p-3">
+                        <p className="text-xs font-semibold uppercase tracking-[0.1em] text-emerald-800">Supported here</p>
+                        <ul className="mt-2 list-disc space-y-1 pl-4 text-sm text-emerald-900">
+                          {remoteCapabilityMatrix.supported.map((item) => (
+                            <li key={item}>{item}</li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div className="rounded-lg border border-amber-300/60 bg-amber-50 p-3">
+                        <p className="text-xs font-semibold uppercase tracking-[0.1em] text-amber-900">Not supported here</p>
+                        <ul className="mt-2 list-disc space-y-1 pl-4 text-sm text-amber-900">
+                          {remoteCapabilityMatrix.unsupported.map((item) => (
+                            <li key={item}>{item}</li>
+                          ))}
+                        </ul>
+                      </div>
                     </div>
-                  ) : (
-                    <p className="rounded-lg border border-red-300/60 bg-red-50 px-3 py-2 text-sm text-red-800">
-                      {remoteDashboard.error}
-                    </p>
-                  )}
-
-                  {remoteDashboard.configured && (
-                    <a
-                      href={`${remoteDashboard.base}`}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center justify-center rounded-full border border-[color:var(--pine)] px-4 py-2 text-sm font-semibold text-[color:var(--pine)] transition hover:bg-[color:var(--pine)] hover:text-white"
-                    >
-                      Open full dashboard
-                    </a>
-                  )}
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              </div>
 
               <Card className="border border-[color:var(--line)] bg-[color:var(--background)]">
                 <CardContent className="space-y-4 p-6">
                   <h3 className="text-lg font-semibold text-[color:var(--ink)]">Gated remote actions</h3>
                   <p className="text-sm text-[color:var(--foreground)]/78">
-                    These controls call a secured proxy endpoint and never expose remote action tokens in the browser.
+                    These controls call a secured proxy endpoint, never expose remote action tokens, and require an explicit confirmation phrase.
                   </p>
 
-                  <form method="post" action="/api/admin/agent-dashboard/action" className="grid gap-2">
-                    <input type="hidden" name="action" value="reset" />
-                    <Button type="submit" className="w-full justify-center">Reset gateway</Button>
-                  </form>
+                  <div className="grid gap-3 lg:grid-cols-2">
+                    {remoteActionSpecs.map((action) => {
+                      const buttonClass =
+                        action.risk === 'high'
+                          ? 'border-red-300 bg-red-50 text-red-800 hover:bg-red-100'
+                          : action.risk === 'warning'
+                            ? 'border-amber-300 bg-amber-50 text-amber-900 hover:bg-amber-100'
+                            : 'border-[color:var(--pine)] bg-[color:var(--pine)] text-white hover:opacity-95'
 
-                  <form method="post" action="/api/admin/agent-dashboard/action" className="grid gap-2">
-                    <input type="hidden" name="action" value="restart" />
-                    <Button type="submit" className="w-full justify-center">Restart gateway</Button>
-                  </form>
+                      return (
+                        <form key={action.id} method="post" action="/api/admin/agent-dashboard/action" className="rounded-xl border border-[color:var(--line)] bg-[color:var(--fog)]/35 p-4">
+                          <input type="hidden" name="action" value={action.id} />
+                          <p className="text-sm font-semibold text-[color:var(--ink)]">{action.label}</p>
+                          <p className="mt-1 text-xs text-[color:var(--foreground)]/78">{action.description}</p>
 
-                  <form method="post" action="/api/admin/agent-dashboard/action" className="grid gap-2">
-                    <input type="hidden" name="action" value="stop" />
-                    <button
-                      type="submit"
-                      className="w-full rounded-lg border border-red-300 bg-red-50 px-3 py-2 text-sm font-semibold text-red-800 hover:bg-red-100"
-                    >
-                      Stop gateway
-                    </button>
-                  </form>
+                          <label className="mt-3 block text-xs font-medium uppercase tracking-[0.08em] text-[color:var(--foreground)]/72">
+                            Type {action.confirmPhrase} to confirm
+                            <input
+                              name="confirmPhrase"
+                              required
+                              autoComplete="off"
+                              spellCheck={false}
+                              placeholder={action.confirmPhrase}
+                              className="mt-1 h-10 w-full rounded-lg border border-[color:var(--line)] bg-white/95 px-3 text-sm text-[color:var(--ink)]"
+                            />
+                          </label>
 
-                  <form method="post" action="/api/admin/agent-dashboard/action" className="grid gap-2">
-                    <input type="hidden" name="action" value="doctor-fix" />
-                    <button
-                      type="submit"
-                      className="w-full rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-sm font-semibold text-amber-900 hover:bg-amber-100"
-                    >
-                      Run doctor --fix
-                    </button>
-                  </form>
+                          <button type="submit" className={`mt-3 w-full rounded-lg border px-3 py-2 text-sm font-semibold ${buttonClass}`}>
+                            {action.label}
+                          </button>
+                        </form>
+                      )
+                    })}
+                  </div>
 
                   <p className="text-xs text-[color:var(--foreground)]/68">
                     Configure environment variables: AGENT_DASHBOARD_REMOTE_BASE_URL, AGENT_DASHBOARD_REMOTE_READ_TOKEN,

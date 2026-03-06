@@ -2,10 +2,21 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { evaluateAdminAccess } from '@/lib/auth/admin-access'
 import { logAdminAction } from '@/lib/auth/admin-audit'
+import { sanitizeTextForLog } from '@/lib/security/redact-secrets'
 
 export const runtime = 'nodejs'
 
 const ALLOWED_ACTIONS = new Set(['reset', 'stop', 'restart', 'doctor-fix'])
+const ACTION_CONFIRM_PHRASE: Record<string, string> = {
+  reset: 'RESET',
+  restart: 'RESTART',
+  stop: 'STOP',
+  'doctor-fix': 'DOCTOR',
+}
+
+function requiredPhraseForAction(action: string) {
+  return ACTION_CONFIRM_PHRASE[action] ?? 'CONFIRM'
+}
 
 function adminRedirect(request: NextRequest, status: 'ok' | 'error', message: string) {
   const url = new URL('/admin', request.nextUrl.origin)
@@ -44,6 +55,9 @@ export async function POST(request: NextRequest) {
 
   const formData = await request.formData()
   const action = String(formData.get('action') ?? '').trim().toLowerCase()
+  const providedConfirmPhrase = String(formData.get('confirmPhrase') ?? '')
+    .trim()
+    .toUpperCase()
 
   if (!ALLOWED_ACTIONS.has(action)) {
     await logAdminAction({
@@ -54,6 +68,23 @@ export async function POST(request: NextRequest) {
       metadata: { reason: 'invalid_action', action },
     })
     return NextResponse.redirect(adminRedirect(request, 'error', `Unsupported action: ${action || 'none'}`), { status: 302 })
+  }
+
+  const expectedConfirmPhrase = requiredPhraseForAction(action)
+  if (providedConfirmPhrase !== expectedConfirmPhrase) {
+    await logAdminAction({
+      actorUserId: user.id,
+      actorEmail: user.email,
+      action: 'agent_dashboard_remote_action',
+      target: action,
+      status: 'denied',
+      metadata: { reason: 'confirm_phrase_mismatch', expectedConfirmPhrase },
+    })
+
+    return NextResponse.redirect(
+      adminRedirect(request, 'error', `Confirmation phrase mismatch. Type ${expectedConfirmPhrase} to run ${action}.`),
+      { status: 302 }
+    )
   }
 
   const baseUrl = normalizeBaseUrl(process.env.AGENT_DASHBOARD_REMOTE_BASE_URL)
@@ -102,16 +133,18 @@ export async function POST(request: NextRequest) {
       signal: AbortSignal.timeout(Number.isFinite(timeoutMs) ? Math.max(5000, timeoutMs) : 45000),
     })
   } catch (error) {
+    const errorMessage = sanitizeTextForLog(error instanceof Error ? error.message : String(error))
+
     await logAdminAction({
       actorUserId: user.id,
       actorEmail: user.email,
       action: 'agent_dashboard_remote_action',
       target: action,
       status: 'error',
-      metadata: { reason: 'fetch_failed', message: error instanceof Error ? error.message : String(error) },
+      metadata: { reason: 'fetch_failed', message: errorMessage },
     })
 
-    return NextResponse.redirect(adminRedirect(request, 'error', `Dashboard action request failed: ${error instanceof Error ? error.message : 'unknown error'}`), {
+    return NextResponse.redirect(adminRedirect(request, 'error', `Dashboard action request failed: ${errorMessage || 'unknown error'}`), {
       status: 302,
     })
   }
@@ -128,7 +161,7 @@ export async function POST(request: NextRequest) {
     | null
 
   if (!response.ok || !payload?.ok) {
-    const message = payload?.error || payload?.result?.stderr || `Action failed (${response.status})`
+    const message = sanitizeTextForLog(payload?.error || payload?.result?.stderr || `Action failed (${response.status})`)
 
     await logAdminAction({
       actorUserId: user.id,
@@ -142,6 +175,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.redirect(adminRedirect(request, 'error', message), { status: 302 })
   }
 
+  const stdoutSnippet = sanitizeTextForLog(payload.result?.stdout?.slice(0, 160) ?? '')
+
   await logAdminAction({
     actorUserId: user.id,
     actorEmail: user.email,
@@ -150,9 +185,12 @@ export async function POST(request: NextRequest) {
     status: 'success',
     metadata: {
       status: response.status,
-      message: payload.result?.stdout?.slice(0, 240) ?? null,
+      message: stdoutSnippet || null,
     },
   })
 
-  return NextResponse.redirect(adminRedirect(request, 'ok', `Action completed: ${action}`), { status: 302 })
+  return NextResponse.redirect(
+    adminRedirect(request, 'ok', stdoutSnippet ? `Action completed: ${action} (${stdoutSnippet})` : `Action completed: ${action}`),
+    { status: 302 }
+  )
 }

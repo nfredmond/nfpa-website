@@ -14,6 +14,7 @@ type LoginFormProps = {
 
 export function LoginForm({ redirectPath, infoMessage }: LoginFormProps) {
   const router = useRouter()
+  const isAdminPath = redirectPath.startsWith('/admin')
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -68,6 +69,8 @@ export function LoginForm({ redirectPath, infoMessage }: LoginFormProps) {
       const normalized = rawMessage.toLowerCase()
       if (normalized.includes('email') && normalized.includes('confirm')) {
         setError('Please confirm your email first, then try signing in again.')
+      } else if (normalized.includes('invalid login credentials')) {
+        setError('Email or password is incorrect. Please retry or reset your password.')
       } else {
         setError(rawMessage)
       }
@@ -102,6 +105,12 @@ export function LoginForm({ redirectPath, infoMessage }: LoginFormProps) {
       >
         {isGoogleLoading ? 'Connecting to Google…' : 'Continue with Google'}
       </Button>
+
+      {isAdminPath && (
+        <p className="rounded-lg border border-amber-300/60 bg-amber-50 px-3 py-2 text-xs text-amber-900">
+          Admin login path detected. Use Google + MFA to satisfy access policy.
+        </p>
+      )}
 
       <div className="flex items-center gap-3 text-xs uppercase tracking-[0.12em] text-[color:var(--foreground)]/68">
         <span className="h-px flex-1 bg-[color:var(--line)]" />
