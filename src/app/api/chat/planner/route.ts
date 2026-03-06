@@ -9,8 +9,8 @@ import { sanitizeForLog, sanitizeTextForLog } from '@/lib/security/redact-secret
 export const runtime = 'nodejs'
 
 // OpenAI Responses API expects provider-native model IDs.
-// OpenClaw alias `openai-codex/gpt-5.3-codex` maps to `gpt-5.3-codex` here.
-const CHAT_MODEL = 'gpt-5.3-codex'
+// OpenClaw alias `openai-codex/gpt-5.3-instant` maps to `gpt-5.3-instant` here.
+const CHAT_MODEL = 'gpt-5.3-instant'
 const ROUTE_KEY = 'planner-chat'
 const MAX_CONTEXT_MESSAGES = 16
 const MAX_MESSAGE_CHARS = 4000
