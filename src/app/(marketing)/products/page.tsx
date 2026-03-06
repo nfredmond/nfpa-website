@@ -306,9 +306,9 @@ export default function ProductsPage() {
       <Section spacing="lg" className="border-y border-[color:var(--line)] bg-[color:var(--fog)]/78 text-[color:var(--ink)] dark:bg-[#101c27] dark:text-white">
         <Container>
           <div className="mx-auto max-w-3xl text-center">
-            <h2 className="section-title text-4xl text-[color:var(--ink)] dark:text-white md:text-5xl">Need a custom setup before subscribing?</h2>
+            <h2 className="section-title text-4xl text-[color:var(--ink)] dark:text-white md:text-5xl">Need a custom setup before checkout?</h2>
             <p className="mt-4 text-lg text-[color:var(--foreground)]/82 dark:text-white/80">
-              We can scope a bounded implementation plan first, then convert to a recurring subscription when value is proven.
+              We can scope a bounded implementation plan first, then route you to the right purchase model (one-time guide or recurring subscription) once fit is clear.
             </p>
             <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
               <Button asChild variant="secondary" size="lg">

@@ -63,7 +63,7 @@ export default function ContactPage() {
   const defaultTimeline = checkoutIntent ? timelines[0] : ''
   const checkoutLabel = checkoutProductLabel[checkoutProduct] || checkoutProduct
   const defaultDescription = checkoutIntent
-    ? [`Subscription request`, `Product: ${checkoutLabel}`, checkoutTier ? `Tier: ${checkoutTier}` : null, '', 'Please share next steps, onboarding requirements, and checkout availability.']
+    ? [`Checkout request`, `Product: ${checkoutLabel}`, checkoutTier ? `Tier: ${checkoutTier}` : null, '', 'Please share next steps and checkout/access availability.']
         .filter(Boolean)
         .join('\n')
     : ''
@@ -72,8 +72,9 @@ export default function ContactPage() {
     if (typeof window === 'undefined') return
 
     const params = new URLSearchParams(window.location.search)
+    const intent = (params.get('intent') || '').toLowerCase()
     setCheckoutContext({
-      intent: params.get('intent') === 'subscription',
+      intent: ['subscription', 'checkout', 'purchase'].includes(intent),
       product: params.get('product') || '',
       tier: params.get('tier') || '',
     })
@@ -170,9 +171,9 @@ export default function ContactPage() {
                     </p>
                     {checkoutIntent ? (
                       <div className="mb-6 rounded-xl border border-[color:var(--pine)]/25 bg-[color:var(--sand)]/35 px-4 py-3 text-sm text-[color:var(--foreground)]/85">
-                        <p className="font-semibold text-[color:var(--pine)]">Subscription request detected</p>
+                        <p className="font-semibold text-[color:var(--pine)]">Checkout request detected</p>
                         <p className="mt-1">
-                          We captured your selected product from the pricing page{checkoutTier ? ` (${checkoutTier})` : ''}. Complete the form and we’ll send scoped checkout/onboarding next steps.
+                          We captured your selected product from the pricing page{checkoutTier ? ` (${checkoutTier})` : ''}. Complete the form and we’ll send scoped checkout/access next steps.
                         </p>
                       </div>
                     ) : null}
