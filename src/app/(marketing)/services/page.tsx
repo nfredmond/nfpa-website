@@ -98,8 +98,8 @@ export default function ServicesPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="relative h-56 overflow-hidden rounded-2xl border border-[color:var(--line)]">
               <Image
-                src="/images/site/workshop-maps.jpg"
-                alt="Planning workshop maps and collaborative working session"
+                src="/images/site/drone-intersection-topdown-2026-03.jpg"
+                alt="Top-down drone capture of a civic intersection used for lane and safety analysis"
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 50vw"
@@ -108,8 +108,8 @@ export default function ServicesPage() {
             </div>
             <div className="relative h-56 overflow-hidden rounded-2xl border border-[color:var(--line)]">
               <Image
-                src="/images/site/mainstreet-aerial.jpg"
-                alt="Aerial complete streets perspective in a U.S. small-town corridor"
+                src="/images/site/drone-town-overview-2026-03.jpg"
+                alt="Oblique drone overview of a small-town street network and surrounding valley context"
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 50vw"

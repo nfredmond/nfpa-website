@@ -118,8 +118,8 @@ export default function ResourcesPage() {
         <Container>
           <div className="relative h-56 overflow-hidden rounded-2xl border border-[color:var(--line)]">
             <Image
-              src="/images/site/workshop-maps.jpg"
-              alt="Planning workshop maps and collaborative project materials"
+              src="/images/site/drone-intersection-topdown-2026-03.jpg"
+              alt="Top-down drone intersection view for planning and grant resource context"
               fill
               className="object-cover"
               sizes="100vw"

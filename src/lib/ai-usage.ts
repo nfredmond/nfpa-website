@@ -13,6 +13,21 @@ type UsageEventRow = {
   status: string | null
 }
 
+type AbuseControlRow = {
+  id: string
+  route: string | null
+  user_id: string | null
+  visitor_id: string | null
+  ip: string | null
+  reason: string | null
+}
+
+export type ActiveAiBan = {
+  id: string
+  route: string | null
+  reason: string | null
+}
+
 export function buildScopeKey(userId: string | null | undefined, visitorId: string | null | undefined, ip: string) {
   if (userId) return `user:${userId}`
   if (visitorId) return `guest:${visitorId}`
@@ -95,5 +110,139 @@ export async function logUsageEvent(admin: SupabaseClient, event: LogUsageInput)
 
   if (error) {
     throw error
+  }
+}
+
+function rowMatchesRequester(
+  row: AbuseControlRow,
+  requester: { userId?: string | null; visitorId?: string | null; ip?: string | null }
+) {
+  const hasAnyScope = Boolean(row.user_id || row.visitor_id || row.ip)
+  if (!hasAnyScope) return false
+
+  if (row.user_id && row.user_id !== requester.userId) return false
+  if (row.visitor_id && row.visitor_id !== requester.visitorId) return false
+  if (row.ip && row.ip !== requester.ip) return false
+
+  return true
+}
+
+async function fetchActiveBansForIdentifier(
+  admin: SupabaseClient,
+  params: {
+    column: 'user_id' | 'visitor_id' | 'ip'
+    value: string
+    route: string
+  }
+): Promise<AbuseControlRow[]> {
+  const { column, value, route } = params
+  const selectColumns = 'id,route,user_id,visitor_id,ip,reason'
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Supabase admin DB client uses generated table types not yet wired in this repo.
+  const adminClient = admin as any
+
+  const [routeSpecificResult, globalResult] = await Promise.all([
+    adminClient
+      .from('ai_abuse_controls')
+      .select(selectColumns)
+      .eq('active', true)
+      .eq(column, value)
+      .eq('route', route)
+      .order('created_at', { ascending: false })
+      .limit(50),
+    adminClient
+      .from('ai_abuse_controls')
+      .select(selectColumns)
+      .eq('active', true)
+      .eq(column, value)
+      .is('route', null)
+      .order('created_at', { ascending: false })
+      .limit(50),
+  ])
+
+  if (routeSpecificResult.error) {
+    throw routeSpecificResult.error
+  }
+
+  if (globalResult.error) {
+    throw globalResult.error
+  }
+
+  return [...(routeSpecificResult.data ?? []), ...(globalResult.data ?? [])] as AbuseControlRow[]
+}
+
+export async function findActiveAiBan(
+  admin: SupabaseClient,
+  params: {
+    route: string
+    userId?: string | null
+    visitorId?: string | null
+    ip?: string | null
+  }
+): Promise<ActiveAiBan | null> {
+  const checks: Array<Promise<AbuseControlRow[]>> = []
+
+  if (params.userId) {
+    checks.push(
+      fetchActiveBansForIdentifier(admin, {
+        column: 'user_id',
+        value: params.userId,
+        route: params.route,
+      })
+    )
+  }
+
+  if (params.visitorId) {
+    checks.push(
+      fetchActiveBansForIdentifier(admin, {
+        column: 'visitor_id',
+        value: params.visitorId,
+        route: params.route,
+      })
+    )
+  }
+
+  if (params.ip) {
+    checks.push(
+      fetchActiveBansForIdentifier(admin, {
+        column: 'ip',
+        value: params.ip,
+        route: params.route,
+      })
+    )
+  }
+
+  if (checks.length === 0) {
+    return null
+  }
+
+  const groups = await Promise.all(checks)
+  const deduped = new Map<string, AbuseControlRow>()
+
+  for (const group of groups) {
+    for (const row of group) {
+      if (!row?.id) continue
+      if (!deduped.has(row.id)) {
+        deduped.set(row.id, row)
+      }
+    }
+  }
+
+  const match = Array.from(deduped.values()).find((row) =>
+    rowMatchesRequester(row, {
+      userId: params.userId ?? null,
+      visitorId: params.visitorId ?? null,
+      ip: params.ip ?? null,
+    })
+  )
+
+  if (!match) {
+    return null
+  }
+
+  return {
+    id: match.id,
+    route: match.route,
+    reason: match.reason,
   }
 }

@@ -17,6 +17,7 @@ const tabs = [
   { id: 'users', label: 'Users' },
   { id: 'stripe', label: 'Stripe Tests' },
   { id: 'agent-ops', label: 'Agent Ops' },
+  { id: 'ai-ops', label: 'AI Ops' },
   { id: 'projects', label: 'Projects' },
   { id: 'pages', label: 'Pages' },
   { id: 'settings', label: 'Settings' },
@@ -71,6 +72,64 @@ function getProjectStatusStyle(status: string) {
   }
 
   return 'border border-[color:var(--line)] bg-[color:var(--fog)]/55 text-[color:var(--foreground)]'
+}
+
+type AiUsageEventRow = {
+  id: string
+  scope_key: string
+  route: string
+  status: string
+  input_tokens: number | null
+  output_tokens: number | null
+  created_at: string
+  user_id: string | null
+  visitor_id: string | null
+  ip: string | null
+  metadata: Record<string, unknown> | null
+}
+
+type AiAbuseControlRow = {
+  id: string
+  route: string | null
+  user_id: string | null
+  visitor_id: string | null
+  ip: string | null
+  reason: string | null
+  active: boolean
+  created_by_email: string
+  created_at: string
+  updated_at: string
+}
+
+function getEventTokens(row: AiUsageEventRow) {
+  const input = Number.isFinite(row.input_tokens ?? NaN) ? Number(row.input_tokens) : 0
+  const output = Number.isFinite(row.output_tokens ?? NaN) ? Number(row.output_tokens) : 0
+  return input + output
+}
+
+function formatRouteLabel(route: string | null | undefined) {
+  if (!route) return 'All routes'
+  if (route === 'planner-chat') return 'Planner Chat'
+  if (route === 'grant-lab') return 'Grant Lab'
+  return route
+}
+
+function getRequesterLabel(row: {
+  scope_key?: string | null
+  user_id?: string | null
+  visitor_id?: string | null
+  ip?: string | null
+}) {
+  if (row.user_id) {
+    return `user:${row.user_id}`
+  }
+  if (row.visitor_id) {
+    return `visitor:${row.visitor_id}`
+  }
+  if (row.ip) {
+    return `ip:${row.ip}`
+  }
+  return row.scope_key ?? 'unknown'
 }
 
 async function getRemoteAgentDashboardSnapshot() {
@@ -199,6 +258,8 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
     status: string
     created_at: string
   }> = []
+  let aiUsageRows: AiUsageEventRow[] = []
+  let activeBans: AiAbuseControlRow[] = []
   const remoteDashboard = await getRemoteAgentDashboardSnapshot()
 
   if (admin) {
@@ -232,7 +293,61 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
 
       auditRows = (logs ?? []) as typeof auditRows
     }
+
+    if (currentTab === 'ai-ops') {
+      const dayAgoIso = new Date(new Date().getTime() - 24 * 60 * 60 * 1000).toISOString()
+
+      const [{ data: usageData }, { data: banData }] = await Promise.all([
+        admin
+          .from('ai_usage_events')
+          .select('id, scope_key, route, status, input_tokens, output_tokens, created_at, user_id, visitor_id, ip, metadata')
+          .gte('created_at', dayAgoIso)
+          .order('created_at', { ascending: false })
+          .limit(2000),
+        admin
+          .from('ai_abuse_controls')
+          .select('id, route, user_id, visitor_id, ip, reason, active, created_by_email, created_at, updated_at')
+          .eq('active', true)
+          .order('created_at', { ascending: false })
+          .limit(100),
+      ])
+
+      aiUsageRows = (usageData ?? []) as AiUsageEventRow[]
+      activeBans = (banData ?? []) as AiAbuseControlRow[]
+    }
   }
+
+  const aiSummary = {
+    totalRequests: aiUsageRows.length,
+    totalTokens: aiUsageRows.reduce((sum, row) => sum + getEventTokens(row), 0),
+    plannerRequests: aiUsageRows.filter((row) => row.route === 'planner-chat').length,
+    plannerTokens: aiUsageRows.filter((row) => row.route === 'planner-chat').reduce((sum, row) => sum + getEventTokens(row), 0),
+    grantRequests: aiUsageRows.filter((row) => row.route === 'grant-lab').length,
+    grantTokens: aiUsageRows.filter((row) => row.route === 'grant-lab').reduce((sum, row) => sum + getEventTokens(row), 0),
+  }
+
+  const topRequesters = Array.from(
+    aiUsageRows.reduce((map, row) => {
+      const key = row.scope_key || getRequesterLabel(row)
+      const existing = map.get(key) || {
+        key,
+        requester: getRequesterLabel(row),
+        requests: 0,
+        tokens: 0,
+      }
+      existing.requests += 1
+      existing.tokens += getEventTokens(row)
+      map.set(key, existing)
+      return map
+    }, new Map<string, { key: string; requester: string; requests: number; tokens: number }>()).values()
+  )
+    .sort((a, b) => {
+      if (b.tokens !== a.tokens) return b.tokens - a.tokens
+      return b.requests - a.requests
+    })
+    .slice(0, 12)
+
+  const recentAiEvents = aiUsageRows.slice(0, 30)
 
   return (
     <Section spacing="xl">
@@ -476,6 +591,197 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                   </p>
                 </CardContent>
               </Card>
+            </div>
+          )}
+
+          {currentTab === 'ai-ops' && (
+            <div className="space-y-4">
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                <Card className="border border-[color:var(--line)] bg-[color:var(--background)]">
+                  <CardContent className="p-5">
+                    <p className="text-xs uppercase tracking-[0.12em] text-[color:var(--foreground)]/64">Total requests (24h)</p>
+                    <p className="mt-2 text-3xl font-semibold text-[color:var(--ink)]">{aiSummary.totalRequests.toLocaleString()}</p>
+                  </CardContent>
+                </Card>
+                <Card className="border border-[color:var(--line)] bg-[color:var(--background)]">
+                  <CardContent className="p-5">
+                    <p className="text-xs uppercase tracking-[0.12em] text-[color:var(--foreground)]/64">Estimated tokens (24h)</p>
+                    <p className="mt-2 text-3xl font-semibold text-[color:var(--ink)]">{aiSummary.totalTokens.toLocaleString()}</p>
+                  </CardContent>
+                </Card>
+                <Card className="border border-[color:var(--line)] bg-[color:var(--background)]">
+                  <CardContent className="p-5">
+                    <p className="text-xs uppercase tracking-[0.12em] text-[color:var(--foreground)]/64">Planner requests / tokens</p>
+                    <p className="mt-2 text-sm font-medium text-[color:var(--foreground)]">
+                      {aiSummary.plannerRequests.toLocaleString()} / {aiSummary.plannerTokens.toLocaleString()}
+                    </p>
+                  </CardContent>
+                </Card>
+                <Card className="border border-[color:var(--line)] bg-[color:var(--background)] md:col-span-2 lg:col-span-1">
+                  <CardContent className="p-5">
+                    <p className="text-xs uppercase tracking-[0.12em] text-[color:var(--foreground)]/64">Grant Lab requests / tokens</p>
+                    <p className="mt-2 text-sm font-medium text-[color:var(--foreground)]">
+                      {aiSummary.grantRequests.toLocaleString()} / {aiSummary.grantTokens.toLocaleString()}
+                    </p>
+                  </CardContent>
+                </Card>
+              </div>
+
+              <div className="grid gap-4 lg:grid-cols-2">
+                <Card className="border border-[color:var(--line)] bg-[color:var(--background)]">
+                  <CardContent className="space-y-4 p-6">
+                    <h2 className="text-xl font-semibold text-[color:var(--ink)]">Top requesters (last 24h)</h2>
+                    <p className="text-sm text-[color:var(--foreground)]/76">Who is using the most tokens across Planner Chat and Grant Lab.</p>
+                    {topRequesters.length === 0 ? (
+                      <p className="text-sm text-[color:var(--foreground)]/72">No AI events recorded in the last 24 hours.</p>
+                    ) : (
+                      <ul className="space-y-2">
+                        {topRequesters.map((entry) => (
+                          <li key={entry.key} className="rounded-lg border border-[color:var(--line)] bg-[color:var(--fog)]/40 px-3 py-2 text-sm">
+                            <p className="font-medium text-[color:var(--ink)]">{entry.requester}</p>
+                            <p className="text-[color:var(--foreground)]/75">
+                              Requests: {entry.requests.toLocaleString()} · Tokens: {entry.tokens.toLocaleString()}
+                            </p>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </CardContent>
+                </Card>
+
+                <Card className="border border-[color:var(--line)] bg-[color:var(--background)]">
+                  <CardContent className="space-y-4 p-6">
+                    <h2 className="text-xl font-semibold text-[color:var(--ink)]">Ban management</h2>
+                    <p className="text-sm text-[color:var(--foreground)]/76">Block abusive traffic by user ID, visitor ID, or IP. Route can be global or tool-specific.</p>
+
+                    <form method="post" action="/api/admin/ai-ops/ban" className="space-y-3">
+                      <label className="block text-sm text-[color:var(--foreground)]">
+                        Scope type
+                        <select
+                          name="scopeType"
+                          required
+                          className="mt-1 h-10 w-full rounded-xl border border-[color:var(--line)] bg-[color:var(--background)] px-3 text-sm"
+                        >
+                          <option value="user_id">user_id</option>
+                          <option value="visitor_id">visitor_id</option>
+                          <option value="ip">ip</option>
+                        </select>
+                      </label>
+
+                      <label className="block text-sm text-[color:var(--foreground)]">
+                        Scope value
+                        <input
+                          name="scopeValue"
+                          required
+                          placeholder="UUID, visitor token, or IP"
+                          className="mt-1 h-10 w-full rounded-xl border border-[color:var(--line)] bg-[color:var(--background)] px-3 text-sm"
+                        />
+                      </label>
+
+                      <label className="block text-sm text-[color:var(--foreground)]">
+                        Route
+                        <select
+                          name="route"
+                          required
+                          className="mt-1 h-10 w-full rounded-xl border border-[color:var(--line)] bg-[color:var(--background)] px-3 text-sm"
+                        >
+                          <option value="all">All routes</option>
+                          <option value="planner-chat">Planner Chat</option>
+                          <option value="grant-lab">Grant Lab</option>
+                        </select>
+                      </label>
+
+                      <label className="block text-sm text-[color:var(--foreground)]">
+                        Reason
+                        <textarea
+                          name="reason"
+                          rows={3}
+                          placeholder="Example: Repeated spam requests"
+                          className="mt-1 w-full rounded-xl border border-[color:var(--line)] bg-[color:var(--background)] px-3 py-2 text-sm"
+                        />
+                      </label>
+
+                      <Button type="submit" className="w-full">Create ban</Button>
+                    </form>
+                  </CardContent>
+                </Card>
+              </div>
+
+              <div className="grid gap-4 lg:grid-cols-2">
+                <Card className="border border-[color:var(--line)] bg-[color:var(--background)]">
+                  <CardContent className="space-y-4 p-6">
+                    <h2 className="text-xl font-semibold text-[color:var(--ink)]">Active bans</h2>
+                    {activeBans.length === 0 ? (
+                      <p className="text-sm text-[color:var(--foreground)]/72">No active bans.</p>
+                    ) : (
+                      <ul className="space-y-2">
+                        {activeBans.map((ban) => (
+                          <li key={ban.id} className="rounded-lg border border-[color:var(--line)] bg-[color:var(--fog)]/40 px-3 py-2 text-sm">
+                            <p className="font-medium text-[color:var(--ink)]">{getRequesterLabel(ban)}</p>
+                            <p className="text-xs text-[color:var(--foreground)]/75">Route: {formatRouteLabel(ban.route)}</p>
+                            <p className="text-xs text-[color:var(--foreground)]/75">Reason: {ban.reason || 'No reason provided'}</p>
+                            <p className="text-xs text-[color:var(--foreground)]/68">
+                              Added by {ban.created_by_email} on {formatDate(ban.created_at)}
+                            </p>
+                            <form method="post" action="/api/admin/ai-ops/unban" className="mt-2">
+                              <input type="hidden" name="banId" value={ban.id} />
+                              <button
+                                type="submit"
+                                className="rounded-lg border border-red-300 bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-800 hover:bg-red-100"
+                              >
+                                Unban
+                              </button>
+                            </form>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </CardContent>
+                </Card>
+
+                <Card className="border border-[color:var(--line)] bg-[color:var(--background)]">
+                  <CardContent className="space-y-4 p-6">
+                    <h2 className="text-xl font-semibold text-[color:var(--ink)]">Recent AI events</h2>
+                    {recentAiEvents.length === 0 ? (
+                      <p className="text-sm text-[color:var(--foreground)]/72">No events recorded in the last 24 hours.</p>
+                    ) : (
+                      <div className="overflow-x-auto">
+                        <table className="min-w-full text-left text-xs">
+                          <thead>
+                            <tr className="border-b border-[color:var(--line)] text-[color:var(--foreground)]/70">
+                              <th className="px-2 py-1.5 font-medium">Route</th>
+                              <th className="px-2 py-1.5 font-medium">Requester</th>
+                              <th className="px-2 py-1.5 font-medium">Status</th>
+                              <th className="px-2 py-1.5 font-medium">Tokens</th>
+                              <th className="px-2 py-1.5 font-medium">Key source</th>
+                              <th className="px-2 py-1.5 font-medium">Time</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {recentAiEvents.map((event) => {
+                              const keySourceRaw = (event.metadata as { key_source?: unknown } | null)?.key_source
+                              const keySource = keySourceRaw === 'user_provided' ? 'user_provided' : 'platform'
+
+                              return (
+                                <tr key={event.id} className="border-b border-[color:var(--line)]/60 text-[color:var(--foreground)]">
+                                  <td className="px-2 py-1.5">{formatRouteLabel(event.route)}</td>
+                                  <td className="max-w-[180px] truncate px-2 py-1.5" title={getRequesterLabel(event)}>
+                                    {getRequesterLabel(event)}
+                                  </td>
+                                  <td className="px-2 py-1.5">{event.status}</td>
+                                  <td className="px-2 py-1.5">{getEventTokens(event).toLocaleString()}</td>
+                                  <td className="px-2 py-1.5">{keySource}</td>
+                                  <td className="whitespace-nowrap px-2 py-1.5">{formatDate(event.created_at)}</td>
+                                </tr>
+                              )
+                            })}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
             </div>
           )}
 

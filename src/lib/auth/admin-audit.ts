@@ -17,7 +17,10 @@ export async function logAdminAction(params: {
 
   const actorEmail = params.actorEmail?.trim().toLowerCase() ?? 'unknown'
 
-  const { error } = await (admin as any).from('admin_action_log').insert({
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Supabase admin DB client uses generated table types not yet wired in this repo.
+  const adminClient = admin as any
+
+  const { error } = await adminClient.from('admin_action_log').insert({
     actor_user_id: params.actorUserId ?? null,
     actor_email: actorEmail,
     action: params.action,

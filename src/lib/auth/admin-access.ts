@@ -49,7 +49,19 @@ function hasGoogleProvider(user: {
   return [...normalizedProviders, ...identityProviders].includes('google')
 }
 
-async function getCurrentAal(supabase: any) {
+type SupabaseAdminAccessClient = {
+  auth: {
+    mfa?: {
+      getAuthenticatorAssuranceLevel?: () => Promise<{
+        data?: {
+          currentLevel?: string | null
+        } | null
+      }>
+    }
+  }
+}
+
+async function getCurrentAal(supabase: SupabaseAdminAccessClient) {
   try {
     if (!supabase.auth.mfa?.getAuthenticatorAssuranceLevel) {
       return null
@@ -63,7 +75,7 @@ async function getCurrentAal(supabase: any) {
 }
 
 export async function evaluateAdminAccess(params: {
-  supabase: any
+  supabase: SupabaseAdminAccessClient
   user: {
     email?: string | null
     app_metadata?: Record<string, unknown>

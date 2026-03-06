@@ -95,6 +95,9 @@ const REVISION_CHIPS = [
 const VISITOR_ID_KEY = 'nfpa_grant_lab_visitor_id'
 const STORAGE_KEY = 'nfpa_grant_lab_workspace_v1'
 const STORAGE_PREF_KEY = 'nfpa_grant_lab_local_autosave'
+const USER_OPENAI_KEY_STORAGE = 'nfpa_user_openai_key'
+const USER_OPENAI_KEY_SESSION_STORAGE = 'nfpa_user_openai_key_session'
+const USER_OPENAI_KEY_REMEMBER_STORAGE = 'nfpa_user_openai_key_remember'
 
 function ensureVisitorId() {
   if (typeof window === 'undefined') return 'server'
@@ -116,30 +119,50 @@ export default function GrantLabPage() {
   const [budgetCap, setBudgetCap] = useState<number | null>(null)
   const [saveLabel, setSaveLabel] = useState('')
   const [persistLocalDrafts, setPersistLocalDrafts] = useState(false)
+  const [userOpenAiKey, setUserOpenAiKey] = useState('')
+  const [rememberOpenAiKey, setRememberOpenAiKey] = useState(false)
+  const [isKeyStorageReady, setIsKeyStorageReady] = useState(false)
   const [mapPreviewUrl, setMapPreviewUrl] = useState<string>('')
   const [mapPreviewFailed, setMapPreviewFailed] = useState(false)
   const [workingElapsedSec, setWorkingElapsedSec] = useState(0)
 
   useEffect(() => {
-    if (typeof window === 'undefined') return
+    if (typeof window === 'undefined') {
+      setIsKeyStorageReady(true)
+      return
+    }
 
     const pref = localStorage.getItem(STORAGE_PREF_KEY) === '1'
     setPersistLocalDrafts(pref)
 
+    const rememberKey = localStorage.getItem(USER_OPENAI_KEY_REMEMBER_STORAGE) === '1'
+    setRememberOpenAiKey(rememberKey)
+
+    const storedKey = rememberKey
+      ? localStorage.getItem(USER_OPENAI_KEY_STORAGE)
+      : sessionStorage.getItem(USER_OPENAI_KEY_SESSION_STORAGE)
+    if (storedKey) {
+      setUserOpenAiKey(storedKey)
+    }
+
     if (!pref) {
       setSaveLabel('Local autosave is off (private mode).')
+      setIsKeyStorageReady(true)
       return
     }
 
     try {
       const raw = localStorage.getItem(STORAGE_KEY)
-      if (!raw) return
-      const parsed = JSON.parse(raw) as { context?: GrantContext; messages?: ChatMessage[] }
-      if (parsed.context) setContext({ ...INITIAL_CONTEXT, ...parsed.context })
-      if (Array.isArray(parsed.messages) && parsed.messages.length > 0) setMessages(parsed.messages)
+      if (raw) {
+        const parsed = JSON.parse(raw) as { context?: GrantContext; messages?: ChatMessage[] }
+        if (parsed.context) setContext({ ...INITIAL_CONTEXT, ...parsed.context })
+        if (Array.isArray(parsed.messages) && parsed.messages.length > 0) setMessages(parsed.messages)
+      }
     } catch {
       // ignore malformed local cache
     }
+
+    setIsKeyStorageReady(true)
   }, [])
 
   useEffect(() => {
@@ -157,6 +180,29 @@ export default function GrantLabPage() {
     localStorage.setItem(STORAGE_KEY, payload)
     setSaveLabel(`Auto-saved locally on this device at ${new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`)
   }, [context, messages, persistLocalDrafts])
+
+  useEffect(() => {
+    if (!isKeyStorageReady || typeof window === 'undefined') return
+
+    localStorage.setItem(USER_OPENAI_KEY_REMEMBER_STORAGE, rememberOpenAiKey ? '1' : '0')
+
+    const trimmedKey = userOpenAiKey.trim()
+
+    if (!trimmedKey) {
+      localStorage.removeItem(USER_OPENAI_KEY_STORAGE)
+      sessionStorage.removeItem(USER_OPENAI_KEY_SESSION_STORAGE)
+      return
+    }
+
+    if (rememberOpenAiKey) {
+      localStorage.setItem(USER_OPENAI_KEY_STORAGE, trimmedKey)
+      sessionStorage.removeItem(USER_OPENAI_KEY_SESSION_STORAGE)
+      return
+    }
+
+    sessionStorage.setItem(USER_OPENAI_KEY_SESSION_STORAGE, trimmedKey)
+    localStorage.removeItem(USER_OPENAI_KEY_STORAGE)
+  }, [isKeyStorageReady, rememberOpenAiKey, userOpenAiKey])
 
   useEffect(() => {
     const query = context.location.trim()
@@ -210,14 +256,32 @@ export default function GrantLabPage() {
     return 'Tip: Be explicit about readiness, local match strategy, and measurable outcomes.'
   }, [context.grantProgram])
 
+  function updateUserOpenAiKey(nextValue: string) {
+    setUserOpenAiKey(nextValue)
+  }
+
+  function clearUserOpenAiKey() {
+    setUserOpenAiKey('')
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem(USER_OPENAI_KEY_STORAGE)
+      sessionStorage.removeItem(USER_OPENAI_KEY_SESSION_STORAGE)
+    }
+  }
+
   async function requestAssistant(nextMessages: ChatMessage[], mode: 'draft' | 'chat') {
     setError(null)
     setIsWorking(true)
 
     try {
+      const headers: HeadersInit = { 'Content-Type': 'application/json' }
+      const trimmedKey = userOpenAiKey.trim()
+      if (trimmedKey) {
+        headers['x-user-openai-key'] = trimmedKey
+      }
+
       const response = await fetch('/api/chat/grant-lab', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({
           visitorId: ensureVisitorId(),
           mode,
@@ -398,6 +462,49 @@ export default function GrantLabPage() {
             >
               <Download className="h-3.5 w-3.5" /> Export .md
             </button>
+          </div>
+
+          <div className="mb-4 rounded-2xl border border-[color:var(--line)] bg-[color:var(--fog)]/55 p-4">
+            <div className="flex flex-wrap items-start gap-3">
+              <label className="block min-w-[260px] flex-1 text-sm text-[color:var(--foreground)]/80">
+                Use my OpenAI API key (session-only by default)
+                <input
+                  type="password"
+                  value={userOpenAiKey}
+                  onChange={(event) => updateUserOpenAiKey(event.target.value)}
+                  placeholder="sk-..."
+                  autoComplete="off"
+                  spellCheck={false}
+                  className="mt-1 h-10 w-full rounded-xl border border-[color:var(--line)] bg-[color:var(--background)] px-3 text-sm text-[color:var(--foreground)]"
+                />
+              </label>
+              <button
+                type="button"
+                onClick={clearUserOpenAiKey}
+                className="rounded-lg border border-[color:var(--line)] px-3 py-2 text-xs text-[color:var(--foreground)]/78 hover:border-[color:var(--pine)] hover:text-[color:var(--pine)]"
+              >
+                Clear key
+              </button>
+            </div>
+            <label className="mt-2 inline-flex items-center gap-2 text-xs text-[color:var(--foreground)]/75">
+              <input
+                type="checkbox"
+                checked={rememberOpenAiKey}
+                onChange={(event) => setRememberOpenAiKey(event.target.checked)}
+                className="h-3.5 w-3.5 rounded border-[color:var(--line)]"
+              />
+              Remember on this device (writes key to local storage)
+            </label>
+            <p className="mt-2 text-xs text-amber-700 dark:text-amber-400">
+              Your API key is sensitive. Only enable remember mode on trusted, private devices.
+            </p>
+            <p className="mt-1 text-xs text-[color:var(--foreground)]/68">
+              {userOpenAiKey.trim()
+                ? rememberOpenAiKey
+                  ? 'Using your remembered device key for new requests.'
+                  : 'Using your session-only key for this tab session.'
+                : 'Leave blank to use the platform key.'}
+            </p>
           </div>
 
           <div className="grid grid-cols-1 gap-6 xl:grid-cols-[1.05fr_0.95fr]">

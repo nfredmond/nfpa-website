@@ -37,6 +37,9 @@ type PlannerApiResponse = {
 
 const STARTED_AT_KEY = 'nfpa_planner_chat_started_at'
 const VISITOR_ID_KEY = 'nfpa_planner_chat_visitor_id'
+const USER_OPENAI_KEY_STORAGE = 'nfpa_user_openai_key'
+const USER_OPENAI_KEY_SESSION_STORAGE = 'nfpa_user_openai_key_session'
+const USER_OPENAI_KEY_REMEMBER_STORAGE = 'nfpa_user_openai_key_remember'
 const GUEST_GRACE_MS = 10 * 60 * 1000
 
 const STARTER_PROMPTS = [
@@ -87,6 +90,9 @@ export function PlannerChatbot() {
   const [requiresSignup, setRequiresSignup] = useState(false)
   const [guestStartedAt, setGuestStartedAt] = useState<number>(Date.now())
   const [nowMs, setNowMs] = useState<number>(Date.now())
+  const [userOpenAiKey, setUserOpenAiKey] = useState('')
+  const [rememberOpenAiKey, setRememberOpenAiKey] = useState(false)
+  const [isKeyStorageReady, setIsKeyStorageReady] = useState(false)
   const [preferences, setPreferences] = useState<PlannerPreferences>({
     geographyFocus: 'mixed-us',
     responseStyle: 'quick-take',
@@ -94,13 +100,53 @@ export function PlannerChatbot() {
 
   useEffect(() => {
     setGuestStartedAt(ensureGuestStart())
-  }, [])
 
+    if (typeof window === 'undefined') {
+      setIsKeyStorageReady(true)
+      return
+    }
+
+    const remember = localStorage.getItem(USER_OPENAI_KEY_REMEMBER_STORAGE) === '1'
+    setRememberOpenAiKey(remember)
+
+    const stored = remember
+      ? localStorage.getItem(USER_OPENAI_KEY_STORAGE)
+      : sessionStorage.getItem(USER_OPENAI_KEY_SESSION_STORAGE)
+
+    if (stored) {
+      setUserOpenAiKey(stored)
+    }
+
+    setIsKeyStorageReady(true)
+  }, [])
 
   useEffect(() => {
     const interval = window.setInterval(() => setNowMs(Date.now()), 15000)
     return () => window.clearInterval(interval)
   }, [])
+
+  useEffect(() => {
+    if (!isKeyStorageReady || typeof window === 'undefined') return
+
+    localStorage.setItem(USER_OPENAI_KEY_REMEMBER_STORAGE, rememberOpenAiKey ? '1' : '0')
+
+    const trimmedKey = userOpenAiKey.trim()
+
+    if (!trimmedKey) {
+      localStorage.removeItem(USER_OPENAI_KEY_STORAGE)
+      sessionStorage.removeItem(USER_OPENAI_KEY_SESSION_STORAGE)
+      return
+    }
+
+    if (rememberOpenAiKey) {
+      localStorage.setItem(USER_OPENAI_KEY_STORAGE, trimmedKey)
+      sessionStorage.removeItem(USER_OPENAI_KEY_SESSION_STORAGE)
+      return
+    }
+
+    sessionStorage.setItem(USER_OPENAI_KEY_SESSION_STORAGE, trimmedKey)
+    localStorage.removeItem(USER_OPENAI_KEY_STORAGE)
+  }, [isKeyStorageReady, rememberOpenAiKey, userOpenAiKey])
 
   const guestRemainingMs = Math.max(0, guestStartedAt + GUEST_GRACE_MS - nowMs)
   const guestMinutesLeft = Math.ceil(guestRemainingMs / 60000)
@@ -122,6 +168,18 @@ export function PlannerChatbot() {
     await navigator.clipboard.writeText(latestAssistant.content)
   }
 
+  function updateUserOpenAiKey(nextValue: string) {
+    setUserOpenAiKey(nextValue)
+  }
+
+  function clearUserOpenAiKey() {
+    setUserOpenAiKey('')
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem(USER_OPENAI_KEY_STORAGE)
+      sessionStorage.removeItem(USER_OPENAI_KEY_SESSION_STORAGE)
+    }
+  }
+
   async function sendMessage(userText: string) {
     if (!userText.trim() || isSending || requiresSignup) return
 
@@ -132,9 +190,15 @@ export function PlannerChatbot() {
     setIsSending(true)
 
     try {
+      const headers: HeadersInit = { 'Content-Type': 'application/json' }
+      const trimmedKey = userOpenAiKey.trim()
+      if (trimmedKey) {
+        headers['x-user-openai-key'] = trimmedKey
+      }
+
       const response = await fetch('/api/chat/planner', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({
           visitorId: ensureVisitorId(),
           preferences,
@@ -235,6 +299,49 @@ export function PlannerChatbot() {
               <option value="board-memo">Board memo</option>
             </select>
           </label>
+        </div>
+
+        <div className="mb-3 rounded-xl border border-[color:var(--line)] bg-[color:var(--fog)]/55 p-3">
+          <div className="flex flex-wrap items-start justify-between gap-2">
+            <label className="block flex-1 text-xs text-[color:var(--foreground)]/78">
+              Use my OpenAI API key (session-only by default)
+              <input
+                type="password"
+                value={userOpenAiKey}
+                onChange={(event) => updateUserOpenAiKey(event.target.value)}
+                placeholder="sk-..."
+                autoComplete="off"
+                spellCheck={false}
+                className="mt-1 h-10 w-full rounded-xl border border-[color:var(--line)] bg-[color:var(--background)] px-3 text-sm text-[color:var(--foreground)]"
+              />
+            </label>
+            <button
+              type="button"
+              onClick={clearUserOpenAiKey}
+              className="rounded-lg border border-[color:var(--line)] px-3 py-2 text-xs text-[color:var(--foreground)]/78 hover:border-[color:var(--pine)] hover:text-[color:var(--pine)]"
+            >
+              Clear key
+            </button>
+          </div>
+          <label className="mt-2 inline-flex items-center gap-2 text-[11px] text-[color:var(--foreground)]/75">
+            <input
+              type="checkbox"
+              checked={rememberOpenAiKey}
+              onChange={(event) => setRememberOpenAiKey(event.target.checked)}
+              className="h-3.5 w-3.5 rounded border-[color:var(--line)]"
+            />
+            Remember on this device (writes key to local storage)
+          </label>
+          <p className="mt-2 text-[11px] text-amber-700 dark:text-amber-400">
+            Your API key is sensitive. Only enable remember mode on trusted, private devices.
+          </p>
+          <p className="mt-1 text-[11px] text-[color:var(--foreground)]/65">
+            {userOpenAiKey.trim()
+              ? rememberOpenAiKey
+                ? 'Using your remembered device key for new requests.'
+                : 'Using your session-only key for this tab session.'
+              : 'Leave blank to use the platform key.'}
+          </p>
         </div>
 
         <div className="mb-3 flex flex-wrap gap-2">

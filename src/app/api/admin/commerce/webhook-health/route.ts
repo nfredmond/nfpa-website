@@ -45,9 +45,12 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Supabase admin client unavailable' }, { status: 500 })
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Supabase admin DB client uses generated table types not yet wired in this repo.
+  const adminClient = admin as any
+
   const cutoff = new Date(Date.now() - thresholdMinutes * 60_000).toISOString()
 
-  const { data, error } = await (admin as any)
+  const { data, error } = await adminClient
     .from('commerce_fulfillment_ledger')
     .select('stripe_event_id, stripe_event_type, status, created_at')
     .in('status', SUCCESS_STATUSES)

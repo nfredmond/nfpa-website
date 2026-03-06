@@ -31,8 +31,8 @@ export default function EthicsPage() {
         <Container>
           <div className="relative h-52 overflow-hidden rounded-2xl border border-[color:var(--line)]">
             <Image
-              src="/images/site/hero-corridor.jpg"
-              alt="Transportation corridor landscape used for U.S. planning context"
+              src="/images/site/drone-corridor-valley-2026-03.jpg"
+              alt="Drone view of a rural transportation corridor and valley context"
               fill
               className="object-cover"
               sizes="100vw"

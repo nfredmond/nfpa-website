@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { createClient } from '@/lib/supabase/server'
 import { getSupabaseAdminClient } from '@/lib/supabase/admin'
-import { buildScopeKey, fetchUsageSnapshot, logUsageEvent } from '@/lib/ai-usage'
+import { buildScopeKey, fetchUsageSnapshot, findActiveAiBan, logUsageEvent } from '@/lib/ai-usage'
+import { sanitizeForLog, sanitizeTextForLog } from '@/lib/security/redact-secrets'
 
 export const runtime = 'nodejs'
 
@@ -24,6 +25,8 @@ const MEMBER_MIN_INTERVAL_MS = 350
 const GUEST_DAILY_TOKEN_BUDGET = 45000
 const MEMBER_DAILY_TOKEN_BUDGET = 120000
 const OPENAI_TIMEOUT_MS = 45000
+const AI_BAN_CHECK_FAIL_OPEN = process.env.AI_BAN_CHECK_FAIL_OPEN === 'true'
+const IS_PRODUCTION = process.env.NODE_ENV === 'production'
 
 const SYSTEM_PROMPT = `You are a senior U.S. transportation + land use grant strategist.
 
@@ -86,6 +89,14 @@ const requestSchema = z.object({
 
 function jsonError(message: string, status = 400, extras: Record<string, unknown> = {}) {
   return NextResponse.json({ ok: false, message, ...extras }, { status })
+}
+
+function shouldFailOpenBanCheck() {
+  return !IS_PRODUCTION && AI_BAN_CHECK_FAIL_OPEN
+}
+
+function banCheckUnavailableResponse() {
+  return jsonError('Safety systems are temporarily unavailable. Please retry in a moment.', 503)
 }
 
 function getRequesterIp(req: NextRequest): string {
@@ -187,12 +198,68 @@ export async function POST(req: NextRequest) {
     const ip = getRequesterIp(req)
     const scopeKey = buildScopeKey(user?.id, visitorId, ip)
     const requesterKind = user ? 'member' : 'guest'
+    const userProvidedApiKey = req.headers.get('x-user-openai-key')?.trim() || null
+    const keySource = userProvidedApiKey ? 'user_provided' : 'platform'
 
     const maxPerHour = user ? MEMBER_MAX_REQUESTS_PER_HOUR : GUEST_MAX_REQUESTS_PER_HOUR
     const minIntervalMs = user ? MEMBER_MIN_INTERVAL_MS : GUEST_MIN_INTERVAL_MS
     const budgetCap = user ? MEMBER_DAILY_TOKEN_BUDGET : GUEST_DAILY_TOKEN_BUDGET
 
     let tokensUsed24h = 0
+
+    if (!admin) {
+      if (!shouldFailOpenBanCheck()) {
+        console.error('Grant abuse-control check unavailable', {
+          route: ROUTE_KEY,
+          reason: 'missing_admin_client',
+          failOpen: shouldFailOpenBanCheck(),
+        })
+        return banCheckUnavailableResponse()
+      }
+    } else {
+      try {
+        const ban = await findActiveAiBan(admin, {
+          route: ROUTE_KEY,
+          userId: user?.id,
+          visitorId: visitorId ?? null,
+          ip,
+        })
+
+        if (ban) {
+          try {
+            await logUsageEvent(admin, {
+              scopeKey,
+              route: ROUTE_KEY,
+              requesterKind,
+              userId: user?.id,
+              visitorId: visitorId ?? null,
+              ip,
+              status: 'blocked',
+              metadata: {
+                reason: ban.reason ?? 'blocked_by_admin',
+                route: ROUTE_KEY,
+                banId: ban.id,
+                key_source: keySource,
+              },
+            })
+          } catch (logError) {
+            console.error('Grant blocked-event log failed', sanitizeForLog(logError))
+          }
+
+          return jsonError('This AI tool is temporarily unavailable for this session.', 403)
+        }
+      } catch (banError) {
+        console.error('Grant abuse-control check failed', {
+          route: ROUTE_KEY,
+          failOpen: shouldFailOpenBanCheck(),
+          error: sanitizeForLog(banError),
+        })
+
+        if (!shouldFailOpenBanCheck()) {
+          return banCheckUnavailableResponse()
+        }
+      }
+    }
 
     if (admin) {
       try {
@@ -208,7 +275,7 @@ export async function POST(req: NextRequest) {
             visitorId: visitorId ?? null,
             ip,
             status: 'rate_limited',
-            metadata: { reason: 'min_interval' },
+            metadata: { reason: 'min_interval', key_source: keySource },
           })
           return jsonError('You are sending messages too quickly. Please wait a moment.', 429)
         }
@@ -222,12 +289,12 @@ export async function POST(req: NextRequest) {
             visitorId: visitorId ?? null,
             ip,
             status: 'rate_limited',
-            metadata: { reason: 'hourly_limit' },
+            metadata: { reason: 'hourly_limit', key_source: keySource },
           })
           return jsonError('You have reached the hourly limit for this tool. Please retry shortly.', 429)
         }
       } catch (usageError) {
-        console.error('Grant usage snapshot failed; continuing without persistent limits', usageError)
+        console.error('Grant usage snapshot failed; continuing without persistent limits', sanitizeForLog(usageError))
         admin = null
       }
     }
@@ -241,7 +308,7 @@ export async function POST(req: NextRequest) {
       })
     }
 
-    const apiKey = process.env.OPENAI_API_KEY
+    const apiKey = userProvidedApiKey || process.env.OPENAI_API_KEY
     if (!apiKey) {
       return jsonError('Grant AI is not configured yet.', 503)
     }
@@ -303,10 +370,12 @@ export async function POST(req: NextRequest) {
 
     if (!openAiResponse.ok) {
       const details = await openAiResponse.text()
-      console.error('Grant lab upstream error', {
-        status: openAiResponse.status,
-        details,
-      })
+      console.error('Grant lab upstream error',
+        sanitizeForLog({
+          status: openAiResponse.status,
+          details: sanitizeTextForLog(details),
+        })
+      )
 
       if (admin) {
         try {
@@ -319,10 +388,10 @@ export async function POST(req: NextRequest) {
             ip,
             inputTokens: estimatedInputTokens,
             status: 'upstream_error',
-            metadata: { status: openAiResponse.status },
+            metadata: { status: openAiResponse.status, key_source: keySource },
           })
         } catch (logError) {
-          console.error('Grant usage log failed (upstream error)', logError)
+          console.error('Grant usage log failed (upstream error)', sanitizeForLog(logError))
         }
       }
 
@@ -355,10 +424,11 @@ export async function POST(req: NextRequest) {
             model: CHAT_MODEL,
             mode,
             messageCount: userMessages.length,
+            key_source: keySource,
           },
         })
       } catch (logError) {
-        console.error('Grant usage log failed (completed)', logError)
+        console.error('Grant usage log failed (completed)', sanitizeForLog(logError))
       }
     }
 
@@ -371,7 +441,7 @@ export async function POST(req: NextRequest) {
       isAuthenticated: !!user,
     })
   } catch (error) {
-    console.error('Grant lab route error', error)
+    console.error('Grant lab route error', sanitizeForLog(error))
     return jsonError('Unexpected server error.', 500)
   }
 }

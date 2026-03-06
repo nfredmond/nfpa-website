@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { createClient } from '@/lib/supabase/server'
 import { getSupabaseAdminClient } from '@/lib/supabase/admin'
-import { buildScopeKey, fetchUsageSnapshot, logUsageEvent } from '@/lib/ai-usage'
+import { buildScopeKey, fetchUsageSnapshot, findActiveAiBan, logUsageEvent } from '@/lib/ai-usage'
 import { getCensusContextForPrompt } from '@/lib/census'
+import { sanitizeForLog, sanitizeTextForLog } from '@/lib/security/redact-secrets'
 
 export const runtime = 'nodejs'
 
@@ -15,6 +16,8 @@ const MAX_CONTEXT_MESSAGES = 16
 const MAX_MESSAGE_CHARS = 4000
 const MAX_TOTAL_INPUT_CHARS = 24000
 const MAX_OUTPUT_TOKENS = 1800
+const AI_BAN_CHECK_FAIL_OPEN = process.env.AI_BAN_CHECK_FAIL_OPEN === 'true'
+const IS_PRODUCTION = process.env.NODE_ENV === 'production'
 
 const GUEST_GRACE_MS = 10 * 60 * 1000
 const GUEST_MAX_REQUESTS_PER_HOUR = 60
@@ -93,6 +96,14 @@ function getStateStore(): PlannerStateStore {
 
 function jsonError(message: string, status = 400, extras: Record<string, unknown> = {}) {
   return NextResponse.json({ ok: false, message, ...extras }, { status })
+}
+
+function shouldFailOpenBanCheck() {
+  return !IS_PRODUCTION && AI_BAN_CHECK_FAIL_OPEN
+}
+
+function banCheckUnavailableResponse() {
+  return jsonError('Safety systems are temporarily unavailable. Please retry in a moment.', 503)
 }
 
 function getRequesterIp(req: NextRequest): string {
@@ -218,11 +229,67 @@ export async function POST(req: NextRequest) {
     const ip = getRequesterIp(req)
     const scopeKey = buildScopeKey(userId, visitorId, ip)
     const requesterKind = user ? 'member' : 'guest'
+    const userProvidedApiKey = req.headers.get('x-user-openai-key')?.trim() || null
+    const keySource = userProvidedApiKey ? 'user_provided' : 'platform'
 
     const maxPerHour = user ? MEMBER_MAX_REQUESTS_PER_HOUR : GUEST_MAX_REQUESTS_PER_HOUR
     const minIntervalMs = user ? MEMBER_MIN_INTERVAL_MS : GUEST_MIN_INTERVAL_MS
 
     let guestExpiresAt: number | null = null
+
+    if (!admin) {
+      if (!shouldFailOpenBanCheck()) {
+        console.error('Planner abuse-control check unavailable', {
+          route: ROUTE_KEY,
+          reason: 'missing_admin_client',
+          failOpen: shouldFailOpenBanCheck(),
+        })
+        return banCheckUnavailableResponse()
+      }
+    } else {
+      try {
+        const ban = await findActiveAiBan(admin, {
+          route: ROUTE_KEY,
+          userId,
+          visitorId: visitorId ?? null,
+          ip,
+        })
+
+        if (ban) {
+          try {
+            await logUsageEvent(admin, {
+              scopeKey,
+              route: ROUTE_KEY,
+              requesterKind,
+              userId,
+              visitorId: visitorId ?? null,
+              ip,
+              status: 'blocked',
+              metadata: {
+                reason: ban.reason ?? 'blocked_by_admin',
+                route: ROUTE_KEY,
+                banId: ban.id,
+                key_source: keySource,
+              },
+            })
+          } catch (logError) {
+            console.error('Planner blocked-event log failed', sanitizeForLog(logError))
+          }
+
+          return jsonError('This AI tool is temporarily unavailable for this session.', 403)
+        }
+      } catch (banError) {
+        console.error('Planner abuse-control check failed', {
+          route: ROUTE_KEY,
+          failOpen: shouldFailOpenBanCheck(),
+          error: sanitizeForLog(banError),
+        })
+
+        if (!shouldFailOpenBanCheck()) {
+          return banCheckUnavailableResponse()
+        }
+      }
+    }
 
     // Guest grace remains in-memory to keep UX consistent even if usage events table is unavailable.
     if (!user) {
@@ -248,7 +315,7 @@ export async function POST(req: NextRequest) {
               visitorId: visitorId ?? null,
               ip,
               status: 'guest_expired',
-              metadata: { reason: 'guest_grace_expired' },
+              metadata: { reason: 'guest_grace_expired', key_source: keySource },
             })
           } catch {
             admin = null
@@ -282,7 +349,7 @@ export async function POST(req: NextRequest) {
             visitorId: visitorId ?? null,
             ip,
             status: 'rate_limited',
-            metadata: { reason: 'min_interval' },
+            metadata: { reason: 'min_interval', key_source: keySource },
           })
           return jsonError('You are sending messages too quickly. Please wait a moment.', 429)
         }
@@ -296,17 +363,17 @@ export async function POST(req: NextRequest) {
             visitorId: visitorId ?? null,
             ip,
             status: 'rate_limited',
-            metadata: { reason: 'hourly_limit' },
+            metadata: { reason: 'hourly_limit', key_source: keySource },
           })
           return jsonError('You have hit the hourly message limit. Please try again shortly.', 429)
         }
       } catch (usageError) {
-        console.error('Planner usage snapshot failed; falling back to in-memory limits', usageError)
+        console.error('Planner usage snapshot failed; falling back to in-memory limits', sanitizeForLog(usageError))
         admin = null
       }
     }
 
-    const apiKey = process.env.OPENAI_API_KEY
+    const apiKey = userProvidedApiKey || process.env.OPENAI_API_KEY
     if (!apiKey) {
       return jsonError('Chat API is not configured yet.', 503)
     }
@@ -357,10 +424,12 @@ export async function POST(req: NextRequest) {
 
     if (!openAiResponse.ok) {
       const details = await openAiResponse.text()
-      console.error('Planner chat upstream error', {
-        status: openAiResponse.status,
-        details,
-      })
+      console.error('Planner chat upstream error',
+        sanitizeForLog({
+          status: openAiResponse.status,
+          details: sanitizeTextForLog(details),
+        })
+      )
 
       if (admin) {
         try {
@@ -374,10 +443,10 @@ export async function POST(req: NextRequest) {
             inputTokens: estimatedInputTokens,
             outputTokens: 0,
             status: 'upstream_error',
-            metadata: { status: openAiResponse.status },
+            metadata: { status: openAiResponse.status, key_source: keySource },
           })
         } catch (logError) {
-          console.error('Planner usage log failed (upstream error)', logError)
+          console.error('Planner usage log failed (upstream error)', sanitizeForLog(logError))
         }
       }
 
@@ -408,10 +477,11 @@ export async function POST(req: NextRequest) {
           metadata: {
             model: CHAT_MODEL,
             messageCount: userMessages.length,
+            key_source: keySource,
           },
         })
       } catch (logError) {
-        console.error('Planner usage log failed (completed)', logError)
+        console.error('Planner usage log failed (completed)', sanitizeForLog(logError))
       }
     }
 
@@ -423,7 +493,7 @@ export async function POST(req: NextRequest) {
       sources: censusContext.sources,
     })
   } catch (error) {
-    console.error('Planner chat route error', error)
+    console.error('Planner chat route error', sanitizeForLog(error))
     return jsonError('Unexpected server error.', 500)
   }
 }

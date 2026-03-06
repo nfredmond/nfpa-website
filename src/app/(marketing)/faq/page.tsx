@@ -71,8 +71,8 @@ export default function FAQPage() {
         <Container>
           <div className="relative h-52 overflow-hidden rounded-2xl border border-[color:var(--line)]">
             <Image
-              src="/images/site/hero-corridor.jpg"
-              alt="U.S. transportation corridor planning context"
+              src="/images/site/drone-corridor-valley-2026-03.jpg"
+              alt="Rural corridor and small-town planning context captured by drone"
               fill
               className="object-cover"
               sizes="100vw"

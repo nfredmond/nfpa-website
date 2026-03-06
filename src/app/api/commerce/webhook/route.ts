@@ -101,6 +101,11 @@ function shouldTriggerWelcome(eventType: string, accessStatus: string) {
   return WELCOME_EVENT_TYPES.has(eventType) && accessStatus === 'active'
 }
 
+function getUntypedAdminDbClient(admin: NonNullable<ReturnType<typeof getSupabaseAdminClient>>) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Supabase admin DB client uses generated table types not yet wired in this repo.
+  return admin as any
+}
+
 async function maybeSendWelcomeEmail(params: {
   to: string
   productId: string
@@ -172,8 +177,9 @@ async function queueOnboardingEvent(params: {
   })
 
   const status = sendResult.status === 'email_sent' ? 'sent' : sendResult.status
+  const adminDbClient = getUntypedAdminDbClient(admin)
 
-  const { error } = await (admin as any)
+  const { error } = await adminDbClient
     .from('customer_onboarding_events')
     .upsert(
       {
@@ -248,7 +254,7 @@ async function syncEntitlementToUserMetadata(params: {
   const { admin, email, productId, tierId, accessStatus } = params
 
   try {
-    const listed = await (admin as any).auth.admin.listUsers({ page: 1, perPage: 1000 })
+    const listed = await admin.auth.admin.listUsers({ page: 1, perPage: 1000 })
     if (listed?.error) {
       throw listed.error
     }
@@ -280,7 +286,7 @@ async function syncEntitlementToUserMetadata(params: {
       product_access: productAccess,
     }
 
-    await (admin as any).auth.admin.updateUserById(target.id, {
+    await admin.auth.admin.updateUserById(target.id, {
       app_metadata: nextAppMetadata,
     })
   } catch (error) {
@@ -329,6 +335,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Supabase admin client unavailable' }, { status: 500 })
   }
 
+  const adminDbClient = getUntypedAdminDbClient(admin)
+
   const object = event.data?.object ?? {}
 
   const checkoutSessionId = asString(object.id)
@@ -364,7 +372,7 @@ export async function POST(request: NextRequest) {
     payload: object,
   }
 
-  const { error } = await (admin as any)
+  const { error } = await adminDbClient
     .from('commerce_fulfillment_ledger')
     .upsert(row, { onConflict: 'stripe_event_id' })
 
@@ -379,7 +387,7 @@ export async function POST(request: NextRequest) {
 
   if (customerEmail && productId && tierId) {
     const accessStatus = accessStatusForEventType(event.type)
-    const { error: accessError } = await (admin as any)
+    const { error: accessError } = await adminDbClient
       .from('customer_product_access')
       .upsert(
         {

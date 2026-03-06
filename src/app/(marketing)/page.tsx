@@ -153,8 +153,8 @@ export default function HomePage() {
             <div className="soft-card float-slow rounded-3xl bg-white/92 p-5 text-[color:var(--ink)] dark:bg-[#101b24]/92 dark:text-white sm:p-6">
               <div className="relative h-44 w-full overflow-hidden rounded-2xl border border-[color:var(--line)]">
                 <Image
-                  src="/images/site/hero-corridor.jpg"
-                  alt="Aerial corridor view supporting U.S. rural and small-town mobility planning"
+                  src="/images/site/drone-corridor-valley-2026-03.jpg"
+                  alt="Drone view of a rural valley corridor and arterial roadway used for mobility planning analysis"
                   fill
                   className="object-cover"
                   sizes="(max-width: 1024px) 100vw, 40vw"

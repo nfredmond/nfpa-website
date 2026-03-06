@@ -68,8 +68,8 @@ export default function ProcessPage() {
         <Container>
           <div className="relative h-60 overflow-hidden rounded-2xl border border-[color:var(--line)]">
             <Image
-              src="/images/site/mainstreet-aerial.jpg"
-              alt="Aerial perspective of a complete-streets style corridor"
+              src="/images/site/drone-mainstreet-parking-2026-03.jpg"
+              alt="Drone street-level oblique showing curb activity and parking behavior"
               fill
               className="object-cover"
               sizes="100vw"
