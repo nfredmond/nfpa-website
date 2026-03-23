@@ -425,7 +425,7 @@ export default function GrantLabPage() {
                 Want unlimited access? This workflow is included in OpenPlan subscriptions, and can also be custom-built into client-specific delivery systems.
               </p>
               <div className="mt-4 flex flex-wrap gap-3 text-sm">
-                <Link href="/products#openplan" className="inline-flex items-center rounded-full border border-white/45 bg-white/14 px-4 py-2 font-semibold text-white hover:bg-white/22">
+                <Link href="/openplan" className="inline-flex items-center rounded-full border border-white/45 bg-white/14 px-4 py-2 font-semibold text-white hover:bg-white/22">
                   See OpenPlan inclusion <ArrowRight className="ml-1.5 h-4 w-4" />
                 </Link>
                 <Link href="/contact?inquiry=custom-grant-ai" className="inline-flex items-center rounded-full border border-white/40 bg-black/10 px-4 py-2 font-semibold text-white/95 hover:bg-white/12">
@@ -789,7 +789,7 @@ export default function GrantLabPage() {
                     free account
                   </Link>
                   . Want unlimited access and production rollout? It’s included in{' '}
-                  <Link href="/products#openplan" className="font-semibold text-[color:var(--pine)]">
+                  <Link href="/openplan" className="font-semibold text-[color:var(--pine)]">
                     OpenPlan subscriptions
                   </Link>
                   , and available as a{' '}

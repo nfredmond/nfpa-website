@@ -131,7 +131,31 @@ export default function ResourcesPage() {
 
       <Section spacing="xl">
         <Container>
-          <h2 className="section-title text-4xl md:text-5xl text-[color:var(--ink)]">Downloadable Resources</h2>
+          <div className="rounded-3xl border border-[color:var(--line)] bg-[color:var(--fog)]/72 p-6 md:p-8">
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-[0.68fr_0.32fr] lg:items-center">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[color:var(--foreground)]/62">Featured tool</p>
+                <h2 className="section-title mt-3 text-4xl text-[color:var(--ink)] md:text-5xl">Funding Readiness Scorecard</h2>
+                <p className="mt-4 max-w-3xl text-lg text-[color:var(--foreground)]/82">
+                  Run a 10-question self-check, see your readiness band, and download the matching worksheet for offline review.
+                </p>
+              </div>
+
+              <div className="flex flex-col gap-3 lg:items-end">
+                <Button asChild size="lg">
+                  <Link href="/funding-readiness-scorecard">Open the scorecard</Link>
+                </Button>
+                <Button asChild variant="outline" size="lg">
+                  <a href="/Funding_Readiness_Scorecard_Worksheet.pdf" download>
+                    <Download className="mr-2 h-4 w-4" />
+                    Download worksheet PDF
+                  </a>
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          <h2 className="section-title mt-10 text-4xl md:text-5xl text-[color:var(--ink)]">Downloadable Resources</h2>
           <div className="mt-7 grid grid-cols-1 md:grid-cols-3 gap-5">
             {resources.map((resource) => (
               <Card key={resource.title} hover>

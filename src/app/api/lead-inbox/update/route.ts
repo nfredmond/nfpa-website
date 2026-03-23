@@ -25,8 +25,12 @@ export async function POST(req: NextRequest) {
   const leadId = String(form.get('leadId') || '').trim()
   const ownerName = String(form.get('ownerName') || '').trim().slice(0, 120)
   const notes = String(form.get('notes') || '').trim().slice(0, 8000)
+  const lastContactOnRaw = String(form.get('lastContactOn') || '').trim()
+  const nextStepOnRaw = String(form.get('nextStepOn') || '').trim()
 
-  if (!leadId) {
+  const isValidDate = (value: string) => !value || /^\d{4}-\d{2}-\d{2}$/.test(value)
+
+  if (!leadId || !isValidDate(lastContactOnRaw) || !isValidDate(nextStepOnRaw)) {
     return safeRedirect(req, returnTo, 'crm-invalid')
   }
 
@@ -44,6 +48,8 @@ export async function POST(req: NextRequest) {
     .update({
       owner_name: ownerName || null,
       notes: notes || null,
+      last_contact_on: lastContactOnRaw || null,
+      next_step_on: nextStepOnRaw || null,
     })
     .eq('id', leadId)
 

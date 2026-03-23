@@ -26,6 +26,7 @@ export async function POST(req: NextRequest) {
 
   const leadId = String(form.get('leadId') || '').trim()
   const status = String(form.get('status') || '').trim()
+  const actionType = String(form.get('actionType') || '').trim()
 
   if (!leadId || !VALID_STATUS.has(status)) {
     return safeRedirect(req, returnTo, 'invalid')
@@ -40,11 +41,16 @@ export async function POST(req: NextRequest) {
 
   const supabase = createClient(supabaseUrl, serviceKey)
 
-  const { error } = await supabase.from('leads').update({ status }).eq('id', leadId)
+  const updatePayload: { status: string; last_contact_on?: string } = { status }
+  if (actionType === 'first-contact') {
+    updatePayload.last_contact_on = new Date().toISOString().slice(0, 10)
+  }
+
+  const { error } = await supabase.from('leads').update(updatePayload).eq('id', leadId)
 
   if (error) {
     return safeRedirect(req, returnTo, 'error')
   }
 
-  return safeRedirect(req, returnTo, 'ok')
+  return safeRedirect(req, returnTo, actionType === 'first-contact' ? 'contact-ok' : 'ok')
 }

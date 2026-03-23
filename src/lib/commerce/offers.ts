@@ -20,7 +20,7 @@ export const offerCatalog: OfferProduct[] = [
   {
     id: "openplan",
     name: "OpenPlan Software",
-    description: "Corridor analysis, funding-ready reporting, and operational planning intelligence.",
+    description: "A modular planning operating system for lean public-sector and consultant teams that need stronger continuity across projects, decisions, risks, datasets, map context, and reporting.",
     tiers: [
       {
         id: "openplan-starter",

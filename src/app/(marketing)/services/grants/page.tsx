@@ -56,9 +56,14 @@ export default function GrantsServicePage() {
                 <p className="mt-4 text-sm text-[color:var(--foreground)]/78">
                   We can start with a focused review and identify the highest-probability funding path.
                 </p>
-                <Button asChild className="mt-5 w-full">
-                  <Link href="/contact">Request Grant Intake</Link>
-                </Button>
+                <div className="mt-5 space-y-3">
+                  <Button asChild className="w-full">
+                    <Link href="/contact">Request Grant Intake</Link>
+                  </Button>
+                  <Button asChild variant="outline" className="w-full">
+                    <Link href="/funding-readiness-scorecard">Try the Funding Readiness Scorecard</Link>
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </div>

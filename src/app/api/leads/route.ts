@@ -12,6 +12,10 @@ type LeadPayload = {
   website?: string // honeypot
   sourcePath?: string
   turnstileToken?: string
+  topic?: string
+  intent?: string
+  product?: string
+  tier?: string
 }
 
 type TurnstileResponse = {
@@ -45,6 +49,10 @@ export async function POST(req: NextRequest) {
     const description = normalize(payload.description)
     const sourcePath = normalize(payload.sourcePath) || '/contact'
     const turnstileToken = normalize(payload.turnstileToken)
+    const topic = normalize(payload.topic).toLowerCase()
+    const intent = normalize(payload.intent).toLowerCase()
+    const product = normalize(payload.product).toLowerCase()
+    const tier = normalize(payload.tier)
 
     if (!firstName || !lastName || !email || !organization || !inquiryType || !timeline || !description) {
       return badRequest('Please complete all required fields.')
@@ -151,6 +159,18 @@ export async function POST(req: NextRequest) {
       meta: {
         ip: forwardedFor,
         user_agent: userAgent,
+        topic,
+        intent,
+        product,
+        tier,
+        routing_hint:
+          topic === 'openplan' && intent === 'updates'
+            ? 'openplan-pilot-updates'
+            : topic === 'openplan' && ['fit', 'discovery', 'discuss-fit'].includes(intent)
+              ? 'openplan-fit-conversation'
+              : topic === 'openplan'
+                ? 'openplan-general'
+                : null,
       },
     })
 

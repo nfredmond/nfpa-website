@@ -18,14 +18,14 @@ const products = [
     id: 'openplan',
     name: 'OpenPlan',
     icon: Map,
-    stage: 'Coming March 2026',
+    stage: 'Prelaunch access',
     description:
-      'Transportation analysis platform for corridor-level diagnostics, equity/safety context, and grant-ready outputs — with architecture that can be adapted to law, science, education, engineering, real estate, and other professional workflows.',
+      'A modular planning operating system for lean public-sector and consultant teams that need stronger continuity across projects, decisions, risks, datasets, map context, and reporting.',
     capabilities: [
-      'Corridor-first workflow for practical project framing',
-      'Equity and safety indicators in one operational view',
-      'Report generation aligned with funding narratives',
-      'Methods and assumptions disclosure built into output design',
+      'Project, risk, decision, and meeting continuity in one operational thread',
+      'Map context and linked datasets carried closer to real delivery work',
+      'Analysis-to-report workflow shaped for grant and public-sector narratives',
+      'Honest methods, assumptions, and readiness disclosure built into the product posture',
     ],
     demoUrl: null,
     demoLabel: null,
@@ -164,15 +164,28 @@ export default function ProductsPage() {
                       ))}
                     </ul>
 
-                    {product.demoUrl ? (
-                      <div className="mt-5">
+                    <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+                      {product.id === 'openplan' ? (
+                        <>
+                          <Button asChild variant="outline">
+                            <Link href="/openplan">
+                              OpenPlan details <ArrowRight className="ml-2 h-4 w-4" />
+                            </Link>
+                          </Button>
+                          <Button asChild variant="outline">
+                            <Link href="/contact/openplan-updates">Request pilot updates</Link>
+                          </Button>
+                        </>
+                      ) : null}
+
+                      {product.demoUrl ? (
                         <Button asChild variant="outline">
                           <a href={product.demoUrl} target="_blank" rel="noopener noreferrer">
                             {product.demoLabel ?? 'View Demo'} <ArrowRight className="ml-2 h-4 w-4" />
                           </a>
                         </Button>
-                      </div>
-                    ) : null}
+                      ) : null}
+                    </div>
                   </CardContent>
                 </Card>
               )

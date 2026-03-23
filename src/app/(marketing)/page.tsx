@@ -58,8 +58,8 @@ const products = [
   {
     name: 'OpenPlan',
     icon: Map,
-    description: 'Coming March 2026 — corridor analysis + equity/safety diagnostics + grant-ready report generation in one operational flow (15% pre-launch pricing now live), with customization paths for law, science, education, engineering, real estate, and other sectors.',
-    href: '/products#openplan',
+    description: 'Prelaunch access is live for a modular planning operating system that keeps projects, risks, decisions, datasets, and map context in one operational thread — best for lean public-sector and planning teams doing real delivery work.',
+    href: '/openplan',
   },
   {
     name: 'Marketing & Planning Analytics Software',
@@ -267,6 +267,36 @@ export default function HomePage() {
                 and makes results easier to explain and defend. Architecture is modular so we can customize these tools
                 for any profession when clients need domain-specific workflows.
               </p>
+
+              <div className="mt-6 rounded-3xl border border-[color:var(--pine)]/18 bg-[linear-gradient(135deg,rgba(244,240,233,0.95),rgba(255,255,255,1))] p-6 shadow-sm">
+                <div className="flex items-start gap-4">
+                  <div className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-[color:var(--pine)] text-white">
+                    <Map className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--pine)]/72">OpenPlan — prelaunch access</p>
+                    <h3 className="mt-2 text-2xl font-semibold text-[color:var(--ink)]">A cleaner path from planning evidence to operational follow-through.</h3>
+                    <p className="mt-3 text-sm leading-relaxed text-[color:var(--foreground)]/80">
+                      Built for lean agency and planning teams that already have active projects, real handoffs, and a need for stronger continuity across decisions, risks, datasets, and map context.
+                    </p>
+                    <div className="mt-4 flex flex-col gap-3 sm:flex-row">
+                      <Link
+                        href="/openplan"
+                        className="inline-flex items-center rounded-full bg-[color:var(--pine)] px-5 py-2.5 font-semibold text-white transition hover:bg-[color:var(--pine-deep)]"
+                      >
+                        See OpenPlan details <ArrowRight className="ml-1.5 h-4 w-4" />
+                      </Link>
+                      <Link
+                        href="/contact/openplan-updates"
+                        className="inline-flex items-center rounded-full border border-[color:var(--line)] bg-[color:var(--background)] px-5 py-2.5 font-semibold text-[color:var(--ink)] transition hover:border-[color:var(--pine)] hover:text-[color:var(--pine)]"
+                      >
+                        Request pilot updates
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <div className="mt-6 flex flex-col sm:flex-row gap-3">
                 <Link
                   href="/products"
