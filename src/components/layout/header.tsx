@@ -46,18 +46,18 @@ export function Header() {
               <span className="sr-only">Nat Ford Planning & Analysis</span>
               <div className="flex items-center gap-2">
                 <Image
-                  src="/logos/nf-wordmark-slate.png"
+                  src="/logos/nf-wordmark-light.png"
                   alt="Nat Ford Planning & Analysis"
-                  width={692}
-                  height={130}
+                  width={2172}
+                  height={724}
                   priority
                   className="block h-10 w-auto dark:hidden"
                 />
                 <Image
-                  src="/logos/nf-wordmark-white.png"
+                  src="/logos/nf-wordmark-dark.png"
                   alt="Nat Ford Planning & Analysis"
-                  width={712}
-                  height={134}
+                  width={2172}
+                  height={724}
                   priority
                   className="hidden h-10 w-auto dark:block"
                 />
