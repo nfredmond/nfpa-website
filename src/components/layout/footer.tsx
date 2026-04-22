@@ -39,11 +39,12 @@ export function Footer() {
             <div className="lg:col-span-2">
               <div className="mb-4">
                 <Image
-                  src="/logos/nf-wordmark-dark.png"
+                  src="/logos/nf-wordmark-dark.svg"
                   alt="Nat Ford Planning & Analysis"
-                  width={2172}
-                  height={724}
-                  className="block h-10 w-auto"
+                  width={2200}
+                  height={800}
+                  unoptimized
+                  className="block h-11 w-auto md:h-12"
                 />
               </div>
 
