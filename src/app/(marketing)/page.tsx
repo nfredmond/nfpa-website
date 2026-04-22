@@ -106,6 +106,27 @@ const process = [
   },
 ]
 
+const operatingSignals = [
+  {
+    label: 'Decision lane',
+    value: 'Funding fit, delivery risk, and implementation sequence',
+  },
+  {
+    label: 'Methods spine',
+    value: 'GIS, field reconnaissance, policy review, and defensible documentation',
+  },
+  {
+    label: 'Primary outputs',
+    value: 'Board-ready memos, maps, narratives, dashboards, and scopes',
+  },
+]
+
+const proofPoints = [
+  'Northern California roots, nationwide delivery',
+  'Consulting, GIS, and product work kept in one operating thread',
+  'Human-reviewed analysis with explicit assumptions and ethics gates',
+]
+
 export default function HomePage() {
   return (
     <>
@@ -113,12 +134,28 @@ export default function HomePage() {
       <JsonLd data={servicesData} />
       <JsonLd data={projectsData} />
 
-      <Section spacing="xl" className="hero-mesh-light text-[color:var(--ink)] dark:text-white">
+      <Section spacing="xl" className="hero-mesh-light nf-topography text-[color:var(--ink)] dark:text-white">
         <Container size="xl">
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1.2fr_0.8fr] items-center">
-            <div>
-              <h1 className="section-title text-5xl sm:text-6xl lg:text-7xl leading-[0.96] text-[color:var(--ink)] dark:text-white">
-                Practical planning intelligence built for agencies that need to move.
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1.08fr_0.92fr] items-start">
+            <div className="max-w-3xl">
+              <div className="nf-kicker">
+                <span>Nat Ford Planning &amp; Analysis</span>
+                <span>Transportation planning, GIS, aerial intelligence, and delivery software</span>
+              </div>
+
+              <div className="mt-7 flex flex-wrap items-center gap-3 text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--foreground)]/70 dark:text-white/65">
+                <span className="pill">Built for public-sector decisions</span>
+                <span>Small towns</span>
+                <span className="text-[color:var(--copper)]">•</span>
+                <span>tribes</span>
+                <span className="text-[color:var(--copper)]">•</span>
+                <span>counties</span>
+                <span className="text-[color:var(--copper)]">•</span>
+                <span>RTPAs</span>
+              </div>
+
+              <h1 className="section-title mt-7 text-5xl leading-[0.94] text-[color:var(--ink)] dark:text-white sm:text-6xl lg:text-[5.2rem]">
+                Planning evidence that survives the board packet.
               </h1>
               <p className="mt-6 max-w-2xl text-lg sm:text-xl text-[color:var(--foreground)]/82 dark:text-white/85">
                 Nat Ford combines transportation planning expertise with production-grade tools so agencies, tribes, and
@@ -148,10 +185,47 @@ export default function HomePage() {
                   Try Analytics Software Demo
                 </a>
               </div>
+
+              <div className="mt-10 grid gap-3 sm:grid-cols-3">
+                {proofPoints.map((point) => (
+                  <div key={point} className="nf-proof-strip">
+                    {point}
+                  </div>
+                ))}
+              </div>
             </div>
 
-            <div className="soft-card float-slow rounded-3xl bg-white/92 p-5 text-[color:var(--ink)] dark:bg-[#101b24]/92 dark:text-white sm:p-6">
-              <div className="relative h-44 w-full overflow-hidden rounded-2xl border border-[color:var(--line)]">
+            <div className="nf-ops-board float-slow">
+              <div className="flex items-start justify-between gap-5">
+                <div>
+                  <p className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-[color:var(--foreground)]/60 dark:text-white/55">
+                    Agency operating brief
+                  </p>
+                  <h2 className="section-title mt-3 text-3xl text-[color:var(--ink)] dark:text-white sm:text-[2.3rem]">
+                    Clear scope, auditable method, fundable next move.
+                  </h2>
+                </div>
+
+                <div className="nf-brand-plaque hidden sm:flex">
+                  <Image
+                    src="/logos/nf-monogram-square-light.png"
+                    alt="Nat Ford monogram"
+                    width={512}
+                    height={512}
+                    className="block h-14 w-14 dark:hidden"
+                  />
+                  <Image
+                    src="/logos/nf-monogram-square-dark.png"
+                    alt=""
+                    aria-hidden="true"
+                    width={512}
+                    height={512}
+                    className="hidden h-14 w-14 dark:block"
+                  />
+                </div>
+              </div>
+
+              <div className="mt-6 relative h-44 w-full overflow-hidden rounded-[1.75rem] border border-[color:var(--line)]/80">
                 <Image
                   src="/images/site/drone-corridor-valley-2026-03.jpg"
                   alt="Drone view of a rural valley corridor and arterial roadway used for mobility planning analysis"
@@ -160,26 +234,43 @@ export default function HomePage() {
                   sizes="(max-width: 1024px) 100vw, 40vw"
                   priority
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0f1f2f]/65 via-[#0f1f2f]/15 to-transparent" />
-                <div className="absolute bottom-3 left-3 rounded-full bg-white/90 px-3 py-1 text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-[#12301f]">
-                  Corridor-ready analysis
+                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(15,23,32,0.04),rgba(15,23,32,0.74))]" />
+                <div className="absolute inset-x-4 bottom-4 flex items-end justify-between gap-4">
+                  <div>
+                    <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-white/78">Field visibility</p>
+                    <p className="mt-2 max-w-xs text-sm leading-relaxed text-white/92">
+                      Corridor conditions, site constraints, and implementation context tied back to the funding story.
+                    </p>
+                  </div>
+                  <div className="rounded-full border border-white/18 bg-black/28 px-3 py-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-white/90 backdrop-blur-sm">
+                    Corridor-ready analysis
+                  </div>
                 </div>
               </div>
 
-              <div className="mt-3 grid grid-cols-2 gap-3">
-                <div className="signal-tile rounded-2xl p-3.5">
+              <div className="mt-5 grid gap-3">
+                {operatingSignals.map((signal) => (
+                  <div key={signal.label} className="nf-ops-row">
+                    <p className="nf-ops-label">{signal.label}</p>
+                    <p className="nf-ops-value">{signal.value}</p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-5 grid grid-cols-2 gap-3">
+                <div className="signal-tile rounded-[1.4rem] p-4">
                   <p className="text-xs uppercase tracking-wide text-[color:var(--foreground)]/68">Primary clients</p>
-                  <p className="mt-1 font-semibold">U.S. small towns + tribal + county agencies</p>
+                  <p className="mt-1 font-semibold">U.S. small towns, tribes, counties, RTPAs, and state agencies</p>
                 </div>
-                <div className="signal-tile rounded-2xl p-3.5">
+                <div className="signal-tile rounded-[1.4rem] p-4">
                   <p className="text-xs uppercase tracking-wide text-[color:var(--foreground)]/68">Delivery model</p>
-                  <p className="mt-1 font-semibold">Consulting + Software</p>
+                  <p className="mt-1 font-semibold">Consulting + software + implementation support</p>
                 </div>
               </div>
 
-              <div className="mt-4 rounded-2xl border border-[color:var(--line)] bg-[color:var(--sand)]/40 p-4">
+              <div className="mt-5 rounded-[1.6rem] border border-[color:var(--line)] bg-[color:var(--sand)]/42 p-4 dark:bg-white/[0.04]">
                 <p className="text-xs uppercase tracking-wide text-[color:var(--foreground)]/68">What to expect</p>
-                <p className="mt-1 text-sm leading-relaxed">
+                <p className="mt-2 text-sm leading-relaxed">
                   No hype. No hidden assumptions. No burden-shifting recommendations. Every deliverable is built to be
                   client-safe, review-ready, and implementation-aware.
                 </p>
@@ -210,13 +301,20 @@ export default function HomePage() {
 
       <Section spacing="md" className="border-y border-[color:var(--line)] bg-[color:var(--background)]/80">
         <Container>
-          <p className="text-center text-[0.76rem] uppercase tracking-[0.18em] text-[color:var(--foreground)]/68">
-            Agencies served by Nathaniel in prior roles
-          </p>
-          <div className="mt-4 flex flex-wrap justify-center gap-x-8 gap-y-3 text-sm text-[color:var(--foreground)]/75">
+          <div className="flex flex-col gap-4 border-y border-[color:var(--line)]/75 py-5 md:flex-row md:items-center md:justify-between">
+            <div>
+              <p className="text-[0.76rem] uppercase tracking-[0.18em] text-[color:var(--foreground)]/68">
+                Agencies served by Nathaniel in prior roles
+              </p>
+              <p className="mt-1 text-sm text-[color:var(--foreground)]/72">
+                Rural-facing transportation planning credibility, now paired with a product and operations spine.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-x-8 gap-y-3 text-sm text-[color:var(--foreground)]/75 md:justify-end">
             {trustedBy.map((name) => (
               <span key={name}>{name}</span>
             ))}
+            </div>
           </div>
         </Container>
       </Section>

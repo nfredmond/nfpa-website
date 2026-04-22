@@ -44,38 +44,62 @@ export function Header() {
               className="-m-1.5 p-1.5 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--pine)]"
             >
               <span className="sr-only">Nat Ford Planning & Analysis</span>
-              <div className="flex items-center gap-2">
-                <Image
-                  src="/logos/nf-wordmark-light.png"
-                  alt="Nat Ford Planning & Analysis"
-                  width={2048}
-                  height={683}
-                  priority
-                  className="block h-12 w-auto dark:hidden md:h-14"
-                />
-                <Image
-                  src="/logos/nf-wordmark-dark.png"
-                  alt=""
-                  aria-hidden="true"
-                  width={2048}
-                  height={683}
-                  className="hidden h-12 w-auto dark:block md:h-14"
-                />
+              <div className="flex items-center gap-3">
+                <div className="nf-brand-plaque hidden sm:flex">
+                  <Image
+                    src="/logos/nf-monogram-square-light.png"
+                    alt="Nat Ford monogram"
+                    width={512}
+                    height={512}
+                    priority
+                    className="block h-10 w-10 dark:hidden"
+                  />
+                  <Image
+                    src="/logos/nf-monogram-square-dark.png"
+                    alt=""
+                    aria-hidden="true"
+                    width={512}
+                    height={512}
+                    className="hidden h-10 w-10 dark:block"
+                  />
+                </div>
+
+                <div className="flex flex-col">
+                  <Image
+                    src="/logos/nf-wordmark-light.png"
+                    alt="Nat Ford Planning & Analysis"
+                    width={2048}
+                    height={683}
+                    priority
+                    className="block h-12 w-auto dark:hidden md:h-14"
+                  />
+                  <Image
+                    src="/logos/nf-wordmark-dark.png"
+                    alt=""
+                    aria-hidden="true"
+                    width={2048}
+                    height={683}
+                    className="hidden h-12 w-auto dark:block md:h-14"
+                  />
+                  <span className="hidden text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--foreground)]/62 md:block">
+                    Transportation planning, GIS, and delivery systems
+                  </span>
+                </div>
               </div>
             </Link>
           </div>
 
-          <div className="hidden lg:flex lg:gap-x-5">
+          <div className="hidden lg:flex lg:gap-x-4">
             {navigation.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
                 className={cn(
-                  'text-[0.95rem] transition-colors duration-300 rounded-md px-2 py-1',
+                  'rounded-full px-3 py-1.5 text-[0.76rem] font-semibold uppercase tracking-[0.14em] transition-colors duration-300',
                   'focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--pine)]',
                   pathname === item.href || pathname?.startsWith(item.href + '/')
-                    ? 'text-[color:var(--pine)] font-semibold'
-                    : 'text-[color:var(--foreground)]/80 hover:text-[color:var(--pine)]'
+                    ? 'bg-[color:var(--sand)] text-[color:var(--pine)] dark:bg-[#18232d]'
+                    : 'text-[color:var(--foreground)]/76 hover:text-[color:var(--pine)]'
                 )}
               >
                 {item.name}
@@ -87,7 +111,7 @@ export function Header() {
             <ThemeToggle />
             <Link
               href="/contact"
-              className="inline-flex items-center justify-center rounded-full border border-[color:var(--line)] px-4 py-2 text-sm font-semibold text-[color:var(--foreground)] transition hover:-translate-y-0.5 hover:border-[color:var(--pine)] hover:text-[color:var(--pine)]"
+              className="inline-flex items-center justify-center rounded-full border border-[color:var(--copper)]/55 bg-[color:var(--copper)]/12 px-4 py-2 text-sm font-semibold text-[color:var(--foreground)] transition hover:-translate-y-0.5 hover:border-[color:var(--copper)] hover:bg-[color:var(--copper)]/18 hover:text-[color:var(--ink)] dark:text-white"
             >
               Book Intro Call
             </Link>

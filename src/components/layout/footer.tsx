@@ -37,20 +37,40 @@ export function Footer() {
         <div className="py-14 md:py-16">
           <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4">
             <div className="lg:col-span-2">
-              <div className="mb-4">
-                <Image
-                  src="/logos/nf-wordmark-dark.png"
-                  alt="Nat Ford Planning & Analysis"
-                  width={2048}
-                  height={683}
-                  className="block h-12 w-auto md:h-14"
-                />
+              <div className="mb-5 flex items-center gap-4">
+                <div className="nf-brand-plaque border-white/15 bg-white/[0.04] shadow-none">
+                  <Image
+                    src="/logos/nf-monogram-square-dark.png"
+                    alt="Nat Ford monogram"
+                    width={512}
+                    height={512}
+                    className="block h-11 w-11"
+                  />
+                </div>
+                <div>
+                  <Image
+                    src="/logos/nf-wordmark-dark.png"
+                    alt="Nat Ford Planning & Analysis"
+                    width={2048}
+                    height={683}
+                    className="block h-12 w-auto md:h-14"
+                  />
+                  <p className="mt-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-white/58">
+                    Northern California roots, nationwide public-sector delivery
+                  </p>
+                </div>
               </div>
 
               <p className="mb-4 max-w-md text-sm leading-relaxed text-white/78">
                 Strategy-level planning, GIS, and software for communities that need clear decisions, fundable projects,
                 and delivery confidence.
               </p>
+
+              <div className="mb-5 grid max-w-xl gap-2 text-[0.78rem] uppercase tracking-[0.14em] text-white/52 sm:grid-cols-3">
+                <span>Planning systems</span>
+                <span>Grant readiness</span>
+                <span>GIS + aerial intelligence</span>
+              </div>
 
               <div className="flex gap-4">
                 <a
