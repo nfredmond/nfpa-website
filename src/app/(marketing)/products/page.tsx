@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { ArrowRight, Bot, FileText, Map, PlaneTakeoff, ShieldCheck, Workflow } from 'lucide-react'
+import { ArrowRight, Bot, ExternalLink, FileText, Map, PlaneTakeoff, ShieldCheck, Workflow } from 'lucide-react'
 import { Container } from '@/components/layout/container'
 import { Section } from '@/components/layout/section'
 import { Card, CardContent } from '@/components/ui/card'
@@ -28,8 +28,8 @@ const products = [
       'Analysis-to-report workflow shaped for grant and public-sector narratives',
       'Honest methods, assumptions, and readiness disclosure built into the product posture',
     ],
-    demoUrl: null,
-    demoLabel: null,
+    demoUrl: null as string | null,
+    demoLabel: null as string | null,
   },
   {
     id: 'ads-automation',
@@ -45,7 +45,7 @@ const products = [
       'Built with maintainability and multi-industry expansion in mind',
     ],
     demoUrl: 'https://ads-chatbot.vercel.app',
-    demoLabel: 'View Web Demo',
+    demoLabel: 'Open Live Demo',
   },
   {
     id: 'drone-ops',
@@ -67,7 +67,7 @@ const products = [
     id: 'vibe-coding-for-planners',
     name: 'Vibe Coding for Planners (PDF Guide)',
     icon: FileText,
-    stage: 'Launch-ready digital product',
+    stage: 'Launch-ready',
     description:
       'A practical guide for planners who want faster drafting, better QA, and repeatable AI-assisted workflow hygiene.',
     capabilities: [
@@ -100,94 +100,136 @@ const principles = [
   },
 ]
 
+const heroStats = [
+  { label: 'Products', value: '4' },
+  { label: 'Live checkout', value: 'Stripe-hosted' },
+  { label: 'Launch posture', value: 'Transparent' },
+]
+
 export default function ProductsPage() {
   return (
     <>
       <Section spacing="lg" className="hero-mesh text-white">
         <Container>
-          <div className="max-w-4xl">
-            <span className="pill">Software Products</span>
-            <h1 className="section-title mt-5 text-5xl md:text-6xl leading-[0.96] text-white">Focused products. Transparent pricing.</h1>
-            <p className="mt-5 text-lg text-white/82 max-w-3xl">
-              Built for practical operations, budget realism, and measurable outcomes. Published products use secure Stripe-hosted checkout; products still being finalized route to scoped contact intake. Core product architecture is customizable to any profession, including law, science, education, engineering, and real estate.
-            </p>
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,1.3fr)_minmax(300px,0.8fr)] lg:items-end">
+            <div className="max-w-3xl">
+              <span className="pill">Software Products</span>
+              <h1 className="section-title mt-5 text-5xl leading-[0.94] text-white md:text-6xl">
+                Focused products.{' '}
+                <span className="text-[color:var(--copper)]">Transparent pricing.</span>
+              </h1>
+              <p className="mt-5 max-w-2xl text-lg text-white/82">
+                Built for practical operations, budget realism, and measurable outcomes. Published products use
+                secure Stripe-hosted checkout; products still being finalized route to scoped contact intake.
+                Architecture is customizable for law, science, education, engineering, and real estate.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-3 gap-2 rounded-2xl border border-white/18 bg-white/[0.06] p-4 backdrop-blur-sm">
+              {heroStats.map((stat) => (
+                <div key={stat.label} className="px-2 py-1">
+                  <p className="text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-white/62">
+                    {stat.label}
+                  </p>
+                  <p className="mt-1.5 font-display text-xl leading-tight text-white">{stat.value}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </Container>
       </Section>
 
       <Section spacing="xl">
         <Container>
-          <Card className="mb-6 border-[color:var(--pine)]/25 bg-[color:var(--sand)]/25 p-5">
-            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[color:var(--pine)]">Live Demo</p>
-                <p className="mt-1 text-sm text-[color:var(--foreground)]/80">
-                  Want a quick proof point? Launch the Marketing &amp; Planning Analytics Software demo in one click.
-                </p>
-              </div>
-              <Button asChild>
-                <a href="https://ads-chatbot.vercel.app" target="_blank" rel="noopener noreferrer">
-                  Open Live Demo <ArrowRight className="ml-2 h-4 w-4" />
-                </a>
-              </Button>
+          <div className="mb-8 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+            <div>
+              <span className="pill">Product Catalog</span>
+              <h2 className="section-title mt-4 text-4xl text-[color:var(--ink)] md:text-5xl">
+                Four products. Four different readiness stages.
+              </h2>
             </div>
-          </Card>
+            <p className="max-w-md text-sm text-[color:var(--foreground)]/72">
+              Each card shows the current launch posture. Pricing and checkout for live tiers appears below.
+            </p>
+          </div>
 
           <div className="grid grid-cols-1 gap-6">
             {products.map((product) => {
               const Icon = product.icon
               return (
-                <Card key={product.name} hover id={product.id} className="p-6 md:p-8 scroll-mt-28">
-                  <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-5">
-                    <div className="max-w-3xl">
-                      <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-[color:var(--sand)] text-[color:var(--pine)]">
-                        <Icon className="h-5 w-5" />
-                      </div>
-                      <div className="mt-4 flex items-center gap-3 flex-wrap">
-                        <h2 className="text-3xl font-semibold text-[color:var(--ink)]">{product.name}</h2>
-                        <span className="inline-flex items-center rounded-full border border-[color:var(--line)] bg-[color:var(--fog)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-[color:var(--foreground)]/70">
+                <Card
+                  key={product.name}
+                  hover
+                  id={product.id}
+                  className="scroll-mt-28 overflow-hidden p-0"
+                >
+                  <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,0.42fr)_minmax(0,0.58fr)]">
+                    <div className="border-b border-[color:var(--line)] bg-[linear-gradient(155deg,rgba(239,228,207,0.55),rgba(247,248,244,0.35)_60%,rgba(247,248,244,0))] p-6 md:p-7 lg:border-b-0 lg:border-r">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-[color:var(--pine)] text-white shadow-[0_8px_22px_rgba(31,78,46,0.18)]">
+                          <Icon className="h-5 w-5" />
+                        </div>
+                        <span className="inline-flex items-center rounded-full border border-[color:var(--copper)]/55 bg-white/72 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-[color:var(--pine-deep)]">
                           {product.stage}
                         </span>
                       </div>
-                      <p className="mt-3 text-[1rem] text-[color:var(--foreground)]/78">{product.description}</p>
-                    </div>
-                  </div>
+                      <h3 className="mt-5 text-2xl font-semibold text-[color:var(--ink)] md:text-[1.75rem]">
+                        {product.name}
+                      </h3>
+                      <p className="mt-3 text-[0.975rem] text-[color:var(--foreground)]/78">{product.description}</p>
 
-                  <CardContent className="px-0 pb-0 pt-5">
-                    <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {product.capabilities.map((item) => (
-                        <li
-                          key={item}
-                          className="rounded-xl border border-[color:var(--line)] bg-[color:var(--background)] px-4 py-3 text-sm text-[color:var(--foreground)]/78"
-                        >
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
+                      <div className="mt-6 flex flex-wrap gap-2">
+                        {product.id === 'openplan' ? (
+                          <>
+                            <Button asChild size="sm">
+                              <Link href="/openplan">
+                                OpenPlan details
+                                <ArrowRight className="ml-2 h-4 w-4" />
+                              </Link>
+                            </Button>
+                            <Button asChild size="sm" variant="outline">
+                              <Link href="/contact/openplan-updates">Request pilot updates</Link>
+                            </Button>
+                          </>
+                        ) : null}
 
-                    <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-                      {product.id === 'openplan' ? (
-                        <>
-                          <Button asChild variant="outline">
-                            <Link href="/openplan">
-                              OpenPlan details <ArrowRight className="ml-2 h-4 w-4" />
+                        {product.demoUrl ? (
+                          <Button asChild size="sm" variant={product.id === 'openplan' ? 'outline' : 'primary'}>
+                            <a href={product.demoUrl} target="_blank" rel="noopener noreferrer">
+                              {product.demoLabel ?? 'View Demo'}
+                              <ExternalLink className="ml-2 h-4 w-4" />
+                            </a>
+                          </Button>
+                        ) : null}
+
+                        {!product.demoUrl && product.id !== 'openplan' ? (
+                          <Button asChild size="sm" variant="outline">
+                            <Link href={`/contact?product=${encodeURIComponent(product.id)}`}>
+                              Request access
+                              <ArrowRight className="ml-2 h-4 w-4" />
                             </Link>
                           </Button>
-                          <Button asChild variant="outline">
-                            <Link href="/contact/openplan-updates">Request pilot updates</Link>
-                          </Button>
-                        </>
-                      ) : null}
-
-                      {product.demoUrl ? (
-                        <Button asChild variant="outline">
-                          <a href={product.demoUrl} target="_blank" rel="noopener noreferrer">
-                            {product.demoLabel ?? 'View Demo'} <ArrowRight className="ml-2 h-4 w-4" />
-                          </a>
-                        </Button>
-                      ) : null}
+                        ) : null}
+                      </div>
                     </div>
-                  </CardContent>
+
+                    <CardContent className="p-6 md:p-7">
+                      <p className="text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--foreground)]/58">
+                        Capabilities
+                      </p>
+                      <ul className="mt-3 grid grid-cols-1 gap-2 md:grid-cols-2">
+                        {product.capabilities.map((item) => (
+                          <li
+                            key={item}
+                            className="flex items-start gap-2 rounded-xl border border-[color:var(--line)] bg-[color:var(--background)] px-3 py-2.5 text-[0.9rem] text-[color:var(--foreground)]/80"
+                          >
+                            <ArrowRight className="mt-0.5 h-4 w-4 shrink-0 text-[color:var(--copper)]" />
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </CardContent>
+                  </div>
                 </Card>
               )
             })}
@@ -195,93 +237,100 @@ export default function ProductsPage() {
         </Container>
       </Section>
 
-      <Section spacing="md" className="border-y border-[color:var(--line)] bg-[color:var(--background)]/85">
+      <Section spacing="xl" className="border-y border-[color:var(--line)] bg-[color:var(--fog)]/65">
         <Container>
-          <Card className="border border-[color:var(--line)] bg-[color:var(--background)] p-6 md:p-7">
-            <h2 className="text-2xl font-semibold text-[color:var(--ink)]">Custom software for any domain</h2>
-            <p className="mt-3 text-[color:var(--foreground)]/80">
-              Our product stack is intentionally modular. We can adapt workflows, UI, automations, and QA controls for any profession,
-              including law, science, education, engineering, real estate, and other specialized sectors.
-            </p>
-            <ul className="mt-4 grid gap-2 text-sm text-[color:var(--foreground)]/78 md:grid-cols-2">
-              <li>• Domain-specific terminology and decision workflows</li>
-              <li>• Role-based access + delivery automations</li>
-              <li>• Branded client portals, reports, and QA gates</li>
-              <li>• Sector-specific analytics and compliance framing</li>
-            </ul>
-          </Card>
-        </Container>
-      </Section>
-
-      <Section spacing="xl" className="bg-[color:var(--fog)]/65 border-y border-[color:var(--line)]">
-        <Container>
-          <div className="space-y-3">
+          <div className="max-w-3xl">
             <span className="pill">Pricing & Checkout</span>
-            <h2 className="section-title text-4xl md:text-5xl text-[color:var(--ink)]">Launch-ready pricing tiers</h2>
-            <p className="max-w-4xl text-[color:var(--foreground)]/80">
-              Choose the option that matches your operational need. Published tiers route through Stripe-hosted links; tiers still being finalized route
-              to a scoped contact workflow with product/tier context attached. Pricing is transparent, assumptions are explicit, and checkout language is
-              aligned with our ethics policy (no hidden fees, no guaranteed funding/approval claims, and human-reviewed analysis at critical gates).
+            <h2 className="section-title mt-4 text-4xl text-[color:var(--ink)] md:text-5xl">
+              Launch-ready pricing tiers
+            </h2>
+            <p className="mt-4 max-w-3xl text-[color:var(--foreground)]/80">
+              Published tiers route through Stripe-hosted links; tiers still being finalized route to a scoped
+              contact workflow with product/tier context attached. No hidden fees, no guaranteed funding or
+              approval claims, and human-reviewed analysis at critical gates.
             </p>
           </div>
 
-          <div className="mt-8 space-y-8">
+          <div className="mt-10 space-y-10">
             {offerCatalog.map((product) => {
               const isOpenPlan = product.id === 'openplan'
 
               return (
-                <div key={product.id} className="space-y-4">
-                  <div>
-                    <h3 className="text-2xl font-semibold text-[color:var(--ink)]">{product.name}</h3>
-                    <p className="mt-1 text-sm text-[color:var(--foreground)]/76">{product.description}</p>
+                <div key={product.id} className="space-y-5">
+                  <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+                    <div>
+                      <h3 className="text-2xl font-semibold text-[color:var(--ink)]">{product.name}</h3>
+                      <p className="mt-1 max-w-2xl text-sm text-[color:var(--foreground)]/76">
+                        {product.description}
+                      </p>
+                    </div>
                     {isOpenPlan ? (
-                      <div className="mt-3 rounded-xl border border-[color:var(--pine)]/25 bg-[color:var(--sand)]/35 px-4 py-3 text-sm text-[color:var(--foreground)]/85">
-                        <p className="font-semibold text-[color:var(--pine)]">Coming March 2026</p>
-                        <p className="mt-1">Pre-launch offer: 15% off all OpenPlan tiers before launch. Discount is auto-applied at checkout.</p>
+                      <div className="inline-flex items-center gap-3 rounded-2xl border border-[color:var(--copper)]/45 bg-[color:var(--sand)]/65 px-4 py-2.5">
+                        <span className="inline-flex h-6 items-center rounded-full bg-[color:var(--pine)] px-2.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-white">
+                          March 2026
+                        </span>
+                        <p className="text-xs font-semibold text-[color:var(--pine-deep)]">
+                          Pre-launch: 15% off all tiers · auto-applied at checkout
+                        </p>
                       </div>
                     ) : null}
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                     {product.tiers.map((tier) => {
-                      const discountedPrice = isOpenPlan ? Math.round(tier.monthlyUsd * (1 - OPENPLAN_PRELAUNCH_DISCOUNT)) : tier.monthlyUsd
+                      const discountedPrice = isOpenPlan
+                        ? Math.round(tier.monthlyUsd * (1 - OPENPLAN_PRELAUNCH_DISCOUNT))
+                        : tier.monthlyUsd
                       const hasCheckout = hasPublishedStripeCheckout(tier.stripePaymentLinkEnv)
                       const ctaLabel = hasCheckout ? product.checkoutCtaLabel ?? 'Subscribe' : 'Request access'
 
                       return (
-                        <Card key={tier.id} className="p-5 border border-[color:var(--line)] bg-[color:var(--background)]">
-                          <p className="text-xs font-semibold uppercase tracking-[0.13em] text-[color:var(--foreground)]/62">{tier.name}</p>
-                          <p className="mt-2 text-3xl font-semibold text-[color:var(--ink)]">
+                        <Card
+                          key={tier.id}
+                          className="flex h-full flex-col border border-[color:var(--line)] bg-[color:var(--background)] p-5"
+                        >
+                          <p className="text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--foreground)]/62">
+                            {tier.name}
+                          </p>
+                          <p className="mt-2 font-display text-4xl font-semibold leading-none text-[color:var(--ink)]">
                             ${discountedPrice}
-                            <span className="text-base font-medium text-[color:var(--foreground)]/62"> {product.priceSuffix ?? '/mo'}</span>
+                            <span className="ml-1 text-base font-medium text-[color:var(--foreground)]/62">
+                              {product.priceSuffix ?? '/mo'}
+                            </span>
                           </p>
                           {isOpenPlan ? (
-                            <p className="mt-1 text-xs text-[color:var(--foreground)]/72">
-                              <span className="line-through">${tier.monthlyUsd}/mo</span> standard price
+                            <p className="mt-1 text-xs text-[color:var(--foreground)]/68">
+                              <span className="line-through">${tier.monthlyUsd}/mo</span> standard
                             </p>
                           ) : null}
-                          <p className="mt-2 text-sm text-[color:var(--foreground)]/75">{tier.summary}</p>
-                          <ul className="mt-4 space-y-1.5 text-sm text-[color:var(--foreground)]/78">
+                          <p className="mt-3 text-sm text-[color:var(--foreground)]/76">{tier.summary}</p>
+                          <ul className="mt-4 space-y-1.5 text-sm text-[color:var(--foreground)]/80">
                             {tier.features.map((feature) => (
-                              <li key={feature}>• {feature}</li>
+                              <li key={feature} className="flex gap-2">
+                                <span className="text-[color:var(--copper)]">•</span>
+                                <span>{feature}</span>
+                              </li>
                             ))}
                           </ul>
-                          <div className="mt-5">
+                          <div className="mt-5 flex-1" />
+                          <div className="mt-4">
                             <Button asChild size="sm" className="w-full">
                               <Link href={`/api/commerce/checkout?tier=${tier.id}`}>
-                                {ctaLabel} <ArrowRight className="ml-2 h-4 w-4" />
+                                {ctaLabel}
+                                <ArrowRight className="ml-2 h-4 w-4" />
                               </Link>
                             </Button>
                             {!hasCheckout ? (
-                              <p className="mt-2 text-xs text-[color:var(--foreground)]/65">
-                                Stripe checkout for this tier is currently being finalized. We’ll route you to scoped intake.
+                              <p className="mt-2 text-xs text-[color:var(--foreground)]/64">
+                                Checkout for this tier is being finalized. Scoped intake instead.
                               </p>
                             ) : null}
-                            <p className="mt-2 text-xs text-[color:var(--foreground)]/65">
+                            <p className="mt-2 text-[11px] leading-relaxed text-[color:var(--foreground)]/62">
                               Secure Stripe-hosted checkout. By continuing, you agree to our{' '}
                               <Link href="/terms" className="underline underline-offset-2 hover:text-[color:var(--pine)]">
                                 Terms
                               </Link>
-                              . AI may be used to accelerate drafting/data prep; final analysis is human-reviewed. No guarantee of funding awards or regulatory approvals.
+                              . AI may accelerate drafting/data prep; final analysis is human-reviewed. No guarantee of funding awards or regulatory approvals.
                             </p>
                           </div>
                         </Card>
@@ -295,20 +344,49 @@ export default function ProductsPage() {
         </Container>
       </Section>
 
-      <Section spacing="lg" className="bg-[color:var(--fog)]/65 border-y border-[color:var(--line)]">
+      <Section spacing="xl">
         <Container>
-          <div className="max-w-5xl">
-            <span className="pill">Product Principles</span>
-            <div className="mt-5 grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div className="mb-8 max-w-3xl">
+            <span className="pill">How we ship</span>
+            <h2 className="section-title mt-4 text-4xl text-[color:var(--ink)] md:text-5xl">
+              The product posture behind every tier.
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
+            <Card className="p-6 md:p-7">
+              <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-[color:var(--sand)] text-[color:var(--pine)]">
+                <Workflow className="h-5 w-5" />
+              </div>
+              <h3 className="mt-4 text-2xl font-semibold text-[color:var(--ink)]">
+                Custom software for any domain
+              </h3>
+              <p className="mt-3 text-[color:var(--foreground)]/80">
+                Our product stack is intentionally modular. We adapt workflows, UI, automations, and QA controls
+                for law, science, education, engineering, real estate, and other specialized sectors.
+              </p>
+              <ul className="mt-5 grid gap-2 text-sm text-[color:var(--foreground)]/78 md:grid-cols-2">
+                <li className="flex gap-2"><span className="text-[color:var(--copper)]">•</span>Domain-specific terminology &amp; decision workflows</li>
+                <li className="flex gap-2"><span className="text-[color:var(--copper)]">•</span>Role-based access + delivery automations</li>
+                <li className="flex gap-2"><span className="text-[color:var(--copper)]">•</span>Branded client portals, reports, and QA gates</li>
+                <li className="flex gap-2"><span className="text-[color:var(--copper)]">•</span>Sector-specific analytics and compliance framing</li>
+              </ul>
+            </Card>
+
+            <div className="grid grid-cols-1 gap-4">
               {principles.map((item) => {
                 const Icon = item.icon
                 return (
-                  <Card key={item.title} className="p-6">
-                    <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-[color:var(--sand)] text-[color:var(--pine)]">
-                      <Icon className="h-5 w-5" />
+                  <Card key={item.title} className="p-5">
+                    <div className="flex items-start gap-4">
+                      <div className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[color:var(--sand)] text-[color:var(--pine)]">
+                        <Icon className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <h4 className="text-lg font-semibold text-[color:var(--ink)]">{item.title}</h4>
+                        <p className="mt-1.5 text-sm text-[color:var(--foreground)]/78">{item.body}</p>
+                      </div>
                     </div>
-                    <h3 className="mt-4 text-xl font-semibold text-[color:var(--ink)]">{item.title}</h3>
-                    <p className="mt-2 text-sm text-[color:var(--foreground)]/78">{item.body}</p>
                   </Card>
                 )
               })}

@@ -470,37 +470,56 @@ export default async function LeadInboxPage({
 
   return (
     <>
+      <Section spacing="md" className="hero-mesh text-white">
+        <Container>
+          <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+            <div className="max-w-2xl">
+              <span className="pill">Internal · OpenPlan Ops</span>
+              <h1 className="section-title mt-4 text-4xl leading-[1] text-white md:text-5xl">Lead Inbox</h1>
+              <p className="mt-3 text-sm text-white/78">
+                {leads.length} matching submissions from natfordplanning.com · filtered to the current working slice.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Button
+                asChild
+                variant="outline"
+                className="border-white/35 bg-white/10 text-white hover:border-white/60 hover:bg-white/18 hover:text-white"
+              >
+                <a href={`/api/lead-inbox/export${returnParams.toString() ? `?${returnParams.toString()}` : ''}`}>
+                  <Download className="mr-2 h-4 w-4" />
+                  Export CSV
+                </a>
+              </Button>
+              <Button
+                asChild
+                variant="outline"
+                className="border-white/35 bg-white/10 text-white hover:border-white/60 hover:bg-white/18 hover:text-white"
+              >
+                <Link href="/contact">Contact page</Link>
+              </Button>
+              <form action="/api/lead-inbox/auth" method="post">
+                <input type="hidden" name="action" value="logout" />
+                <Button
+                  type="submit"
+                  variant="outline"
+                  className="border-white/35 bg-white/10 text-white hover:border-white/60 hover:bg-white/18 hover:text-white"
+                >
+                  Log out
+                </Button>
+              </form>
+            </div>
+          </div>
+        </Container>
+      </Section>
+
       <Section spacing="md" className="border-b border-[color:var(--line)] bg-[color:var(--background)]/85">
         <Container>
           <div className="flex flex-col gap-4">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <div>
-                <p className="pill">Internal</p>
-                <h1 className="section-title mt-3 text-4xl text-[color:var(--ink)]">Lead Inbox</h1>
-                <p className="mt-2 text-sm text-[color:var(--foreground)]/75">
-                  {leads.length} matching submissions from natfordplanning.com
-                </p>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                <Button asChild variant="outline">
-                  <a href={`/api/lead-inbox/export${returnParams.toString() ? `?${returnParams.toString()}` : ''}`}>
-                    <Download className="mr-2 h-4 w-4" />
-                    Export CSV
-                  </a>
-                </Button>
-                <Button asChild variant="outline">
-                  <Link href="/contact">Contact page</Link>
-                </Button>
-                <form action="/api/lead-inbox/auth" method="post">
-                  <input type="hidden" name="action" value="logout" />
-                  <Button type="submit" variant="outline">
-                    Log out
-                  </Button>
-                </form>
-              </div>
-            </div>
-
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="mr-1 text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--foreground)]/60">
+                Routing lane
+              </span>
               {ROUTING_OPTIONS.filter((option) => option.value !== 'all').map((option) => {
                 const active = laneFilter === option.value
                 const href = option.value === laneFilter ? '/lead-inbox' : `/lead-inbox?lane=${encodeURIComponent(option.value)}`

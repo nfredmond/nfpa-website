@@ -77,27 +77,54 @@ const services = [
   },
 ]
 
+const capabilityMatrix = [
+  { label: 'Planning', value: 'RTP · ATP · Corridor' },
+  { label: 'Data', value: 'PostGIS · QA · Maps' },
+  { label: 'Field', value: 'Drone · Ortho · DSM' },
+  { label: 'Funding', value: 'Fit · Scoring · Package' },
+  { label: 'Reporting', value: 'Drafting · Figures · QA' },
+]
+
 export default function ServicesPage() {
   return (
     <>
       <Section spacing="lg" className="hero-mesh text-white">
         <Container>
-          <div className="max-w-4xl">
-            <span className="pill">Service Portfolio</span>
-            <h1 className="section-title mt-5 text-5xl md:text-6xl leading-[0.96] text-white">Integrated services built for real public-sector execution.</h1>
-            <p className="mt-5 text-lg text-white/82 max-w-3xl">
-              We combine planning, GIS, funding strategy, and production systems so agencies can make clear decisions and
-              move projects forward with less rework. This architecture is customizable for any profession, including
-              law, science, education, engineering, and real estate.
-            </p>
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,1.25fr)_minmax(320px,0.85fr)] lg:items-end">
+            <div className="max-w-3xl">
+              <span className="pill">Service Portfolio</span>
+              <h1 className="section-title mt-5 text-5xl leading-[0.94] text-white md:text-6xl">
+                Integrated services built for real{' '}
+                <span className="text-[color:var(--copper)]">public-sector execution</span>.
+              </h1>
+              <p className="mt-5 max-w-2xl text-lg text-white/82">
+                Planning, GIS, funding strategy, and production systems — combined so agencies can make clear
+                decisions and move projects forward with less rework. Customizable for law, science, education,
+                engineering, real estate, and other technical domains.
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-white/18 bg-white/[0.06] p-5 backdrop-blur-sm">
+              <p className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-white/70">
+                Capability coverage
+              </p>
+              <dl className="mt-4 space-y-2.5">
+                {capabilityMatrix.map((item) => (
+                  <div key={item.label} className="flex items-baseline justify-between gap-4 border-b border-white/10 pb-2 last:border-b-0 last:pb-0">
+                    <dt className="text-xs font-semibold uppercase tracking-[0.12em] text-white/72">{item.label}</dt>
+                    <dd className="text-right text-sm text-white/88">{item.value}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
           </div>
         </Container>
       </Section>
 
       <Section spacing="md" className="border-y border-[color:var(--line)] bg-[color:var(--background)]/85">
         <Container>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="relative h-56 overflow-hidden rounded-2xl border border-[color:var(--line)]">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <figure className="relative h-60 overflow-hidden rounded-2xl border border-[color:var(--line)]">
               <Image
                 src="/images/site/drone-intersection-topdown-2026-03.jpg"
                 alt="Top-down drone capture of a civic intersection used for lane and safety analysis"
@@ -105,9 +132,12 @@ export default function ServicesPage() {
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0f1f2f]/55 via-transparent to-transparent" />
-            </div>
-            <div className="relative h-56 overflow-hidden rounded-2xl border border-[color:var(--line)]">
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0f1f2f]/70 via-[#0f1f2f]/20 to-transparent" />
+              <figcaption className="absolute bottom-3 left-4 right-4 text-xs font-medium uppercase tracking-[0.12em] text-white/90">
+                Top-down capture · lane & safety analysis
+              </figcaption>
+            </figure>
+            <figure className="relative h-60 overflow-hidden rounded-2xl border border-[color:var(--line)]">
               <Image
                 src="/images/site/drone-town-overview-2026-03.jpg"
                 alt="Oblique drone overview of a small-town street network and surrounding valley context"
@@ -115,30 +145,57 @@ export default function ServicesPage() {
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0f1f2f]/55 via-transparent to-transparent" />
-            </div>
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0f1f2f]/70 via-[#0f1f2f]/20 to-transparent" />
+              <figcaption className="absolute bottom-3 left-4 right-4 text-xs font-medium uppercase tracking-[0.12em] text-white/90">
+                Oblique overview · corridor & context
+              </figcaption>
+            </figure>
           </div>
         </Container>
       </Section>
 
       <Section spacing="xl">
         <Container>
+          <div className="mb-10 max-w-3xl">
+            <span className="pill">Five integrated lanes</span>
+            <h2 className="section-title mt-4 text-4xl text-[color:var(--ink)] md:text-5xl">
+              Each service stands alone. Together, they compress the delivery cycle.
+            </h2>
+          </div>
+
           <div className="grid grid-cols-1 gap-5">
-            {services.map((service) => {
+            {services.map((service, index) => {
               const Icon = service.icon
+              const num = String(index + 1).padStart(2, '0')
               return (
-                <Card key={service.name} hover className="p-6 md:p-7">
-                  <div className="grid grid-cols-1 lg:grid-cols-[0.78fr_0.22fr] gap-8">
-                    <div>
+                <Card key={service.name} hover className="overflow-hidden p-0">
+                  <div className="grid grid-cols-1 lg:grid-cols-[auto_minmax(0,1fr)_minmax(0,0.82fr)_auto]">
+                    <div className="flex items-center justify-center border-b border-[color:var(--line)] bg-[color:var(--sand)]/45 px-5 py-4 lg:border-b-0 lg:border-r lg:px-6 lg:py-7">
+                      <span className="font-display text-3xl font-semibold text-[color:var(--pine)]">{num}</span>
+                    </div>
+
+                    <div className="border-b border-[color:var(--line)] p-6 lg:border-b-0 lg:border-r lg:p-7">
                       <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-[color:var(--sand)] text-[color:var(--pine)]">
                         <Icon className="h-5 w-5" />
                       </div>
-                      <h2 className="mt-4 text-2xl md:text-3xl font-semibold text-[color:var(--ink)]">{service.name}</h2>
-                      <p className="mt-3 text-[1rem] text-[color:var(--foreground)]/78 max-w-3xl">{service.description}</p>
+                      <h3 className="mt-4 text-2xl font-semibold text-[color:var(--ink)] md:text-[1.7rem]">
+                        {service.name}
+                      </h3>
+                      <p className="mt-2.5 max-w-xl text-[1rem] text-[color:var(--foreground)]/78">
+                        {service.description}
+                      </p>
+                    </div>
 
-                      <ul className="mt-4 space-y-2.5">
+                    <div className="border-b border-[color:var(--line)] p-6 lg:border-b-0 lg:border-r lg:p-7">
+                      <p className="text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--foreground)]/58">
+                        Typical outcomes
+                      </p>
+                      <ul className="mt-3 space-y-2">
                         {service.outcomes.map((item) => (
-                          <li key={item} className="flex items-start gap-2.5 text-sm text-[color:var(--foreground)]/75">
+                          <li
+                            key={item}
+                            className="flex items-start gap-2 text-sm text-[color:var(--foreground)]/80"
+                          >
                             <ArrowRight className="mt-0.5 h-4 w-4 shrink-0 text-[color:var(--copper)]" />
                             <span>{item}</span>
                           </li>
@@ -146,9 +203,12 @@ export default function ServicesPage() {
                       </ul>
                     </div>
 
-                    <div className="flex lg:justify-end lg:items-start">
-                      <Button asChild variant="outline" className="w-full lg:w-auto">
-                        <Link href={service.href}>View Service Overview</Link>
+                    <div className="flex items-center p-6 lg:p-7">
+                      <Button asChild variant="outline" className="w-full whitespace-nowrap lg:w-auto">
+                        <Link href={service.href}>
+                          View Overview
+                          <ArrowRight className="ml-2 h-4 w-4" />
+                        </Link>
                       </Button>
                     </div>
                   </div>
