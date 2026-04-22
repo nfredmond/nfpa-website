@@ -5,6 +5,7 @@ import { Container } from '@/components/layout/container'
 import { Section } from '@/components/layout/section'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { SectionEndCTA } from '@/components/features/section-end-cta'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -158,19 +159,11 @@ export default function ServicesPage() {
         </Container>
       </Section>
 
-      <Section spacing="lg" className="bg-[color:var(--sand)]/45 border-y border-[color:var(--line)]">
-        <Container>
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="section-title text-4xl md:text-5xl text-[color:var(--ink)]">Not sure where to start?</h2>
-            <p className="mt-4 text-lg text-[color:var(--foreground)]/82">
-              Start with a 30-minute intake and we’ll recommend a scope that matches your timeline, budget, and decision risk.
-            </p>
-            <Button asChild size="lg" className="mt-7">
-              <Link href="/contact">Schedule Consultation</Link>
-            </Button>
-          </div>
-        </Container>
-      </Section>
+      <SectionEndCTA
+        heading="Not sure where to start?"
+        subhead="Start with a 30-minute intake and we’ll recommend a scope that matches your timeline, budget, and decision risk."
+        primary={{ href: '/contact', label: 'Schedule Consultation' }}
+      />
     </>
   )
 }

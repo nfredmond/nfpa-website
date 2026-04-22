@@ -9,6 +9,9 @@ type LeadPayload = {
   inquiryType: string
   timeline: string
   description: string
+  budgetRange?: string
+  projectGeography?: string
+  desiredStartDate?: string
   website?: string // honeypot
   sourcePath?: string
   turnstileToken?: string
@@ -47,6 +50,9 @@ export async function POST(req: NextRequest) {
     const inquiryType = normalize(payload.inquiryType)
     const timeline = normalize(payload.timeline)
     const description = normalize(payload.description)
+    const budgetRange = normalize(payload.budgetRange)
+    const projectGeography = normalize(payload.projectGeography)
+    const desiredStartDate = normalize(payload.desiredStartDate)
     const sourcePath = normalize(payload.sourcePath) || '/contact'
     const turnstileToken = normalize(payload.turnstileToken)
     const topic = normalize(payload.topic).toLowerCase()
@@ -163,6 +169,9 @@ export async function POST(req: NextRequest) {
         intent,
         product,
         tier,
+        budget_range: budgetRange || null,
+        project_geography: projectGeography || null,
+        desired_start_date: desiredStartDate || null,
         routing_hint:
           topic === 'openplan' && intent === 'updates'
             ? 'openplan-pilot-updates'

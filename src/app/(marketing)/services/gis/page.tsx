@@ -3,6 +3,7 @@ import { Container } from '@/components/layout/container'
 import { Section } from '@/components/layout/section'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { SectionEndCTA } from '@/components/features/section-end-cta'
 import { ArrowRight, Database, MapPin } from 'lucide-react'
 import type { Metadata } from 'next'
 
@@ -65,19 +66,18 @@ export default function GISServicePage() {
         </Container>
       </Section>
 
-      <Section spacing="lg" className="bg-[color:var(--sand)]/45 border-y border-[color:var(--line)]">
-        <Container>
-          <div className="text-center max-w-3xl mx-auto">
-            <h2 className="section-title text-4xl text-[color:var(--ink)]">Explore related planning work</h2>
-            <Button asChild variant="outline" className="mt-6">
-              <Link href="/services/planning">
-                <MapPin className="mr-2 h-4 w-4" />
-                Urban & Transportation Planning
-              </Link>
-            </Button>
-          </div>
-        </Container>
-      </Section>
+      <SectionEndCTA
+        heading="Explore related planning work"
+        primary={{
+          href: '/services/planning',
+          label: (
+            <>
+              <MapPin className="mr-2 h-4 w-4" />
+              Urban & Transportation Planning
+            </>
+          ),
+        }}
+      />
     </>
   )
 }

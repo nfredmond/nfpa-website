@@ -26,6 +26,8 @@ const inquiryTypes = [
 
 const timelines = ['Immediate (0-30 days)', 'Near-term (1-3 months)', 'Planning horizon (3+ months)']
 
+const budgetRanges = ['$3.5K – $8.5K', '$8.5K – $18K', '$18K +', 'Not sure yet']
+
 const checkoutInquiryByProduct: Record<string, string> = {
   openplan: 'OpenPlan product',
   'ads-automation': 'Ads automation product',
@@ -141,6 +143,9 @@ export function ContactIntakeForm({
       inquiryType: String(form.get('inquiryType') || ''),
       timeline: String(form.get('timeline') || ''),
       description: String(form.get('description') || ''),
+      budgetRange: String(form.get('budgetRange') || ''),
+      projectGeography: String(form.get('projectGeography') || ''),
+      desiredStartDate: String(form.get('desiredStartDate') || ''),
       website: String(form.get('website') || ''),
       sourcePath: typeof window !== 'undefined' ? `${window.location.pathname}${window.location.search}` : '/contact',
       turnstileToken,
@@ -261,6 +266,39 @@ export function ContactIntakeForm({
             </select>
           </div>
         </div>
+
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div>
+            <label htmlFor="budgetRange" className="mb-1.5 block text-sm font-medium text-[color:var(--ink)]">
+              Budget Range <span className="font-normal text-[color:var(--foreground)]/55">(optional)</span>
+            </label>
+            <select
+              id="budgetRange"
+              name="budgetRange"
+              defaultValue=""
+              className="flex h-11 w-full rounded-xl border border-[color:var(--line)] bg-[color:var(--background)] px-3.5 py-2 text-sm text-[color:var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[color:var(--pine)]"
+            >
+              <option value="">Select a range</option>
+              {budgetRanges.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <Input
+            label="Desired Start Window (optional)"
+            name="desiredStartDate"
+            type="date"
+          />
+        </div>
+
+        <Input
+          label="Project Geography (optional)"
+          name="projectGeography"
+          placeholder="County, region, or service area"
+        />
 
         <Textarea
           label="Project Description"

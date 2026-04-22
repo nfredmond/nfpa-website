@@ -18,6 +18,9 @@ type LeadMeta = {
   product?: string | null
   tier?: string | null
   routing_hint?: string | null
+  budget_range?: string | null
+  project_geography?: string | null
+  desired_start_date?: string | null
 }
 
 type Lead = {
@@ -803,6 +806,26 @@ export default async function LeadInboxPage({
                         {lead.meta?.tier ? (
                           <span className="inline-flex rounded-full border border-[color:var(--line)] bg-[color:var(--background)] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-[color:var(--foreground)]/72">
                             Tier: {lead.meta.tier}
+                          </span>
+                        ) : null}
+                      </div>
+                    ) : null}
+
+                    {lead.meta?.budget_range || lead.meta?.project_geography || lead.meta?.desired_start_date ? (
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        {lead.meta?.budget_range ? (
+                          <span className="inline-flex rounded-full border border-[color:var(--line)] bg-[color:var(--background)] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-[color:var(--foreground)]/72">
+                            Budget: {lead.meta.budget_range}
+                          </span>
+                        ) : null}
+                        {lead.meta?.project_geography ? (
+                          <span className="inline-flex rounded-full border border-[color:var(--line)] bg-[color:var(--background)] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-[color:var(--foreground)]/72">
+                            Geo: {lead.meta.project_geography}
+                          </span>
+                        ) : null}
+                        {lead.meta?.desired_start_date ? (
+                          <span className="inline-flex rounded-full border border-[color:var(--line)] bg-[color:var(--background)] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-[color:var(--foreground)]/72">
+                            Start: {lead.meta.desired_start_date}
                           </span>
                         ) : null}
                       </div>

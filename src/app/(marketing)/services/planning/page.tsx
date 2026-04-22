@@ -7,6 +7,7 @@ import { Container } from '@/components/layout/container'
 import { Section } from '@/components/layout/section'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
+import { SectionEndCTA } from '@/components/features/section-end-cta'
 import { CheckCircle, ArrowRight } from 'lucide-react'
 import type { Metadata } from 'next'
 
@@ -234,23 +235,11 @@ export default function PlanningServicePage() {
         </Container>
       </Section>
 
-      {/* CTA Section */}
-      <Section spacing="lg">
-        <Container>
-          <div className="bg-[#1F4E2E] text-white rounded-2xl p-8 md:p-12 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Ready to start your planning project?
-            </h2>
-            <p className="text-lg text-gray-200 mb-8 max-w-2xl mx-auto">
-              Schedule a free consultation to discuss your community&apos;s needs, timeline, 
-              and funding opportunities.
-            </p>
-            <Button asChild variant="secondary" size="lg">
-              <Link href="/contact">Schedule Consultation</Link>
-            </Button>
-          </div>
-        </Container>
-      </Section>
+      <SectionEndCTA
+        heading="Ready to start your planning project?"
+        subhead="Schedule a free consultation to discuss your community’s needs, timeline, and funding opportunities."
+        primary={{ href: '/contact', label: 'Schedule Consultation' }}
+      />
     </>
   )
 }
