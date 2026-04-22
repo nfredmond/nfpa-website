@@ -1,0 +1,41 @@
+Nat Ford Planning — Final Official Selection List
+
+FINAL HIERARCHY
+---------------
+1. Primary Logo
+   - NatFord_Primary_Stacked_Light.png
+   - NatFord_Primary_Stacked_Dark.png
+
+2. Secondary Logo
+   - NatFord_Secondary_Horizontal_Light.png
+   - NatFord_Secondary_Horizontal_Dark.png
+
+3. Primary Monogram
+   - NatFord_Monogram_Square_Light.png
+   - NatFord_Monogram_Square_Dark.png
+
+4. Alternate Monogram
+   - NatFord_Monogram_Circular_Light.png
+   - NatFord_Monogram_Circular_Dark.png
+
+5. Utility / Monochrome
+   - NatFord_Monochrome_Primary_Light.png
+   - NatFord_Monochrome_Primary_Dark.png
+
+DESIGN DECISION SUMMARY
+-----------------------
+- The “N” is intentionally placed in front of the “F”.
+- This was chosen because the brand reads as Nat Ford, not Ford Nat.
+- The tighter overlap creates a more elegant monogram with better balance and negative space.
+- The square monogram is the main icon mark.
+- The circular monogram is a premium alternate badge/seal.
+
+RECOMMENDED CORE SET
+--------------------
+If only six must be used most often, use:
+- Primary stacked light
+- Primary stacked dark
+- Secondary horizontal light
+- Secondary horizontal dark
+- Square monogram light
+- Square monogram dark

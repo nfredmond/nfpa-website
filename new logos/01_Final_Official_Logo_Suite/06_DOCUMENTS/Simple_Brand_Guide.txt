@@ -1,0 +1,112 @@
+Nat Ford Planning — Simple Brand Guide
+
+1. Core Brand Structure
+-----------------------
+Primary logo:
+Use the stacked logo as the main official brand mark.
+
+Secondary logo:
+Use the horizontal logo for headers, signatures, and wide placements.
+
+Primary monogram:
+Use the square monogram as the main icon/logo symbol.
+
+Alternate monogram:
+Use the circular monogram as an alternate badge or seal.
+
+Monochrome:
+Use the monochrome versions where a simple one-color mark is needed.
+
+2. Preferred Usage
+------------------
+Primary stacked logo:
+- website hero area
+- proposals
+- presentations
+- signage
+- premium printed materials
+
+Horizontal logo:
+- website headers
+- email signatures
+- social covers
+- footers
+- banner placements
+
+Square monogram:
+- favicon
+- social profile image
+- watermark
+- app/icon use
+- small-space branding
+
+Circular monogram:
+- decorative seal
+- premium collateral
+- alternate social icon
+- specialty branding
+
+Monochrome versions:
+- embossing
+- engraving
+- foil
+- invoices
+- stationery
+- low-ink or single-color printing
+
+3. Light vs Dark Rules
+----------------------
+Light versions:
+Use on white or very light backgrounds.
+
+Dark versions:
+Use on black, charcoal, or dark-colored backgrounds.
+
+Do not place the light logo on dark backgrounds unless it is the dark-mode version.
+Do not place the dark logo on light backgrounds unless contrast remains excellent.
+
+4. Brand Colors (approximate)
+-----------------------------
+Brand Black: #111111
+Signature Gold: #B8934E
+White: #FFFFFF
+
+5. Spacing / Clear Space
+------------------------
+Keep generous clear space around all logos.
+As a simple rule, leave at least the height of the “N” stem in visual breathing room around the mark whenever possible.
+
+6. Minimum Size Guidance
+------------------------
+Primary stacked logo:
+Avoid using it too small. Best for medium and large placements.
+
+Horizontal logo:
+Best when width is available. Good for smaller header applications.
+
+Monogram:
+Best for very small applications such as favicons, profile icons, and watermarks.
+
+7. What Not To Do
+-----------------
+Do not stretch the logo.
+Do not rotate the logo.
+Do not change the letter order.
+Do not recolor the logo arbitrarily.
+Do not place busy imagery directly behind the logo.
+Do not crowd the logo with other elements.
+Do not recreate the monogram with the F in front of the N.
+
+8. Official Recommendation
+--------------------------
+Official primary mark:
+Square-monogram stacked logo
+
+Official secondary mark:
+Horizontal lockup
+
+Official icon:
+Square monogram
+
+Official alternate:
+Circular monogram

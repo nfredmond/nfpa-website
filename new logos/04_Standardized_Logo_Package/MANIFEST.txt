@@ -1,0 +1,10 @@
+light_primary_stacked: created background + transparent + 2048/1024/512/256 exports
+light_horizontal: created background + transparent + 2048/1024/512/256 exports
+light_square_monogram: created background + transparent + 2048/1024/512/256 exports
+light_circular_monogram: created background + transparent + 2048/1024/512/256 exports
+light_monochrome_primary: created background + transparent + 2048/1024/512/256 exports
+dark_primary_stacked: created background + transparent + 2048/1024/512/256 exports
+dark_horizontal: created background + transparent + 2048/1024/512/256 exports
+dark_square_monogram: created background + transparent + 2048/1024/512/256 exports
+dark_circular_monogram: created background + transparent + 2048/1024/512/256 exports
+dark_monochrome_primary: created background + transparent + 2048/1024/512/256 exports

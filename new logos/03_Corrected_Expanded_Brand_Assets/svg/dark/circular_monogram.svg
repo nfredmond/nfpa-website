@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200">
+  <rect width="1200" height="1200" fill="none"/>
+  <circle cx="600" cy="600" r="425" fill="none" stroke="#B8934E" stroke-width="7"/>
+  <circle cx="600" cy="600" r="395" fill="none" stroke="#B8934E" stroke-width="5"/>
+  <line x1="190" y1="600" x2="300" y2="600" stroke="#B8934E" stroke-width="4"/>
+  <line x1="900" y1="600" x2="1010" y2="600" stroke="#B8934E" stroke-width="4"/>
+  <text x="360" y="735" font-family="Times New Roman, Georgia, serif" font-size="500" fill="#FFFFFF">N</text>
+  <text x="575" y="845" font-family="Times New Roman, Georgia, serif" font-size="420" fill="#B8934E">F</text>
+</svg>
