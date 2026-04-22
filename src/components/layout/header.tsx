@@ -52,7 +52,7 @@ export function Header() {
                   height={800}
                   priority
                   unoptimized
-                  className="block h-11 w-auto dark:hidden md:h-12"
+                  className="block h-12 w-auto dark:hidden md:h-14"
                 />
                 <Image
                   src="/logos/nf-wordmark-dark.svg"
@@ -61,7 +61,7 @@ export function Header() {
                   width={2200}
                   height={800}
                   unoptimized
-                  className="hidden h-11 w-auto dark:block md:h-12"
+                  className="hidden h-12 w-auto dark:block md:h-14"
                 />
               </div>
             </Link>

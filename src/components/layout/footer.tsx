@@ -44,7 +44,7 @@ export function Footer() {
                   width={2200}
                   height={800}
                   unoptimized
-                  className="block h-11 w-auto md:h-12"
+                  className="block h-12 w-auto md:h-14"
                 />
               </div>
 
