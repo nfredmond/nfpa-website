@@ -41,7 +41,7 @@ export default function ProductsPage() {
               <p className="mt-6 max-w-3xl text-lg leading-8 text-white/82">
                 Nat Ford publishes useful software primitives for planning, GIS, drone data, modeling, AI workflows, and
                 business operations. Use the tools freely. Hire us when you need a managed deployment, custom fork,
-                integration, onboarding, or 24-hour support lane.
+                integration, onboarding, or 24-hour response support lane.
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Button asChild size="lg" variant="secondary">
@@ -226,7 +226,8 @@ export default function ProductsPage() {
             </h2>
             <p className="mt-5 text-[color:var(--foreground)]/76">
               Most teams do not fail because the code was unavailable. They fail because nobody owned deployment,
-              data quality, permissions, training, support, and the last-mile workflow. That is where we help.
+              data quality, permissions, training, support, and the last-mile workflow. That is where we help. Engagements
+              typically range from a $3.5K fit audit to $18K+ managed deployments and custom forks.
             </p>
           </div>
 

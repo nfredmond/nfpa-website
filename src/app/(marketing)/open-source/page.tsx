@@ -50,6 +50,10 @@ const manifesto = [
   'Nat Ford will make money by being excellent stewards: setup, custom versions, hosting, support, training, integrations, and planning expertise — not by hiding useful code behind a tollbooth.',
 ]
 
+const featuredOpenSourceProjects = openSourceProjects.filter((project) =>
+  ['openplan', 'opengeo', 'aerial-intel-platform', 'clawmodeler', 'nat-ford-website'].includes(project.slug)
+)
+
 export default function OpenSourcePage() {
   return (
     <>
@@ -68,7 +72,7 @@ export default function OpenSourcePage() {
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Button asChild size="lg" variant="secondary">
                   <Link href="#projects">
-                    Browse public projects <ArrowRight className="ml-2 h-4 w-4" />
+                    Browse featured projects <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
                 <Button asChild size="lg" variant="outline" className="border-white/35 text-white hover:border-white hover:text-white">
@@ -83,7 +87,7 @@ export default function OpenSourcePage() {
               <ul className="mt-5 space-y-3 text-sm leading-6 text-white/78">
                 <li>• Custom forks and company-specific versions.</li>
                 <li>• Hosted administration, monitoring, release management, and support.</li>
-                <li>• WorkOS-style onboarding, roles, access control, and staff training.</li>
+                <li>• Enterprise SSO, roles, access control, and staff training.</li>
                 <li>• Planning, GIS, data, AI, and software implementation for real workflows.</li>
               </ul>
             </div>
@@ -138,19 +142,19 @@ export default function OpenSourcePage() {
         <Container size="xl">
           <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
-              <span className="pill">Public project directory</span>
+              <span className="pill">Featured public projects</span>
               <h2 className="section-title mt-4 text-4xl text-[color:var(--ink)] md:text-5xl">
                 Building blocks worth forking.
               </h2>
             </div>
             <p className="max-w-xl text-sm leading-6 text-[color:var(--foreground)]/72">
-              These links point to public GitHub repositories where available. Each repo remains the source of truth for
-              license, contribution status, install notes, and current implementation details.
+              Featured active surfaces are shown here. The full catalog, including research lineage and archive projects,
+              lives on the project directory.
             </p>
           </div>
 
           <div className="grid gap-5 lg:grid-cols-2">
-            {openSourceProjects.map((project) => (
+            {featuredOpenSourceProjects.map((project) => (
               <Card key={project.slug} id={project.slug} className="scroll-mt-28 p-0">
                 <CardContent className="p-6 md:p-7">
                   <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
@@ -233,6 +237,13 @@ export default function OpenSourcePage() {
               </Card>
             ))}
           </div>
+          <div className="mt-8 flex justify-center">
+            <Button asChild variant="outline">
+              <Link href="/products">
+                View full project directory <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
         </Container>
       </Section>
 
@@ -245,7 +256,8 @@ export default function OpenSourcePage() {
             </h2>
             <p className="mt-5 text-[color:var(--foreground)]/76">
               Open source is not charity theater. It is a better adoption strategy and a better trust model. The paid
-              work is the part most organizations actually need help with.
+              work is the part most organizations actually need help with. Engagements typically range from a $3.5K fit
+              audit to $18K+ managed deployments and custom forks.
             </p>
           </div>
 

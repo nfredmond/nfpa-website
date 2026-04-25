@@ -102,7 +102,7 @@ export default function HomePage() {
               </div>
 
               <h1 className="section-title mt-7 text-5xl leading-[0.94] text-[color:var(--ink)] dark:text-white sm:text-6xl lg:text-[5.45rem]">
-                Free software. Custom implementation. Serious planning work.
+                Free open-source software. Paid stewardship. Planning work that holds up in public.
               </h1>
               <p className="mt-6 max-w-3xl text-lg leading-8 text-[color:var(--foreground)]/82 dark:text-white/85 sm:text-xl">
                 Nat Ford builds free and open-source tools for transportation planning, geospatial analysis, drone mapping,
@@ -270,7 +270,7 @@ export default function HomePage() {
                 Use the free tools. Hire us when it needs to run.
               </h2>
               <p className="mt-5 text-[color:var(--foreground)]/76">
-                This is the business model: open-source adoption, paid operations. Less tollbooth, more trail crew.
+                This is the business model: open-source adoption, paid operations. Less tollbooth, more trail crew — with actively maintained repos, managed deployment paths, and support that runs week to week.
               </p>
             </div>
             <div className="grid gap-4 md:grid-cols-2">

@@ -43,6 +43,10 @@ export function readinessNote(status: OpenSourceProject['status']) {
 }
 
 export function licenseLabel(project: OpenSourceProject) {
+  if (project.licenseNote.includes('not yet declared')) {
+    return 'License not yet declared'
+  }
+
   return project.licenseNote.startsWith('Open-source project') ? 'Repo license governs reuse' : 'Verify repo license before reuse'
 }
 
@@ -56,9 +60,9 @@ export const openSourceProjects: OpenSourceProject[] = [
       'Free, open-source AI-powered transportation planning intelligence for agencies, consultants, and public-interest planning teams.',
     repoUrl: 'https://github.com/nfredmond/openplan',
     demoUrl: 'https://openplan-natford.vercel.app',
-    licenseNote: 'Open-source project; public repo is the source of truth for current licensing and contribution status.',
+    licenseNote: 'License not yet declared in GitHub metadata; reuse terms are being standardized. Contact Nat Ford before production reuse.',
     paidSupport:
-      'Managed deployment, custom forks, WorkOS-style enterprise onboarding, GIS/data setup, agency-specific templates, and priority support.',
+      'Managed deployment, custom forks, enterprise SSO, role design, and staff onboarding, GIS/data setup, agency-specific templates, and priority support.',
     primitives: ['Planning workspace', 'project and program records', 'GIS/data context', 'grant/report workflows', 'AI-assisted drafting with review gates'],
   },
   {
@@ -69,7 +73,7 @@ export const openSourceProjects: OpenSourceProject[] = [
     summary:
       'AI-native drone-to-insight geospatial platform built with Next.js, Supabase, PostGIS, MapLibre, and AI SDK patterns.',
     repoUrl: 'https://github.com/nfredmond/OpenGeo',
-    licenseNote: 'Open-source project; public repo is the source of truth for current licensing and contribution status.',
+    licenseNote: 'License not yet declared in GitHub metadata; reuse terms are being standardized. Contact Nat Ford before production reuse.',
     paidSupport:
       'Custom geospatial deployments, PostGIS setup, map workflows, hosted administration, data migration, and internal tool integration.',
     primitives: ['Map workspace', 'PostGIS-backed data model', 'AI-assisted geospatial workflow', 'MapLibre interface'],
@@ -82,7 +86,7 @@ export const openSourceProjects: OpenSourceProject[] = [
     summary:
       'Open aerial data processing and planning-intelligence platform using an ODM-composed architecture for drone workflows.',
     repoUrl: 'https://github.com/nfredmond/aerial-intel-platform',
-    licenseNote: 'Open-source project; public repo is the source of truth for current licensing and contribution status.',
+    licenseNote: 'License not yet declared in GitHub metadata; reuse terms are being standardized. Contact Nat Ford before production reuse.',
     paidSupport:
       'Drone program setup, mission processing workflows, hosted operations, QA packets, map deliverables, and staff onboarding.',
     primitives: ['Mission intake', 'ODM processing hooks', 'dataset extraction', 'QA workflow', 'planning-ready outputs'],
@@ -95,7 +99,7 @@ export const openSourceProjects: OpenSourceProject[] = [
     summary:
       'AI-orchestrated, local-first transportation scenario modeling for small and rural agencies. Python engine plus Tauri desktop UI.',
     repoUrl: 'https://github.com/nfredmond/clawmodeler',
-    licenseNote: 'Open-source project; public repo is the source of truth for current licensing and contribution status.',
+    licenseNote: 'License not yet declared in GitHub metadata; reuse terms are being standardized. Contact Nat Ford before production reuse.',
     paidSupport:
       'Model setup, local data preparation, scenario calibration, rural agency training, support, and custom modeling extensions.',
     primitives: ['Scenario modeling engine', 'desktop interface', 'local-first workflows', 'transportation analytics'],
@@ -109,7 +113,7 @@ export const openSourceProjects: OpenSourceProject[] = [
       'Ad and operations automation lineage for Google, Meta, and LinkedIn workflows, adaptable to planning and business reporting.',
     repoUrl: 'https://github.com/nfredmond/ads_chatbot',
     demoUrl: 'https://ads-chatbot.vercel.app',
-    licenseNote: 'Public repo available; verify repo license before production reuse.',
+    licenseNote: 'License not yet declared in GitHub metadata; reuse terms are being standardized. Contact Nat Ford before production reuse.',
     paidSupport:
       'Custom analytics dashboards, campaign operations automation, CRM/reporting integrations, and support for non-planning companies.',
     primitives: ['Channel sync patterns', 'reporting automation', 'AI-assisted operations review', 'cross-platform workflow glue'],
@@ -122,7 +126,7 @@ export const openSourceProjects: OpenSourceProject[] = [
     summary:
       'Linux desktop podcast episode processor for Welcome to Grass Valley: concat, NVENC MP4, transcription, and AI summaries.',
     repoUrl: 'https://github.com/nfredmond/podcast-processor-codex',
-    licenseNote: 'Public repo available; verify repo license before production reuse.',
+    licenseNote: 'License not yet declared in GitHub metadata; reuse terms are being standardized. Contact Nat Ford before production reuse.',
     paidSupport:
       'Custom media workflow automation, local desktop tools, transcription pipelines, and AI-assisted publishing systems.',
     primitives: ['Desktop workflow', 'media processing', 'Whisper transcription', 'AI summary pipeline'],
@@ -136,7 +140,7 @@ export const openSourceProjects: OpenSourceProject[] = [
       'The public Nat Ford website and lead-routing surface, including services, project catalog, contact intake, internal lead inbox, and commerce/admin infrastructure.',
     repoUrl: 'https://github.com/nfredmond/nat-ford-website',
     demoUrl: 'https://www.natfordplanning.com',
-    licenseNote: 'Public repo available; verify repo license before production reuse.',
+    licenseNote: 'License not yet declared in GitHub metadata; reuse terms are being standardized. Contact Nat Ford before production reuse.',
     paidSupport:
       'Custom websites, intake systems, internal operations dashboards, authenticated portals, lead routing, and deployment support.',
     primitives: ['Next.js marketing site', 'lead intake workflow', 'admin surfaces', 'content architecture', 'Vercel/Supabase deployment patterns'],
@@ -149,7 +153,7 @@ export const openSourceProjects: OpenSourceProject[] = [
     summary:
       'Transportation dashboard lineage for public-agency reporting, performance tracking, and operational visibility.',
     repoUrl: 'https://github.com/nfredmond/DOT-Dashboard',
-    licenseNote: 'Public repo available; verify repo license before production reuse.',
+    licenseNote: 'License not yet declared in GitHub metadata; reuse terms are being standardized. Contact Nat Ford before production reuse.',
     paidSupport:
       'Custom agency dashboards, KPI design, data cleanup, public reporting views, and hosted dashboard operations.',
     primitives: ['Agency dashboard patterns', 'transportation reporting', 'public-sector data display', 'performance metrics'],
@@ -162,7 +166,7 @@ export const openSourceProjects: OpenSourceProject[] = [
     summary:
       'Second-generation DOT dashboard exploration for agency-facing mobility, funding, and program-performance reporting.',
     repoUrl: 'https://github.com/nfredmond/DOT_Dashboard_2.0',
-    licenseNote: 'Public repo available; verify repo license before production reuse.',
+    licenseNote: 'License not yet declared in GitHub metadata; reuse terms are being standardized. Contact Nat Ford before production reuse.',
     paidSupport:
       'Dashboard modernization, public data portals, internal reporting systems, and decision-support interface design.',
     primitives: ['Dashboard architecture', 'program reporting', 'agency UX patterns', 'data visualization'],
@@ -175,7 +179,7 @@ export const openSourceProjects: OpenSourceProject[] = [
     summary:
       'Drone mapping and mission-planning lineage for processing aerial data into usable planning and site-analysis outputs.',
     repoUrl: 'https://github.com/nfredmond/drone-mapper',
-    licenseNote: 'Public repo available; verify repo license before production reuse.',
+    licenseNote: 'License not yet declared in GitHub metadata; reuse terms are being standardized. Contact Nat Ford before production reuse.',
     paidSupport:
       'Drone mapping workflow setup, mission planning tools, photogrammetry processing, and planning-ready deliverable packaging.',
     primitives: ['Drone mission workflow', 'mapping pipeline', 'aerial data processing', 'site-analysis outputs'],
@@ -188,7 +192,7 @@ export const openSourceProjects: OpenSourceProject[] = [
     summary:
       'Open transportation demand-modeling lineage and reference work for building more accessible modeling tools.',
     repoUrl: 'https://github.com/nfredmond/FreeChAMP',
-    licenseNote: 'Public repo available; verify repo license before production reuse.',
+    licenseNote: 'License not yet declared in GitHub metadata; reuse terms are being standardized. Contact Nat Ford before production reuse.',
     paidSupport:
       'Demand-model setup, scenario workflow modernization, rural data preparation, and model interpretation support.',
     primitives: ['Demand-model reference', 'scenario inputs', 'transportation analytics', 'modeling workflow patterns'],
@@ -201,7 +205,7 @@ export const openSourceProjects: OpenSourceProject[] = [
     summary:
       'AI-assisted transportation demand-modeling experiment exploring how agents can help scaffold modeling workflows and assumptions.',
     repoUrl: 'https://github.com/nfredmond/Demand_Model_grok3',
-    licenseNote: 'Public repo available; verify repo license before production reuse.',
+    licenseNote: 'License not yet declared in GitHub metadata; reuse terms are being standardized. Contact Nat Ford before production reuse.',
     paidSupport:
       'Modeling workflow prototyping, assumption documentation, scenario testing, and AI-assisted analysis package development.',
     primitives: ['AI-assisted modeling scaffold', 'scenario logic', 'model documentation', 'research prototype'],
@@ -214,7 +218,7 @@ export const openSourceProjects: OpenSourceProject[] = [
     summary:
       'Demand-modeling experiment from the o3-mini lineage, useful as a reference for agent-assisted modeling workflows.',
     repoUrl: 'https://github.com/nfredmond/Demand_Model_o3-mini',
-    licenseNote: 'Public repo available; verify repo license before production reuse.',
+    licenseNote: 'License not yet declared in GitHub metadata; reuse terms are being standardized. Contact Nat Ford before production reuse.',
     paidSupport:
       'Research-to-production modeling support, code cleanup, reproducible notebooks, and local calibration workflows.',
     primitives: ['Modeling prototype', 'agent-assisted setup', 'workflow experiment', 'transportation analysis'],
@@ -227,7 +231,7 @@ export const openSourceProjects: OpenSourceProject[] = [
     summary:
       'Earlier demand-modeling research lane preserved as open lineage for future transportation modeling product work.',
     repoUrl: 'https://github.com/nfredmond/demandmodel_11.13.25',
-    licenseNote: 'Public repo available; verify repo license before production reuse.',
+    licenseNote: 'License not yet declared in GitHub metadata; reuse terms are being standardized. Contact Nat Ford before production reuse.',
     paidSupport:
       'Model audit, prototype salvage, scenario-package assembly, and migration into a supported modeling workflow.',
     primitives: ['Demand-model prototype', 'historical modeling lineage', 'scenario analysis', 'workflow salvage'],
@@ -248,12 +252,12 @@ export const implementationOffers = [
   {
     name: 'Enterprise onboarding and identity',
     summary: 'We wire up the unglamorous but essential parts: roles, access, SSO-style onboarding, staff training, and governance.',
-    examples: ['WorkOS-style onboarding', 'role design', 'workspace provisioning', 'admin documentation'],
+    examples: ['enterprise SSO and onboarding', 'role design', 'workspace provisioning', 'admin documentation'],
   },
   {
-    name: '24-hour support and operations',
+    name: '24-hour response support and operations',
     summary: 'For teams that need confidence, we provide an operator lane for urgent fixes, QA, uptime checks, and release triage.',
-    examples: ['priority response', 'bug triage', 'security patch support', 'monthly improvement review'],
+    examples: ['24-hour response target for priority issues', 'bug triage', 'security patch support', 'monthly improvement review'],
   },
 ]
 
@@ -280,6 +284,6 @@ export const implementationPackages = [
     name: 'Operator support lane',
     bestFor: 'Teams running open-source tools in public, production, or deadline-sensitive environments.',
     deliverable: 'Ongoing support lane for triage, upgrades, release notes, QA checks, and monthly improvement review.',
-    includes: ['priority response', 'bug triage', 'security/update review', 'monthly operations memo'],
+    includes: ['24-hour response target for priority issues', 'bug triage', 'security/update review', 'monthly operations memo'],
   },
 ]

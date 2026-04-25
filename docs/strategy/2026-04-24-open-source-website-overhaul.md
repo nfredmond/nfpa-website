@@ -9,7 +9,7 @@ Source directive: Nathaniel wants Nat Ford to move from closed-SaaS-first positi
 Nat Ford should publicly position itself as an **open-source planning and software implementation company**:
 
 - Reusable software, public-interest tools, and documented primitives are free and open by default.
-- Revenue comes from serious stewardship: custom forks, deployments, integrations, training, hosting/admin, enterprise identity/onboarding, data pipelines, security/QA, 24-hour support, and planning consulting.
+- Revenue comes from serious stewardship: custom forks, deployments, integrations, training, hosting/admin, enterprise identity/onboarding, data pipelines, security/QA, 24-hour response support, and planning consulting.
 - Planning services and software development are equally first-class. Nat Ford can build and administer custom software for planning agencies and for companies in other sectors when the workflow is real and valuable.
 
 ## Why this is credible now

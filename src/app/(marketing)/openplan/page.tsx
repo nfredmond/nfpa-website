@@ -46,14 +46,14 @@ const goodFitSignals = [
 const managedSupportSignals = [
   'You want Nat Ford to host, configure, administer, and monitor OpenPlan for your team.',
   'You need a custom agency or company edition with your data model, branding, roles, and reporting templates.',
-  'You want onboarding, training, WorkOS-style identity setup, 24-hour support, and merge-forward maintenance.',
+  'You want onboarding, training, enterprise SSO/role setup, 24-hour response support, and merge-forward maintenance.',
 ]
 
 const faqItems = [
   {
     question: 'Is OpenPlan free?',
     answer:
-      'Yes. The public OpenPlan codebase is open source. Teams can inspect it, fork it, and run it themselves subject to the license and repo instructions. Nat Ford charges for implementation, managed hosting, custom forks, onboarding, support, and planning/software services around it.',
+      'Yes. The OpenPlan codebase is public and intended for open-source reuse once license terms are declared. Teams can inspect, fork, or self-host under the repo license. Nat Ford charges only for managed deployment, custom forks, onboarding, support, and surrounding planning services.',
   },
   {
     question: 'What is OpenPlan?',
@@ -136,7 +136,7 @@ export default function OpenPlanPage() {
                 </div>
               </div>
               <div className="mt-4 space-y-3">
-                {['Public repo', 'Self-host path', 'Custom agency fork', 'Managed deployment', 'Data setup', '24-hour support'].map((item, index) => (
+                {['Public repo', 'Self-host path', 'Custom agency fork', 'Managed deployment', 'Data setup', '24-hour response'].map((item, index) => (
                   <div
                     key={item}
                     className="flex items-center justify-between rounded-2xl border border-white/12 bg-black/10 px-4 py-3"
