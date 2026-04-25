@@ -51,7 +51,7 @@ const manifesto = [
 ]
 
 const featuredOpenSourceProjects = openSourceProjects.filter((project) =>
-  ['openplan', 'opengeo', 'aerial-intel-platform', 'clawmodeler'].includes(project.slug)
+  ['openplan', 'opengeo', 'aerial-intel-platform', 'clawmodeler', 'ads-chatbot'].includes(project.slug)
 )
 
 export default function OpenSourcePage() {
@@ -166,7 +166,7 @@ export default function OpenSourcePage() {
                       <h3 className="mt-2 text-2xl font-semibold text-[color:var(--ink)]">{project.name}</h3>
                     </div>
                     <a
-                      href={project.repoUrl}
+                      href={project.repoUrl!}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex shrink-0 items-center justify-center rounded-full border border-[color:var(--line)] px-3.5 py-2 text-sm font-semibold text-[color:var(--foreground)] transition hover:border-[color:var(--pine)] hover:text-[color:var(--pine)]"
@@ -217,7 +217,7 @@ export default function OpenSourcePage() {
                   </p>
                   <div className="mt-4 flex flex-wrap gap-2">
                     <a
-                      href={project.repoUrl}
+                      href={project.repoUrl!}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center rounded-full border border-[color:var(--line)] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.1em] hover:border-[color:var(--pine)] hover:text-[color:var(--pine)]"
@@ -225,7 +225,7 @@ export default function OpenSourcePage() {
                       Inspect repo <ExternalLink className="ml-1.5 h-3.5 w-3.5" />
                     </a>
                     <a
-                      href={`${project.repoUrl}/issues`}
+                      href={`${project.repoUrl!}/issues`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center rounded-full border border-[color:var(--line)] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.1em] hover:border-[color:var(--pine)] hover:text-[color:var(--pine)]"

@@ -16,14 +16,14 @@ import {
 } from '@/data/open-source-projects'
 
 export const metadata: Metadata = {
-  title: 'Open-Source Projects',
+  title: 'Products & Source Projects',
   description:
-    'Browse Nat Ford open-source planning, geospatial, aerial, modeling, operations, and AI software projects with GitHub links and support options.',
+    'Browse selected Nat Ford planning, geospatial, aerial, modeling, operations, and AI products with source status and support options.',
 }
 
 const stats = [
-  { label: 'Pricing posture', value: 'Code is free' },
-  { label: 'Success metric', value: 'Forks + deployments' },
+  { label: 'Catalog posture', value: 'Selective + useful' },
+  { label: 'Success metric', value: 'Adoption + deployments' },
   { label: 'Paid offer', value: 'Implementation + support' },
 ]
 
@@ -34,14 +34,14 @@ export default function ProductsPage() {
         <Container size="xl">
           <div className="grid gap-10 lg:grid-cols-[minmax(0,1.25fr)_minmax(320px,0.75fr)] lg:items-end">
             <div className="max-w-4xl">
-              <span className="pill border-white/20 bg-white/10 text-white">Open-source project catalog</span>
+              <span className="pill border-white/20 bg-white/10 text-white">Product and source catalog</span>
               <h1 className="section-title mt-5 text-5xl leading-[0.94] text-white md:text-7xl">
                 Not a product shelf. A set of building blocks.
               </h1>
               <p className="mt-6 max-w-3xl text-lg leading-8 text-white/82">
-                Nat Ford publishes useful software primitives for planning, GIS, drone data, modeling, AI workflows, and
-                business operations. Use the tools freely. Hire us when you need a managed deployment, custom fork,
-                integration, onboarding, or 24-hour response support lane.
+                Nat Ford publishes and packages useful primitives for planning, GIS, drone data, modeling, AI workflows,
+                business operations, and planner training. Use the public source where it is published. Hire us when you
+                need deployment, customization, integration, onboarding, or a 24-hour response support lane.
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Button asChild size="lg" variant="secondary">
@@ -72,9 +72,10 @@ export default function ProductsPage() {
           <div className="grid gap-5 md:grid-cols-3">
             <Card className="p-6">
               <PackageOpen className="h-8 w-8 text-[color:var(--pine)]" />
-              <h2 className="mt-4 text-2xl font-semibold text-[color:var(--ink)]">Free and inspectable</h2>
+              <h2 className="mt-4 text-2xl font-semibold text-[color:var(--ink)]">Inspectable where public</h2>
               <p className="mt-3 text-sm leading-6 text-[color:var(--foreground)]/76">
                 Public repos let people and agents inspect the method, run the code, and adapt the tool without waiting on a sales call.
+                Release-track products are labeled clearly instead of pretending every artifact is already public source.
               </p>
             </Card>
             <Card className="p-6">
@@ -99,14 +100,14 @@ export default function ProductsPage() {
         <Container size="xl">
           <div className="mb-9 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
-              <span className="pill">GitHub-linked projects</span>
+              <span className="pill">Selected catalog</span>
               <h2 className="section-title mt-4 text-4xl text-[color:var(--ink)] md:text-5xl">
-                Open projects Nat Ford is building on.
+                Products Nat Ford is building on.
               </h2>
             </div>
             <p className="max-w-xl text-sm leading-6 text-[color:var(--foreground)]/72">
-              Repository pages are the source of truth for licenses, install instructions, current readiness, and contribution status.
-              The labels below are practical buyer guidance, not a substitute for reading the repo before reuse.
+              Repository pages are the source of truth when a public repo is available. Release-track and commercial-guide
+              entries are labeled separately so the catalog stays useful without overstating source availability.
             </p>
           </div>
 
@@ -133,14 +134,23 @@ export default function ProductsPage() {
                           Demo <ExternalLink className="ml-2 h-4 w-4" />
                         </a>
                       ) : null}
-                      <a
-                        href={project.repoUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center justify-center rounded-full bg-[color:var(--pine)] px-3.5 py-2 text-sm font-semibold text-white transition hover:bg-[color:var(--pine-deep)]"
-                      >
-                        GitHub <ExternalLink className="ml-2 h-4 w-4" />
-                      </a>
+                      {project.repoUrl ? (
+                        <a
+                          href={project.repoUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center justify-center rounded-full bg-[color:var(--pine)] px-3.5 py-2 text-sm font-semibold text-white transition hover:bg-[color:var(--pine-deep)]"
+                        >
+                          GitHub <ExternalLink className="ml-2 h-4 w-4" />
+                        </a>
+                      ) : (
+                        <Link
+                          href="/contact?topic=custom-software"
+                          className="inline-flex items-center justify-center rounded-full bg-[color:var(--pine)] px-3.5 py-2 text-sm font-semibold text-white transition hover:bg-[color:var(--pine-deep)]"
+                        >
+                          Discuss access <ArrowRight className="ml-2 h-4 w-4" />
+                        </Link>
+                      )}
                     </div>
                   </div>
 
@@ -157,7 +167,7 @@ export default function ProductsPage() {
                     </div>
                     <div>
                       <p className="text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--foreground)]/55">Contribution path</p>
-                      <p className="mt-1 font-semibold text-[color:var(--ink)]">Use GitHub issues / forks</p>
+                      <p className="mt-1 font-semibold text-[color:var(--ink)]">{project.contributionPath ?? 'Use GitHub issues / forks'}</p>
                     </div>
                     <p className="md:col-span-3 text-[0.82rem] leading-5 text-[color:var(--foreground)]/70">{readinessNote(project.status)}</p>
                   </div>
@@ -185,30 +195,41 @@ export default function ProductsPage() {
                     {project.licenseNote}
                   </p>
                   <div className="mt-4 flex flex-wrap gap-2">
-                    <a
-                      href={project.repoUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center rounded-full border border-[color:var(--line)] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.1em] hover:border-[color:var(--pine)] hover:text-[color:var(--pine)]"
-                    >
-                      Inspect repo <ExternalLink className="ml-1.5 h-3.5 w-3.5" />
-                    </a>
-                    <a
-                      href={`${project.repoUrl}/fork`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center rounded-full border border-[color:var(--line)] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.1em] hover:border-[color:var(--pine)] hover:text-[color:var(--pine)]"
-                    >
-                      Fork it <GitFork className="ml-1.5 h-3.5 w-3.5" />
-                    </a>
-                    <a
-                      href={`${project.repoUrl}/issues`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center rounded-full border border-[color:var(--line)] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.1em] hover:border-[color:var(--pine)] hover:text-[color:var(--pine)]"
-                    >
-                      Issues / roadmap <ExternalLink className="ml-1.5 h-3.5 w-3.5" />
-                    </a>
+                    {project.repoUrl ? (
+                      <>
+                        <a
+                          href={project.repoUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center rounded-full border border-[color:var(--line)] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.1em] hover:border-[color:var(--pine)] hover:text-[color:var(--pine)]"
+                        >
+                          Inspect repo <ExternalLink className="ml-1.5 h-3.5 w-3.5" />
+                        </a>
+                        <a
+                          href={`${project.repoUrl}/fork`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center rounded-full border border-[color:var(--line)] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.1em] hover:border-[color:var(--pine)] hover:text-[color:var(--pine)]"
+                        >
+                          Fork it <GitFork className="ml-1.5 h-3.5 w-3.5" />
+                        </a>
+                        <a
+                          href={`${project.repoUrl}/issues`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center rounded-full border border-[color:var(--line)] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.1em] hover:border-[color:var(--pine)] hover:text-[color:var(--pine)]"
+                        >
+                          Issues / roadmap <ExternalLink className="ml-1.5 h-3.5 w-3.5" />
+                        </a>
+                      </>
+                    ) : (
+                      <Link
+                        href="/contact?topic=custom-software"
+                        className="inline-flex items-center rounded-full border border-[color:var(--line)] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.1em] hover:border-[color:var(--pine)] hover:text-[color:var(--pine)]"
+                      >
+                        Discuss implementation <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+                      </Link>
+                    )}
                   </div>
                 </CardContent>
               </Card>

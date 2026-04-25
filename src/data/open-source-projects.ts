@@ -1,45 +1,42 @@
 export type OpenSourceProject = {
   name: string
   slug: string
-  status: 'Active build' | 'Public alpha' | 'Production site' | 'Research lineage' | 'Utility'
-  category: 'Planning OS' | 'Geospatial' | 'Aerial intelligence' | 'Modeling' | 'Operations' | 'Creative tools' | 'Public-interest utilities'
+  status: 'Active build' | 'Public alpha' | 'Release track' | 'Commercial guide'
+  category: 'Planning OS' | 'Geospatial' | 'Aerial intelligence' | 'Modeling' | 'Operations' | 'Training product'
   summary: string
-  repoUrl: string
+  repoUrl?: string
   demoUrl?: string
   docsUrl?: string
   licenseSpdx: string
   licenseNote: string
+  contributionPath?: string
   paidSupport: string
   primitives: string[]
 }
 
 export function readinessLabel(status: OpenSourceProject['status']) {
   switch (status) {
-    case 'Production site':
-      return 'Production surface'
     case 'Public alpha':
       return 'Usable alpha'
     case 'Active build':
       return 'Active buildout'
-    case 'Utility':
-      return 'Specialized utility'
-    case 'Research lineage':
-      return 'Research / reference'
+    case 'Release track':
+      return 'Release track'
+    case 'Commercial guide':
+      return 'Commercial guide'
   }
 }
 
 export function readinessNote(status: OpenSourceProject['status']) {
   switch (status) {
-    case 'Production site':
-      return 'Live public surface; best used as a working reference or supported implementation pattern.'
     case 'Public alpha':
       return 'Installable or inspectable now, with scope and hardening still evolving.'
     case 'Active build':
       return 'Moving quickly; best for pilots, custom forks, and teams comfortable shaping the tool.'
-    case 'Utility':
-      return 'Narrow, practical tool; useful when the workflow matches the repo.'
-    case 'Research lineage':
-      return 'Reference code and product lineage; useful for audits, salvage, prototypes, and custom builds.'
+    case 'Release track':
+      return 'Useful product lane with source/package release details handled deliberately rather than dumped onto the web before it is ready.'
+    case 'Commercial guide':
+      return 'Paid educational product; built from Nat Ford planning practice rather than a public code repository.'
   }
 }
 
@@ -121,46 +118,32 @@ export const openSourceProjects: OpenSourceProject[] = [
     primitives: ['Channel sync patterns', 'reporting automation', 'AI-assisted operations review', 'cross-platform workflow glue'],
   },
   {
-    name: 'Demand Model Grok3',
-    slug: 'demand-model-grok3',
-    status: 'Research lineage',
-    category: 'Modeling',
+    name: 'ClawChat',
+    slug: 'clawchat',
+    status: 'Release track',
+    category: 'Operations',
     summary:
-      'AI-assisted transportation demand-modeling experiment exploring how agents can help scaffold modeling workflows and assumptions.',
-    repoUrl: 'https://github.com/nfredmond/Demand_Model_grok3',
-    licenseSpdx: 'Apache-2.0',
-    licenseNote: 'Source code is licensed under Apache-2.0 unless the repository marks a specific file or asset otherwise; see LICENSE-NOTICE for exclusions.',
+      'Hybrid multi-agent operating system backbone for planning-company operations: control plane, councils, workflow templates, simulation, and MCP/A2A integration patterns.',
+    licenseSpdx: 'Source release pending',
+    licenseNote: 'ClawChat is currently a release-track Nat Ford system. Public source and redistribution terms will be published only after the release boundary is approved.',
+    contributionPath: 'Private release track / contact Nat Ford',
     paidSupport:
-      'Modeling workflow prototyping, assumption documentation, scenario testing, and AI-assisted analysis package development.',
-    primitives: ['AI-assisted modeling scaffold', 'scenario logic', 'model documentation', 'research prototype'],
+      'Multi-agent operations design, workflow automation, internal QA councils, AI governance, and practical agent operating systems for planning teams.',
+    primitives: ['Agent control plane', 'bounded expert councils', 'workflow templates', 'simulation lanes', 'MCP/A2A integration'],
   },
   {
-    name: 'Demand Model o3-mini',
-    slug: 'demand-model-o3-mini',
-    status: 'Research lineage',
-    category: 'Modeling',
+    name: 'Vibe Coding for Planners',
+    slug: 'vibe-coding-for-planners',
+    status: 'Commercial guide',
+    category: 'Training product',
     summary:
-      'Demand-modeling experiment from the o3-mini lineage, useful as a reference for agent-assisted modeling workflows.',
-    repoUrl: 'https://github.com/nfredmond/Demand_Model_o3-mini',
-    licenseSpdx: 'Apache-2.0',
-    licenseNote: 'Source code is licensed under Apache-2.0 unless the repository marks a specific file or asset otherwise; see LICENSE-NOTICE for exclusions.',
+      'Practical planner-safe AI guide for using vibe coding in ATPs, RTPs, grant narratives, GIS summaries, outreach synthesis, and meeting prep.',
+    licenseSpdx: 'Commercial guide',
+    licenseNote: 'Commercial educational product in release preparation; not a public code repository.',
+    contributionPath: 'Buyer feedback / implementation workshops',
     paidSupport:
-      'Research-to-production modeling support, code cleanup, reproducible notebooks, and local calibration workflows.',
-    primitives: ['Modeling prototype', 'agent-assisted setup', 'workflow experiment', 'transportation analysis'],
-  },
-  {
-    name: 'Demand Model 11.13.25',
-    slug: 'demandmodel-111325',
-    status: 'Research lineage',
-    category: 'Modeling',
-    summary:
-      'Earlier demand-modeling research lane preserved as open lineage for future transportation modeling product work.',
-    repoUrl: 'https://github.com/nfredmond/demandmodel_11.13.25',
-    licenseSpdx: 'Apache-2.0',
-    licenseNote: 'Source code is licensed under Apache-2.0 unless the repository marks a specific file or asset otherwise; see LICENSE-NOTICE for exclusions.',
-    paidSupport:
-      'Model audit, prototype salvage, scenario-package assembly, and migration into a supported modeling workflow.',
-    primitives: ['Demand-model prototype', 'historical modeling lineage', 'scenario analysis', 'workflow salvage'],
+      'Team workshops, template rollout, AI-use policy setup, QA checklists, and implementation support for planning firms and agencies.',
+    primitives: ['Planner-safe prompts', 'QA checklists', 'rollout plans', 'disclosure language', 'workflow templates'],
   },
 ]
 
