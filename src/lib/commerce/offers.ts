@@ -220,3 +220,49 @@ export function findTierById(tierId: string): (OfferTier & { product: OfferProdu
 
   return null;
 }
+
+export type CommerceProductTierReference = {
+  productId: string | null;
+  tierId: string | null;
+};
+
+export function buildCheckoutClientReferenceId(productId: string, tierId: string): string {
+  return `${productId}:${tierId}`;
+}
+
+export function normalizeCommerceProductTierReference(
+  productId: string | null,
+  tierId: string | null
+): CommerceProductTierReference {
+  const tier = tierId ? findTierById(tierId) : null;
+
+  return {
+    productId: tier?.product.id ?? productId ?? null,
+    tierId: tier?.id ?? tierId ?? null,
+  };
+}
+
+export function inferProductAndTierFromClientReference(
+  clientReferenceId: string | null
+): CommerceProductTierReference {
+  if (!clientReferenceId) {
+    return { productId: null, tierId: null };
+  }
+
+  if (clientReferenceId.includes(":")) {
+    const [productId, tierId] = clientReferenceId.split(":", 2);
+    return normalizeCommerceProductTierReference(productId || null, tierId || null);
+  }
+
+  if (clientReferenceId.endsWith("-prelaunch")) {
+    const tierId = clientReferenceId.replace(/-prelaunch$/, "");
+    const tier = findTierById(tierId);
+
+    return {
+      productId: tier?.product.id ?? null,
+      tierId: tier?.id ?? tierId,
+    };
+  }
+
+  return normalizeCommerceProductTierReference(null, clientReferenceId);
+}

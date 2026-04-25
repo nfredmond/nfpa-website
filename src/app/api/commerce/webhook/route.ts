@@ -1,7 +1,7 @@
 import { createHmac, timingSafeEqual } from 'crypto'
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseAdminClient } from '@/lib/supabase/admin'
-import { findTierById } from '@/lib/commerce/offers'
+import { inferProductAndTierFromClientReference, normalizeCommerceProductTierReference } from '@/lib/commerce/offers'
 
 export const runtime = 'nodejs'
 
@@ -209,35 +209,6 @@ async function queueOnboardingEvent(params: {
   }
 }
 
-function inferProductAndTier(clientReferenceId: string | null) {
-  if (!clientReferenceId) {
-    return { productId: null, tierId: null }
-  }
-
-  if (clientReferenceId.includes(':')) {
-    const [productId, tierId] = clientReferenceId.split(':', 2)
-    return {
-      productId: productId || null,
-      tierId: tierId || null,
-    }
-  }
-
-  if (clientReferenceId.endsWith('-prelaunch')) {
-    const tierId = clientReferenceId.replace(/-prelaunch$/, '')
-    const tier = findTierById(tierId)
-    return {
-      productId: tier?.product.id ?? null,
-      tierId: tier?.id ?? tierId,
-    }
-  }
-
-  const tier = findTierById(clientReferenceId)
-  return {
-    productId: tier?.product.id ?? null,
-    tierId: tier?.id ?? clientReferenceId,
-  }
-}
-
 function asString(value: unknown): string | null {
   if (typeof value !== 'string') return null
   const trimmed = value.trim()
@@ -345,7 +316,8 @@ export async function POST(request: NextRequest) {
   const metadataTierId = asString(metadata.tier_id) || asString(metadata.tierId)
   const metadataProductId = asString(metadata.product_id) || asString(metadata.productId)
 
-  const inferred = inferProductAndTier(clientReferenceId)
+  const inferred = inferProductAndTierFromClientReference(clientReferenceId)
+  const metadataReference = normalizeCommerceProductTierReference(metadataProductId, metadataTierId)
 
   const customerEmail = normalizeEmail(
     asString(object.customer_email) ||
@@ -353,8 +325,8 @@ export async function POST(request: NextRequest) {
       asString(object.receipt_email)
   )
 
-  const productId = metadataProductId || inferred.productId
-  const tierId = metadataTierId || inferred.tierId
+  const productId = metadataReference.productId || inferred.productId
+  const tierId = metadataReference.tierId || inferred.tierId
 
   const row = {
     stripe_event_id: event.id,

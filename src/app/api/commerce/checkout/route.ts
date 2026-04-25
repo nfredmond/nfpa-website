@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { findTierById } from '@/lib/commerce/offers'
+import { buildCheckoutClientReferenceId, findTierById } from '@/lib/commerce/offers'
 import { resolveStripePaymentLinkEnv } from '@/lib/commerce/stripe-payment-links'
 
 const OPENPLAN_PRELAUNCH_END = process.env.OPENPLAN_PRELAUNCH_END ?? '2026-04-01T00:00:00-07:00'
@@ -36,7 +36,7 @@ function validateStripePaymentLink(paymentLink: string): URL | null {
 
 function applyCheckoutTracking(checkoutUrl: URL, tierId: string, productId: string) {
   if (!checkoutUrl.searchParams.get('client_reference_id')) {
-    checkoutUrl.searchParams.set('client_reference_id', `${productId}:${tierId}`)
+    checkoutUrl.searchParams.set('client_reference_id', buildCheckoutClientReferenceId(productId, tierId))
   }
 
   if (!checkoutUrl.searchParams.get('prefilled_email')) {
