@@ -3,131 +3,89 @@ import Link from 'next/link'
 import {
   ArrowRight,
   Bot,
-  Compass,
+  Code2,
   Database,
+  ExternalLink,
   FileText,
-  Handshake,
-  Map,
+  GitFork,
+  Landmark,
   MapPin,
   Plane,
-  Radar,
-  Sparkles,
+  ShieldCheck,
+  Wrench,
 } from 'lucide-react'
 import { Container } from '@/components/layout/container'
 import { Section } from '@/components/layout/section'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
 import JsonLd from '@/components/features/json-ld'
 import { PlannerChatbot } from '@/components/features/planner-chatbot'
 import organizationData from '@/data/organization.json'
 import servicesData from '@/data/services.json'
 import projectsData from '@/data/projects.json'
+import { implementationOffers, openSourceProjects } from '@/data/open-source-projects'
 
-const services = [
+const planningServices = [
   {
-    name: 'Urban & Transportation Planning',
-    description: 'RTPs, ATPs, VMT analysis, and implementation strategy for U.S. small towns, tribes, counties, RTPAs, transportation commissions, and state agencies.',
+    name: 'Transportation planning',
+    description: 'RTPs, ATPs, VMT analysis, corridor strategy, implementation plans, and board-ready decision materials.',
     icon: MapPin,
     href: '/services/planning',
   },
   {
-    name: 'GIS & Spatial Analysis',
-    description: 'PostGIS-backed analysis, map automation, and scenario intelligence for policy and capital decisions.',
+    name: 'GIS, data, and modeling',
+    description: 'PostGIS, QGIS, web maps, data pipelines, scenario analysis, and local-first modeling workflows.',
     icon: Database,
     href: '/services/gis',
   },
   {
-    name: 'Aerial Mapping & Photogrammetry',
-    description: 'Orthomosaics, terrain models, and site intelligence from FAA-licensed drone workflows.',
+    name: 'Aerial intelligence',
+    description: 'Drone mapping, photogrammetry, mission workflows, orthomosaics, terrain models, and site intelligence.',
     icon: Plane,
     href: '/services/aerial',
   },
   {
-    name: 'Funding & Grant Services',
-    description: 'Program fit, narrative strategy, and grant package execution that improves funding competitiveness.',
+    name: 'Grants and implementation',
+    description: 'Funding strategy, grant narratives, readiness reviews, scope packaging, and delivery support.',
     icon: FileText,
     href: '/services/grants',
   },
-  {
-    name: 'AI-Enabled Documentation',
-    description: 'Faster report assembly with methods-first disclosure, citation QA, and human approval gates.',
-    icon: Sparkles,
-    href: '/services/ai',
-  },
 ]
 
-const products = [
+const softwareServices = [
   {
-    name: 'OpenPlan',
-    icon: Map,
-    description: 'Prelaunch access is live for a modular planning operating system that keeps projects, risks, decisions, datasets, and map context in one operational thread — best for lean public-sector and planning teams doing real delivery work.',
-    href: '/openplan',
+    name: 'Custom internal software',
+    description: 'Dashboards, portals, CRMs, workflow tools, reporting systems, and automation for any company with a real process problem.',
+    icon: Code2,
   },
   {
-    name: 'Marketing & Planning Analytics Software',
+    name: 'Open-source deployment',
+    description: 'We install, configure, host, monitor, and administer open tools so your team can use them without becoming maintainers overnight.',
+    icon: Wrench,
+  },
+  {
+    name: 'AI agent workflows',
+    description: 'Agent-ready documentation, local CI loops, QA traces, source-cited outputs, and editable deliverable packages.',
     icon: Bot,
-    description: 'A client-proven analytics and automation platform for campaign and planning operations.',
-    href: '/products#ads-automation',
-  },
-  {
-    name: 'Vibe Coding for Planners',
-    icon: FileText,
-    description: 'A practical PDF guide with structured prompts, QA checklists, and launch-ready implementation workflow.',
-    href: '/products#vibe-coding-for-planners',
   },
 ]
 
-const trustedBy = [
-  'Sierra County',
-  'Del Norte County',
-  'Tehama County',
-  'Plumas County',
-  'El Dorado County Transportation Commission',
+const openSourceBeliefs = [
+  'Open code earns trust faster than a sales deck.',
+  'Agents prefer tools they can install, fork, inspect, and glue together.',
+  'The moat is stewardship: implementation, support, taste, domain knowledge, and keeping custom forks healthy.',
+  'For public-sector work, reusable code and open methods reduce duplicate spending and improve accountability.',
 ]
 
-const process = [
-  {
-    title: 'Frame the real decision',
-    desc: 'We clarify what decision must be made, which constraints are binding, and what success actually looks like.',
-    icon: Compass,
-  },
-  {
-    title: 'Build an auditable method',
-    desc: 'Assumptions, data lineage, and limitations are explicit so technical stakeholders can verify and trust the work.',
-    icon: Radar,
-  },
-  {
-    title: 'Translate to fundable action',
-    desc: 'We package recommendations into implementation-ready scopes, grant narratives, and board-usable materials.',
-    icon: FileText,
-  },
-  {
-    title: 'Stay in execution mode',
-    desc: 'Consulting and software are aligned so projects move from strategy to delivery without losing continuity.',
-    icon: Handshake,
-  },
-]
-
-const operatingSignals = [
-  {
-    label: 'Decision lane',
-    value: 'Funding fit, delivery risk, and implementation sequence',
-  },
-  {
-    label: 'Methods spine',
-    value: 'GIS, field reconnaissance, policy review, and defensible documentation',
-  },
-  {
-    label: 'Primary outputs',
-    value: 'Board-ready memos, maps, narratives, dashboards, and scopes',
-  },
-]
-
-const proofPoints = [
-  'Northern California roots, nationwide delivery',
-  'Consulting, GIS, and product work kept in one operating thread',
-  'Human-reviewed analysis with explicit assumptions and ethics gates',
+const proofStats = [
+  { label: 'Public repos', value: `${openSourceProjects.length}+` },
+  { label: 'Company model', value: 'Free code + paid stewardship' },
+  { label: 'Core domains', value: 'Planning, GIS, aerial, AI, ops' },
 ]
 
 export default function HomePage() {
+  const featuredProjects = openSourceProjects.slice(0, 4)
+
   return (
     <>
       <JsonLd data={organizationData} />
@@ -136,60 +94,43 @@ export default function HomePage() {
 
       <Section spacing="xl" className="hero-mesh-light nf-topography text-[color:var(--ink)] dark:text-white">
         <Container size="xl">
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1.08fr_0.92fr] items-start">
-            <div className="max-w-3xl">
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1.08fr_0.92fr] lg:items-start">
+            <div className="max-w-4xl">
               <div className="nf-kicker">
                 <span>Nat Ford Planning &amp; Analysis</span>
-                <span>Transportation planning, GIS, aerial intelligence, and delivery software</span>
+                <span>Open-source planning, GIS, AI, and operations software</span>
               </div>
 
-              <div className="mt-7 flex flex-wrap items-center gap-3 text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--foreground)]/70 dark:text-white/65">
-                <span className="pill">Built for public-sector decisions</span>
-                <span>Small towns</span>
-                <span className="text-[color:var(--copper)]">•</span>
-                <span>tribes</span>
-                <span className="text-[color:var(--copper)]">•</span>
-                <span>counties</span>
-                <span className="text-[color:var(--copper)]">•</span>
-                <span>RTPAs</span>
-              </div>
-
-              <h1 className="section-title mt-7 text-5xl leading-[0.94] text-[color:var(--ink)] dark:text-white sm:text-6xl lg:text-[5.2rem]">
-                Planning evidence that survives the board packet.
+              <h1 className="section-title mt-7 text-5xl leading-[0.94] text-[color:var(--ink)] dark:text-white sm:text-6xl lg:text-[5.45rem]">
+                Free software. Custom implementation. Serious planning work.
               </h1>
-              <p className="mt-6 max-w-2xl text-lg sm:text-xl text-[color:var(--foreground)]/82 dark:text-white/85">
-                Nat Ford combines transportation planning expertise with production-grade tools so agencies, tribes, and
-                consultancies can move from analysis to funded implementation with less friction. Our software tools can
-                also be customized for any profession, including law, science, education, engineering, and real estate.
+              <p className="mt-6 max-w-3xl text-lg leading-8 text-[color:var(--foreground)]/82 dark:text-white/85 sm:text-xl">
+                Nat Ford builds free and open-source tools for transportation planning, geospatial analysis, drone mapping,
+                modeling, and business operations. We make money by helping agencies and companies deploy, customize,
+                administer, and support the software when the work has to hold up in public.
               </p>
 
-              <div className="mt-8 flex flex-col sm:flex-row gap-3">
-                <Link
-                  href="/contact"
-                  className="inline-flex items-center justify-center rounded-full bg-[color:var(--copper)] px-6 py-3 text-[0.98rem] font-semibold text-[#1f2428] transition hover:-translate-y-0.5 hover:brightness-105"
-                >
-                  Schedule Strategy Call
-                </Link>
-                <Link
-                  href="/products"
-                  className="inline-flex items-center justify-center rounded-full border border-[color:var(--line)] bg-white/65 px-6 py-3 text-[0.98rem] font-semibold text-[color:var(--ink)] transition hover:bg-white dark:border-white/35 dark:bg-transparent dark:text-white dark:hover:bg-white/10"
-                >
-                  Explore Products
-                </Link>
-                <a
-                  href="https://ads-chatbot.vercel.app"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center rounded-full border border-[color:var(--copper)]/65 bg-[color:var(--copper)]/20 px-6 py-3 text-[0.98rem] font-semibold text-[color:var(--ink)] transition hover:bg-[color:var(--copper)]/30 dark:text-white"
-                >
-                  Try Analytics Software Demo
-                </a>
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                <Button asChild size="lg" variant="secondary">
+                  <Link href="/open-source">
+                    Read the open-source position <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+                <Button asChild size="lg" variant="outline">
+                  <Link href="/products">Browse public projects</Link>
+                </Button>
+                <Button asChild size="lg" variant="ghost">
+                  <Link href="/contact?topic=custom-software">Scope custom software</Link>
+                </Button>
               </div>
 
-              <div className="mt-10 grid gap-3 sm:grid-cols-3">
-                {proofPoints.map((point) => (
-                  <div key={point} className="nf-proof-strip">
-                    {point}
+              <div className="mt-10 grid gap-3 md:grid-cols-3">
+                {proofStats.map((stat) => (
+                  <div key={stat.label} className="nf-proof-strip">
+                    <span className="block text-[0.66rem] uppercase tracking-[0.16em] text-[color:var(--foreground)]/58 dark:text-white/54">
+                      {stat.label}
+                    </span>
+                    <span className="mt-1 block text-[0.95rem] font-semibold text-[color:var(--ink)] dark:text-white">{stat.value}</span>
                   </div>
                 ))}
               </div>
@@ -199,10 +140,10 @@ export default function HomePage() {
               <div className="flex items-start justify-between gap-5">
                 <div>
                   <p className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-[color:var(--foreground)]/60 dark:text-white/55">
-                    Agency operating brief
+                    Operating model
                   </p>
                   <h2 className="section-title mt-3 text-3xl text-[color:var(--ink)] dark:text-white sm:text-[2.3rem]">
-                    Clear scope, auditable method, fundable next move.
+                    Open the primitives. Charge for stewardship.
                   </h2>
                 </div>
 
@@ -235,205 +176,110 @@ export default function HomePage() {
                   priority
                 />
                 <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(15,23,32,0.04),rgba(15,23,32,0.74))]" />
-                <div className="absolute inset-x-4 bottom-4 flex items-end justify-between gap-4">
-                  <div>
-                    <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-white/78">Field visibility</p>
-                    <p className="mt-2 max-w-xs text-sm leading-relaxed text-white/92">
-                      Corridor conditions, site constraints, and implementation context tied back to the funding story.
-                    </p>
-                  </div>
-                  <div className="rounded-full border border-white/18 bg-black/28 px-3 py-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-white/90 backdrop-blur-sm">
-                    Corridor-ready analysis
-                  </div>
+                <div className="absolute inset-x-4 bottom-4">
+                  <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-white/78">Planning + software</p>
+                  <p className="mt-1 text-xl font-semibold text-white">Field evidence, open tools, practical delivery.</p>
                 </div>
               </div>
 
-              <div className="mt-5 grid gap-3">
-                {operatingSignals.map((signal) => (
-                  <div key={signal.label} className="nf-ops-row">
-                    <p className="nf-ops-label">{signal.label}</p>
-                    <p className="nf-ops-value">{signal.value}</p>
+              <div className="mt-6 space-y-3">
+                {openSourceBeliefs.map((belief) => (
+                  <div key={belief} className="flex gap-3 border-t border-[color:var(--line)] pt-3 text-sm leading-6 text-[color:var(--foreground)]/76 dark:text-white/72">
+                    <GitFork className="mt-1 h-4 w-4 shrink-0 text-[color:var(--copper)]" />
+                    <span>{belief}</span>
                   </div>
                 ))}
               </div>
-
-              <div className="mt-5 grid grid-cols-2 gap-3">
-                <div className="signal-tile rounded-[1.4rem] p-4">
-                  <p className="text-xs uppercase tracking-wide text-[color:var(--foreground)]/68">Primary clients</p>
-                  <p className="mt-1 font-semibold">U.S. small towns, tribes, counties, RTPAs, and state agencies</p>
-                </div>
-                <div className="signal-tile rounded-[1.4rem] p-4">
-                  <p className="text-xs uppercase tracking-wide text-[color:var(--foreground)]/68">Delivery model</p>
-                  <p className="mt-1 font-semibold">Consulting + software + implementation support</p>
-                </div>
-              </div>
-
-              <div className="mt-5 rounded-[1.6rem] border border-[color:var(--line)] bg-[color:var(--sand)]/42 p-4 dark:bg-white/[0.04]">
-                <p className="text-xs uppercase tracking-wide text-[color:var(--foreground)]/68">What to expect</p>
-                <p className="mt-2 text-sm leading-relaxed">
-                  No hype. No hidden assumptions. No burden-shifting recommendations. Every deliverable is built to be
-                  client-safe, review-ready, and implementation-aware.
-                </p>
-              </div>
             </div>
           </div>
         </Container>
       </Section>
 
-      <Section spacing="lg" className="border-y border-[color:var(--line)] bg-[color:var(--fog)]/55">
+      <Section spacing="lg" className="border-y border-[color:var(--line)] bg-[color:var(--fog)]/60">
         <Container>
-          <div className="mb-6 max-w-3xl">
-            <h2 className="section-title text-4xl text-[color:var(--ink)] md:text-5xl">
-              Get instant planning strategy for U.S. small towns, tribes, counties, RTPAs, and state agencies.
-            </h2>
-            <p className="mt-3 text-lg text-[color:var(--foreground)]/80">
-              Ask detailed transportation and land use questions, stress-test options, and get actionable next steps.
-            </p>
-            <div className="mt-4">
-              <Link href="/grant-lab" className="inline-flex items-center text-sm font-semibold text-[color:var(--pine)]">
-                Try the AI Grant Narrative Lab <ArrowRight className="ml-1.5 h-4 w-4" />
-              </Link>
-            </div>
-          </div>
-          <PlannerChatbot />
-        </Container>
-      </Section>
-
-      <Section spacing="md" className="border-y border-[color:var(--line)] bg-[color:var(--background)]/80">
-        <Container>
-          <div className="flex flex-col gap-4 border-y border-[color:var(--line)]/75 py-5 md:flex-row md:items-center md:justify-between">
-            <div>
-              <p className="text-[0.76rem] uppercase tracking-[0.18em] text-[color:var(--foreground)]/68">
-                Agencies served by Nathaniel in prior roles
-              </p>
-              <p className="mt-1 text-sm text-[color:var(--foreground)]/72">
-                Rural-facing transportation planning credibility, now paired with a product and operations spine.
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-x-8 gap-y-3 text-sm text-[color:var(--foreground)]/75 md:justify-end">
-            {trustedBy.map((name) => (
-              <span key={name}>{name}</span>
-            ))}
-            </div>
-          </div>
-        </Container>
-      </Section>
-
-      <Section spacing="xl">
-        <Container>
-          <div className="max-w-3xl">
-            <p className="pill mb-4">Consulting Services</p>
-            <h2 className="section-title text-4xl md:text-5xl text-[color:var(--ink)]">Technical depth without the consultant fog.</h2>
-            <p className="mt-4 text-lg text-[color:var(--foreground)]/80">
-              Modular support across planning, GIS, funding, and production documentation — structured for real public
-              workflows, not slide decks.
-            </p>
-          </div>
-
-          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {services.map((service) => {
+          <div className="grid gap-5 lg:grid-cols-3">
+            {softwareServices.map((service) => {
               const Icon = service.icon
               return (
-                <Link
-                  key={service.name}
-                  href={service.href}
-                  className="group rounded-2xl border border-[color:var(--line)] bg-[color:var(--background)] p-6 transition-all duration-300 hover:-translate-y-1 hover:border-[color:var(--pine)]/60 hover:shadow-xl"
-                >
-                  <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-[color:var(--sand)] text-[color:var(--pine)] group-hover:bg-[color:var(--pine)] group-hover:text-white transition-colors">
+                <Card key={service.name} className="p-6">
+                  <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-[color:var(--pine)] text-white">
                     <Icon className="h-5 w-5" />
                   </div>
-                  <h3 className="mt-4 text-xl font-semibold text-[color:var(--ink)]">{service.name}</h3>
-                  <p className="mt-2 text-[0.98rem] text-[color:var(--foreground)]/75">{service.description}</p>
-                  <span className="mt-4 inline-flex items-center text-sm font-semibold text-[color:var(--pine)]">
-                    Learn more <ArrowRight className="ml-1.5 h-4 w-4" />
-                  </span>
-                </Link>
+                  <h2 className="mt-5 text-2xl font-semibold text-[color:var(--ink)]">{service.name}</h2>
+                  <p className="mt-3 text-sm leading-6 text-[color:var(--foreground)]/76">{service.description}</p>
+                </Card>
               )
             })}
           </div>
         </Container>
       </Section>
 
-      <Section spacing="xl" className="bg-[color:var(--fog)]/65 border-y border-[color:var(--line)]">
-        <Container>
-          <div className="grid grid-cols-1 lg:grid-cols-[0.95fr_1.05fr] gap-10 items-start">
+      <Section spacing="xl">
+        <Container size="xl">
+          <div className="mb-9 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
-              <p className="pill mb-4">Software Products</p>
-              <h2 className="section-title text-4xl md:text-5xl text-[color:var(--ink)]">Software that compounds consulting impact.</h2>
-              <p className="mt-4 text-lg text-[color:var(--foreground)]/80">
-                We are not building software for software&apos;s sake. Each product shortens cycle time, hardens quality,
-                and makes results easier to explain and defend. Architecture is modular so we can customize these tools
-                for any profession when clients need domain-specific workflows.
-              </p>
-
-              <div className="mt-6 rounded-3xl border border-[color:var(--pine)]/18 bg-[linear-gradient(135deg,rgba(244,240,233,0.95),rgba(255,255,255,1))] p-6 shadow-sm">
-                <div className="flex items-start gap-4">
-                  <div className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-[color:var(--pine)] text-white">
-                    <Map className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--pine)]/72">OpenPlan — prelaunch access</p>
-                    <h3 className="mt-2 text-2xl font-semibold text-[color:var(--ink)]">A cleaner path from planning evidence to operational follow-through.</h3>
-                    <p className="mt-3 text-sm leading-relaxed text-[color:var(--foreground)]/80">
-                      Built for lean agency and planning teams that already have active projects, real handoffs, and a need for stronger continuity across decisions, risks, datasets, and map context.
-                    </p>
-                    <div className="mt-4 flex flex-col gap-3 sm:flex-row">
-                      <Link
-                        href="/openplan"
-                        className="inline-flex items-center rounded-full bg-[color:var(--pine)] px-5 py-2.5 font-semibold text-white transition hover:bg-[color:var(--pine-deep)]"
-                      >
-                        See OpenPlan details <ArrowRight className="ml-1.5 h-4 w-4" />
-                      </Link>
-                      <Link
-                        href="/contact/openplan-updates"
-                        className="inline-flex items-center rounded-full border border-[color:var(--line)] bg-[color:var(--background)] px-5 py-2.5 font-semibold text-[color:var(--ink)] transition hover:border-[color:var(--pine)] hover:text-[color:var(--pine)]"
-                      >
-                        Request pilot updates
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-6 flex flex-col sm:flex-row gap-3">
-                <Link
-                  href="/products"
-                  className="inline-flex items-center rounded-full border border-[color:var(--line)] px-5 py-2.5 font-semibold text-[color:var(--ink)] hover:border-[color:var(--pine)] hover:text-[color:var(--pine)] transition"
-                >
-                  View Product Details
-                </Link>
-                <a
-                  href="https://ads-chatbot.vercel.app"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center rounded-full border border-[color:var(--pine)]/45 bg-[color:var(--background)] px-5 py-2.5 font-semibold text-[color:var(--pine)] hover:border-[color:var(--pine)] hover:bg-[color:var(--pine)] hover:text-white transition"
-                >
-                  Launch Ads Demo <ArrowRight className="ml-1.5 h-4 w-4" />
-                </a>
-              </div>
+              <span className="pill">Public open-source work</span>
+              <h2 className="section-title mt-4 text-4xl text-[color:var(--ink)] md:text-5xl">
+                Projects you can inspect, fork, and build on.
+              </h2>
             </div>
+            <Button asChild variant="outline">
+              <Link href="/products">
+                View full project directory <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
 
-            <div className="grid gap-4">
-              {products.map((product) => {
-                const Icon = product.icon
-                return (
-                  <Link
-                    key={product.name}
-                    href={product.href}
-                    className="soft-card rounded-2xl p-6 transition hover:-translate-y-0.5 hover:shadow-xl"
-                  >
-                    <div className="flex items-start gap-4">
-                      <div className="mt-0.5 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-[color:var(--pine)] text-white">
-                        <Icon className="h-5 w-5" />
-                      </div>
-                      <div>
-                        <h3 className="text-2xl font-semibold text-[color:var(--ink)]">{product.name}</h3>
-                        <p className="mt-2 text-[0.98rem] text-[color:var(--foreground)]/78">{product.description}</p>
-                      </div>
+          <div className="grid gap-5 lg:grid-cols-2">
+            {featuredProjects.map((project) => (
+              <Card key={project.slug} hover className="p-0">
+                <CardContent className="p-6 md:p-7">
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--foreground)]/58">
+                        {project.category} · {project.status}
+                      </p>
+                      <h3 className="mt-2 text-2xl font-semibold text-[color:var(--ink)]">{project.name}</h3>
                     </div>
-                  </Link>
-                )
-              })}
+                    <a
+                      href={project.repoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex shrink-0 items-center rounded-full border border-[color:var(--line)] px-3 py-1.5 text-sm font-semibold hover:border-[color:var(--pine)] hover:text-[color:var(--pine)]"
+                    >
+                      GitHub <ExternalLink className="ml-2 h-4 w-4" />
+                    </a>
+                  </div>
+                  <p className="mt-4 text-[0.98rem] leading-7 text-[color:var(--foreground)]/78">{project.summary}</p>
+                  <p className="mt-5 border-t border-[color:var(--line)] pt-4 text-sm leading-6 text-[color:var(--foreground)]/70">
+                    <span className="font-semibold text-[color:var(--ink)]">Paid support:</span> {project.paidSupport}
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </Container>
+      </Section>
+
+      <Section spacing="xl" className="border-y border-[color:var(--line)] bg-[color:var(--sand)]/38">
+        <Container>
+          <div className="grid gap-10 lg:grid-cols-[0.42fr_0.58fr] lg:items-start">
+            <div>
+              <span className="pill">Implementation services</span>
+              <h2 className="section-title mt-4 text-4xl text-[color:var(--ink)] md:text-5xl">
+                Use the free tools. Hire us when it needs to run.
+              </h2>
+              <p className="mt-5 text-[color:var(--foreground)]/76">
+                This is the business model: open-source adoption, paid operations. Less tollbooth, more trail crew.
+              </p>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2">
+              {implementationOffers.map((offer) => (
+                <Card key={offer.name} className="p-5">
+                  <h3 className="text-xl font-semibold text-[color:var(--ink)]">{offer.name}</h3>
+                  <p className="mt-3 text-sm leading-6 text-[color:var(--foreground)]/76">{offer.summary}</p>
+                </Card>
+              ))}
             </div>
           </div>
         </Container>
@@ -441,76 +287,65 @@ export default function HomePage() {
 
       <Section spacing="xl">
         <Container>
-          <div className="max-w-3xl">
-            <p className="pill mb-4">How We Work</p>
-            <h2 className="section-title text-4xl md:text-5xl text-[color:var(--ink)]">Intuitive process. Serious technical standards.</h2>
+          <div className="mb-8 max-w-3xl">
+            <span className="pill">Planning services still matter</span>
+            <h2 className="section-title mt-4 text-4xl text-[color:var(--ink)] md:text-5xl">
+              Software does not replace planning judgment.
+            </h2>
+            <p className="mt-5 text-[color:var(--foreground)]/76">
+              Nat Ford still does the planning work: rural transportation plans, active transportation plans, grant packages,
+              VMT analysis, GIS, field review, and board-ready documentation. The software makes the work more reusable,
+              auditable, and faster to adapt.
+            </p>
           </div>
 
-          <div className="mt-9 grid grid-cols-1 md:grid-cols-2 gap-5">
-            {process.map((step, idx) => {
-              const Icon = step.icon
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+            {planningServices.map((service) => {
+              const Icon = service.icon
               return (
-                <div key={step.title} className="rounded-2xl border border-[color:var(--line)] bg-[color:var(--background)] p-6">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--foreground)]/62">
-                      Step {idx + 1}
-                    </span>
-                    <Icon className="h-5 w-5 text-[color:var(--pine)]" />
-                  </div>
-                  <h3 className="mt-3 text-2xl font-semibold text-[color:var(--ink)]">{step.title}</h3>
-                  <p className="mt-2 text-[0.98rem] text-[color:var(--foreground)]/75">{step.desc}</p>
-                </div>
+                <Link key={service.name} href={service.href} className="group rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--pine)]">
+                  <Card hover className="h-full p-6">
+                    <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-[color:var(--pine)] text-white transition group-hover:bg-[color:var(--pine-deep)]">
+                      <Icon className="h-5 w-5" />
+                    </div>
+                    <h3 className="mt-5 text-xl font-semibold text-[color:var(--ink)]">{service.name}</h3>
+                    <p className="mt-3 text-sm leading-6 text-[color:var(--foreground)]/76">{service.description}</p>
+                  </Card>
+                </Link>
               )
             })}
           </div>
         </Container>
       </Section>
 
-      <Section spacing="lg" className="bg-[color:var(--sand)]/45 border-y border-[color:var(--line)]">
+      <Section spacing="lg" className="bg-[#0f1720] text-white">
         <Container>
-          <div className="max-w-4xl">
-            <p className="pill mb-4">Ethics & AI Disclosure</p>
-            <h2 className="section-title text-4xl text-[color:var(--ink)]">The covenant behind every deliverable.</h2>
-            <p className="mt-4 text-lg text-[color:var(--foreground)]/82">
-              AI is used to accelerate drafting, data cleaning, and formatting. Final analysis and conclusions remain
-              human-reviewed and accountable. Assumptions are disclosed, uncertainty is labeled, and key claims are
-              citation-supported or flagged for verification.
-            </p>
-            <Link
-              href="/ethics"
-              className="mt-6 inline-flex items-center font-semibold text-[color:var(--pine)] hover:text-[color:var(--pine-deep)] transition"
-            >
-              Read full ethics policy <ArrowRight className="ml-1.5 h-4 w-4" />
-            </Link>
-          </div>
-        </Container>
-      </Section>
-
-      <Section spacing="lg" className="border-y border-[color:var(--line)] bg-[color:var(--fog)]/75 text-[color:var(--ink)] dark:bg-[#101c27] dark:text-white">
-        <Container>
-          <div className="rounded-3xl border border-[color:var(--line)]/70 bg-[color:var(--background)]/75 px-6 py-10 text-center dark:border-white/15 dark:bg-white/[0.03] md:px-10 md:py-12">
-            <p className="text-xs uppercase tracking-[0.18em] text-[color:var(--foreground)]/62 dark:text-white/65">Next Step</p>
-            <h2 className="section-title mt-3 text-4xl md:text-5xl text-[color:var(--ink)] dark:text-white">Tell us what decision you need to make.</h2>
-            <p className="mx-auto mt-4 max-w-2xl text-lg text-[color:var(--foreground)]/82 dark:text-white/80">
-              We’ll propose a scoped plan that is technically defensible, schedule-aware, and aligned with your budget.
-            </p>
-            <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
-              <Link
-                href="/contact"
-                className="inline-flex items-center justify-center rounded-full bg-[color:var(--copper)] px-6 py-3 text-[0.98rem] font-semibold text-[#1f2428] transition hover:-translate-y-0.5"
-              >
-                Start the Conversation
-              </Link>
-              <Link
-                href="/services"
-                className="inline-flex items-center justify-center rounded-full border border-[color:var(--line)] px-6 py-3 text-[0.98rem] font-semibold text-[color:var(--ink)] transition hover:border-[color:var(--pine)] hover:text-[color:var(--pine)] dark:border-white/30 dark:text-white dark:hover:bg-white/8 dark:hover:text-white"
-              >
-                Browse Services
-              </Link>
+          <div className="grid gap-8 lg:grid-cols-[1fr_0.52fr] lg:items-center">
+            <div>
+              <div className="flex items-center gap-3 text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-white/58">
+                <ShieldCheck className="h-4 w-4 text-[color:var(--copper)]" />
+                Open-source, not reckless
+              </div>
+              <h2 className="section-title mt-4 text-4xl text-white md:text-5xl">
+                We open the building blocks. We protect the client work.
+              </h2>
+              <p className="mt-5 max-w-3xl text-white/76">
+                Public code, demo data, schemas, templates, and methods can create shared value. Client data, credentials,
+                confidential deliverables, and security-sensitive deployment details stay protected. That line is not fuzzy.
+              </p>
+            </div>
+            <div className="rounded-[1.75rem] border border-white/16 bg-white/[0.06] p-6">
+              <Landmark className="h-8 w-8 text-[color:var(--copper)]" />
+              <p className="mt-4 text-lg font-semibold">Public-sector technology should be reusable.</p>
+              <p className="mt-3 text-sm leading-6 text-white/68">
+                Agencies should not pay repeatedly for the same invisible code when open methods and shared tools can do the job better.
+              </p>
             </div>
           </div>
         </Container>
       </Section>
+
+      <PlannerChatbot />
     </>
   )
 }

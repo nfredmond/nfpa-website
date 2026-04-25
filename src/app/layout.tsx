@@ -17,10 +17,10 @@ const body = Source_Sans_3({
 
 export const metadata: Metadata = {
   title: {
-    default: "Nat Ford Planning & Analysis | U.S. Transportation Planning, GIS & Aerial Mapping",
+    default: "Nat Ford Planning & Analysis | Open-Source Planning, GIS, AI & Custom Software",
     template: "%s | Nat Ford Planning & Analysis",
   },
-  description: "Data-driven transportation planning, GIS, and aerial insights for U.S. small towns, tribes, counties, RTPAs, transportation commissions, and state agencies.",
+  description: "Free and open-source planning, GIS, aerial, AI, and operations software with paid implementation, custom forks, hosting, onboarding, support, and transportation planning services.",
   keywords: [
     "urban planning",
     "transportation planning",
@@ -28,6 +28,9 @@ export const metadata: Metadata = {
     "aerial mapping",
     "photogrammetry",
     "grant writing",
+    "open source software",
+    "custom software development",
+    "AI implementation",
     "United States",
     "rural planning",
     "tribal transportation",
@@ -44,13 +47,13 @@ export const metadata: Metadata = {
     siteName: "Nat Ford Planning & Analysis",
     title: "Nat Ford Planning & Analysis",
     description:
-      "Data-driven transportation planning, GIS, and aerial insights for U.S. small towns, tribes, counties, RTPAs, transportation commissions, and state agencies.",
+      "Free and open-source planning, GIS, aerial, AI, and operations software with paid implementation, custom forks, hosting, onboarding, support, and transportation planning services.",
   },
   twitter: {
     card: "summary_large_image",
     title: "Nat Ford Planning & Analysis",
     description:
-      "Data-driven transportation planning, GIS, and aerial insights for U.S. small towns, tribes, counties, RTPAs, transportation commissions, and state agencies.",
+      "Free and open-source planning, GIS, aerial, AI, and operations software with paid implementation, custom forks, hosting, onboarding, support, and transportation planning services.",
   },
   robots: {
     index: true,

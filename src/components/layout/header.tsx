@@ -15,15 +15,14 @@ import { ThemeToggle } from '../ui/theme-toggle'
 import { cn } from '@/lib/utils'
 
 const navigation = [
+  { name: 'Open Source', href: '/open-source' },
+  { name: 'Projects', href: '/products' },
   { name: 'Services', href: '/services' },
-  { name: 'Products', href: '/products' },
-  { name: 'Grant AI Lab', href: '/grant-lab' },
-  { name: 'Experience', href: '/projects' },
+  { name: 'Planning Work', href: '/projects' },
   { name: 'Resources', href: '/resources' },
   { name: 'About', href: '/about' },
   { name: 'Ethics', href: '/ethics' },
   { name: 'Contact', href: '/contact' },
-  { name: 'Login', href: '/login' },
 ]
 
 export function Header() {
@@ -82,7 +81,7 @@ export function Header() {
                     className="hidden h-12 w-auto dark:block md:h-14"
                   />
                   <span className="hidden text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-[color:var(--foreground)]/62 md:block">
-                    Transportation planning, GIS, and delivery systems
+                    Open-source planning, GIS, AI, and delivery systems
                   </span>
                 </div>
               </div>
@@ -110,10 +109,10 @@ export function Header() {
           <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-2 lg:items-center">
             <ThemeToggle />
             <Link
-              href="/contact"
+              href="/contact?topic=open-source-support"
               className="inline-flex items-center justify-center rounded-full border border-[color:var(--copper)]/55 bg-[color:var(--copper)]/12 px-4 py-2 text-sm font-semibold text-[color:var(--foreground)] transition hover:-translate-y-0.5 hover:border-[color:var(--copper)] hover:bg-[color:var(--copper)]/18 hover:text-[color:var(--ink)] dark:text-white"
             >
-              Book Intro Call
+              Get Support
             </Link>
           </div>
 
@@ -151,11 +150,11 @@ export function Header() {
               ))}
               <div className="pt-2">
                 <Link
-                  href="/contact"
+                  href="/contact?topic=open-source-support"
                   onClick={() => setMobileMenuOpen(false)}
                   className="inline-flex w-full items-center justify-center rounded-full bg-[color:var(--pine)] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[color:var(--pine-deep)]"
                 >
-                  Book Intro Call
+                  Get Support
                 </Link>
               </div>
             </div>

@@ -11,19 +11,20 @@ import Image from 'next/image'
 
 const footerLinks = {
   services: [
+    { name: 'Open-source software support', href: '/open-source' },
+    { name: 'Custom software development', href: '/services/ai' },
     { name: 'Urban & Transportation Planning', href: '/services/planning' },
     { name: 'GIS & Spatial Analysis', href: '/services/gis' },
     { name: 'Aerial Mapping', href: '/services/aerial' },
     { name: 'Grant Services', href: '/services/grants' },
-    { name: 'AI Documentation', href: '/services/ai' },
   ],
   company: [
-    { name: 'About', href: '/about' },
-    { name: 'Projects', href: '/projects' },
+    { name: 'Open Source', href: '/open-source' },
+    { name: 'Public Projects', href: '/products' },
+    { name: 'Planning Work', href: '/projects' },
     { name: 'Resources', href: '/resources' },
     { name: 'Our Process', href: '/process' },
     { name: 'Ethics & AI Disclosure', href: '/ethics' },
-    { name: 'FAQ', href: '/faq' },
     { name: 'Contact', href: '/contact' },
   ],
 }
@@ -56,20 +57,20 @@ export function Footer() {
                     className="block h-12 w-auto md:h-14"
                   />
                   <p className="mt-1 text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-white/58">
-                    Northern California roots, nationwide public-sector delivery
+Open-source planning, GIS, AI, and operations software
                   </p>
                 </div>
               </div>
 
               <p className="mb-4 max-w-md text-sm leading-relaxed text-white/78">
-                Strategy-level planning, GIS, and software for communities that need clear decisions, fundable projects,
-                and delivery confidence.
+                Free and open-source software for planning, geospatial, aerial, modeling, and operations work — with paid
+                implementation, custom forks, hosting, onboarding, and support for teams that need it to run cleanly.
               </p>
 
               <div className="mb-5 grid max-w-xl gap-2 text-[0.78rem] uppercase tracking-[0.14em] text-white/52 sm:grid-cols-3">
-                <span>Planning systems</span>
-                <span>Grant readiness</span>
-                <span>GIS + aerial intelligence</span>
+                <span>Open-source tools</span>
+                <span>Planning services</span>
+                <span>Custom software support</span>
               </div>
 
               <div className="flex gap-4">

@@ -422,7 +422,7 @@ export default function GrantLabPage() {
                 Choose a grant program, enter your criteria, generate a narrative draft, then refine it by chat. Built for U.S. small towns, tribes, counties, RTPAs, transportation commissions, and state agencies that need practical, fundable language.
               </p>
               <p className="mt-3 max-w-3xl text-sm text-white/95 [text-shadow:0_1px_6px_rgba(0,0,0,0.45)]">
-                Want unlimited access? This workflow is included in OpenPlan subscriptions, and can also be custom-built into client-specific delivery systems.
+                Want this running inside your organization? This workflow can be deployed through OpenPlan, adapted as an open-source custom fork, or built into a client-specific delivery system.
               </p>
               <div className="mt-4 flex flex-wrap gap-3 text-sm">
                 <Link href="/openplan" className="inline-flex items-center rounded-full border border-white/45 bg-white/14 px-4 py-2 font-semibold text-white hover:bg-white/22">
@@ -790,7 +790,7 @@ export default function GrantLabPage() {
                   </Link>
                   . Want unlimited access and production rollout? It’s included in{' '}
                   <Link href="/openplan" className="font-semibold text-[color:var(--pine)]">
-                    OpenPlan subscriptions
+                    OpenPlan managed support
                   </Link>
                   , and available as a{' '}
                   <Link href="/contact?inquiry=custom-grant-ai" className="font-semibold text-[color:var(--pine)]">

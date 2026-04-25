@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowRight, Database, FileText, MapPin, Plane, Sparkles } from 'lucide-react'
+import { ArrowRight, Code2, Database, FileText, MapPin, Plane, Sparkles } from 'lucide-react'
 import { Container } from '@/components/layout/container'
 import { Section } from '@/components/layout/section'
 import { Card } from '@/components/ui/card'
@@ -11,7 +11,7 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Services',
   description:
-    'Planning, GIS, funding strategy, and delivery automation services for agencies and consultancies operating in resource-constrained contexts.',
+    'Planning, GIS, funding strategy, open-source software deployment, and custom software development for agencies, consultancies, and companies with real workflow problems.'
 }
 
 const services = [
@@ -64,6 +64,18 @@ const services = [
     ],
   },
   {
+    name: 'Open-Source & Custom Software',
+    description:
+      'Open-source project deployment, custom internal tools, AI workflows, dashboards, portals, automations, and supported company-specific forks.',
+    icon: Code2,
+    href: '/open-source',
+    outcomes: [
+      'Free code with paid implementation support',
+      'Custom forks, hosting, onboarding, and support',
+      'Software for planning teams and non-planning companies alike',
+    ],
+  },
+  {
     name: 'AI-Enabled Documentation',
     description:
       'Automation for report drafting, table/figure generation, and QA with human-reviewed outputs.',
@@ -82,7 +94,7 @@ const capabilityMatrix = [
   { label: 'Data', value: 'PostGIS · QA · Maps' },
   { label: 'Field', value: 'Drone · Ortho · DSM' },
   { label: 'Funding', value: 'Fit · Scoring · Package' },
-  { label: 'Reporting', value: 'Drafting · Figures · QA' },
+  { label: 'Software', value: 'Open source · AI · Apps' },
 ]
 
 export default function ServicesPage() {
@@ -98,9 +110,7 @@ export default function ServicesPage() {
                 <span className="text-[color:var(--copper)]">public-sector execution</span>.
               </h1>
               <p className="mt-5 max-w-2xl text-lg text-white/82">
-                Planning, GIS, funding strategy, and production systems — combined so agencies can make clear
-                decisions and move projects forward with less rework. Customizable for law, science, education,
-                engineering, real estate, and other technical domains.
+                Planning, GIS, funding strategy, open-source software support, and custom software development — combined so agencies and companies can make clear decisions, automate real workflows, and move work forward with less rework.
               </p>
             </div>
 
@@ -157,7 +167,7 @@ export default function ServicesPage() {
       <Section spacing="xl">
         <Container>
           <div className="mb-10 max-w-3xl">
-            <span className="pill">Five integrated lanes</span>
+            <span className="pill">Six integrated lanes</span>
             <h2 className="section-title mt-4 text-4xl text-[color:var(--ink)] md:text-5xl">
               Each service stands alone. Together, they compress the delivery cycle.
             </h2>

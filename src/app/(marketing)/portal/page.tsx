@@ -123,7 +123,7 @@ export default async function PortalPage() {
                   href="/products"
                   className="rounded-xl border border-[color:var(--line)] bg-[color:var(--fog)]/45 px-4 py-3 text-sm font-medium text-[color:var(--foreground)] hover:bg-[color:var(--fog)]"
                 >
-                  Review products + pricing
+                  Review open-source projects
                 </Link>
                 <Link
                   href="/contact"

@@ -1,20 +1,19 @@
 import Link from 'next/link'
-import { ArrowRight, CheckCircle2, Map, ShieldCheck, Sparkles, Workflow } from 'lucide-react'
+import type { Metadata } from 'next'
+import { CheckCircle2, ExternalLink, GitFork, Map, ShieldCheck, Sparkles, Wrench } from 'lucide-react'
 import { Container } from '@/components/layout/container'
 import { Section } from '@/components/layout/section'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { offerCatalog } from '@/lib/commerce/offers'
-import type { Metadata } from 'next'
+import { implementationOffers, openSourceProjects } from '@/data/open-source-projects'
 
 export const metadata: Metadata = {
   title: 'OpenPlan',
   description:
-    'OpenPlan is a modular planning operating system for keeping projects, decisions, risks, datasets, and map context in one operational thread.',
+    'OpenPlan is a free, open-source planning operating system for keeping projects, decisions, risks, datasets, maps, grants, and reports in one operational thread.',
 }
 
-const openPlan = offerCatalog.find((product) => product.id === 'openplan')
-const OPENPLAN_PRELAUNCH_DISCOUNT = 0.15
+const openPlanProject = openSourceProjects.find((project) => project.slug === 'openplan')
 
 const continuityLanes = [
   {
@@ -27,7 +26,7 @@ const continuityLanes = [
   },
   {
     title: 'Risks and decisions stay alive',
-    body: 'The product is being shaped around operational memory, not just dashboard snapshots.',
+    body: 'The product is shaped around operational memory, not just dashboard snapshots.',
   },
 ]
 
@@ -40,27 +39,26 @@ const fitProfiles = [
 
 const goodFitSignals = [
   'You already have active projects, recurring meetings, and real delivery handoffs to manage.',
-  'You want cleaner continuity across project state, map context, risks, and reporting.',
-  'You are comfortable joining during an active product-hardening phase and giving grounded feedback.',
+  'You want cleaner continuity across project state, map context, risks, grants, programs, and reporting.',
+  'You are comfortable using an open-source tool that can be forked, extended, and adapted to your local workflow.',
 ]
 
-const waitSignals = [
-  'You need a fully mature enterprise rollout with zero workflow shaping or onboarding nuance.',
-  'You do not yet have a defined operating rhythm, accountable owner, or active delivery process to improve.',
-  'You are looking for autonomous planning judgment rather than a human-reviewed operations tool.',
-]
-
-const prelaunchNotes = [
-  'Early-access pricing reflects active product hardening and customer-shaping feedback before launch.',
-  'If checkout is not finalized for a tier, we route to scoped intake instead of forcing a brittle purchase flow.',
-  'If your workflow is high-stakes or unusual, the contact-first path is the safer move.',
+const managedSupportSignals = [
+  'You want Nat Ford to host, configure, administer, and monitor OpenPlan for your team.',
+  'You need a custom agency or company edition with your data model, branding, roles, and reporting templates.',
+  'You want onboarding, training, WorkOS-style identity setup, 24-hour support, and merge-forward maintenance.',
 ]
 
 const faqItems = [
   {
+    question: 'Is OpenPlan free?',
+    answer:
+      'Yes. The public OpenPlan codebase is open source. Teams can inspect it, fork it, and run it themselves subject to the license and repo instructions. Nat Ford charges for implementation, managed hosting, custom forks, onboarding, support, and planning/software services around it.',
+  },
+  {
     question: 'What is OpenPlan?',
     answer:
-      'OpenPlan is an emerging modular planning operating system designed to keep projects, decisions, risks, datasets, and map-based analysis in one operational thread.',
+      'OpenPlan is a modular planning operating system designed to keep projects, decisions, risks, datasets, map-based analysis, grants, programs, and reports in one operational thread.',
   },
   {
     question: 'Who is it for?',
@@ -68,29 +66,19 @@ const faqItems = [
       'The strongest fit today is lean public-sector and transportation planning teams, plus consultants supporting rural, county, regional, or tribal planning work.',
   },
   {
-    question: 'What problem is it meant to solve?',
-    answer:
-      'A lot of planning work breaks down after the meeting or analysis. Decisions, source files, risk notes, and next actions get scattered across different tools. OpenPlan is being shaped to reduce that handoff failure.',
-  },
-  {
     question: 'How is this different from a normal dashboard?',
     answer:
-      'A dashboard reports status. OpenPlan is being built to preserve context across projects, decisions, meetings, datasets, and outputs so teams can move from evidence to action without losing the thread.',
+      'A dashboard reports status. OpenPlan is being built to preserve context across projects, decisions, meetings, datasets, maps, grants, and outputs so teams can move from evidence to action without losing the thread.',
   },
   {
-    question: 'Is OpenPlan fully launched?',
+    question: 'Why open source it?',
     answer:
-      'Not as a broad general-release product. The current phase is active buildout, prelaunch packaging, and early customer access. Direction is strong, but product hardening is still ongoing.',
+      'Because planning software should be reusable, inspectable, and adaptable. Agencies should not have to pay over and over for the same invisible scaffolding. Open code also lets people and AI agents build custom versions instead of waiting for a vendor to guess every edge case.',
   },
   {
-    question: 'What does prelaunch access mean?',
+    question: 'Can Nat Ford run OpenPlan for us?',
     answer:
-      'It means you are joining during an early customer-access phase while the product is still being hardened. Pricing reflects that stage, and the best-fit customers are teams willing to use the product seriously and share grounded feedback.',
-  },
-  {
-    question: 'What kinds of workflows is OpenPlan being shaped around?',
-    answer:
-      'Current direction includes project and deliverable tracking, decisions/issues/risks, meeting continuity, linked datasets and map context, analysis-to-report continuity, and grant/proposal readiness support.',
+      'Yes. That is the paid offer: managed deployment, custom fork, hosting/admin, data setup, templates, training, enterprise onboarding, and priority support.',
   },
   {
     question: 'How should we think about AI here?',
@@ -104,10 +92,6 @@ const faqItems = [
   },
 ]
 
-function hasPublishedStripeCheckout(envName: string): boolean {
-  return Boolean(process.env[envName]?.trim())
-}
-
 export default function OpenPlanPage() {
   return (
     <>
@@ -115,19 +99,19 @@ export default function OpenPlanPage() {
         <Container>
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1.3fr)_minmax(320px,0.85fr)] lg:items-end">
             <div className="max-w-4xl">
-              <span className="pill">OpenPlan — Prelaunch Access</span>
+              <span className="pill border-white/20 bg-white/10 text-white">OpenPlan — free and open source</span>
               <h1 className="section-title mt-5 text-5xl leading-[0.94] text-white md:text-6xl">
-                A planning operating system that keeps the operational thread intact.
+                A planning operating system anyone can inspect, fork, and adapt.
               </h1>
-              <p className="mt-5 max-w-3xl text-lg text-white/82">
-                OpenPlan is being shaped for transportation and public-sector delivery work where analysis, decisions, risks, datasets,
-                meetings, and reporting need to stay connected. The goal is not more dashboard clutter. The goal is cleaner execution.
+              <p className="mt-5 max-w-3xl text-lg leading-8 text-white/82">
+                OpenPlan keeps projects, decisions, risks, datasets, maps, grants, programs, and reports in one operational
+                thread. The code is public because planning tools should be reusable building blocks, not black boxes.
               </p>
               <div className="mt-7 flex flex-col gap-3 sm:flex-row">
                 <Button asChild size="lg" className="bg-white text-[color:var(--pine)] hover:bg-[color:var(--sand)]">
-                  <Link href="#pricing">
-                    View prelaunch pricing <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
+                  <a href={openPlanProject?.repoUrl ?? 'https://github.com/nfredmond/openplan'} target="_blank" rel="noopener noreferrer">
+                    View GitHub repo <ExternalLink className="ml-2 h-4 w-4" />
+                  </a>
                 </Button>
                 <Button
                   asChild
@@ -135,7 +119,7 @@ export default function OpenPlanPage() {
                   variant="outline"
                   className="border-white/35 bg-white/8 text-white hover:bg-white/14 hover:text-white"
                 >
-                  <Link href="/contact/openplan-fit">Discuss fit first</Link>
+                  <Link href="/contact/openplan-fit">Request managed setup</Link>
                 </Button>
               </div>
             </div>
@@ -144,15 +128,15 @@ export default function OpenPlanPage() {
               <div className="absolute inset-x-5 top-0 h-px bg-gradient-to-r from-transparent via-white/80 to-transparent" />
               <div className="flex items-center justify-between gap-3 border-b border-white/12 pb-4">
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/62">Operational thread</p>
-                  <p className="mt-1 text-lg font-semibold">What stays connected</p>
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/62">Commercial model</p>
+                  <p className="mt-1 text-lg font-semibold">Free code + paid stewardship</p>
                 </div>
                 <div className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-white/15 bg-white/10">
-                  <Workflow className="h-5 w-5" />
+                  <GitFork className="h-5 w-5" />
                 </div>
               </div>
               <div className="mt-4 space-y-3">
-                {['Project scope', 'Key decision', 'Current risk', 'Linked dataset', 'Map context', 'Report output'].map((item, index) => (
+                {['Public repo', 'Self-host path', 'Custom agency fork', 'Managed deployment', 'Data setup', '24-hour support'].map((item, index) => (
                   <div
                     key={item}
                     className="flex items-center justify-between rounded-2xl border border-white/12 bg-black/10 px-4 py-3"
@@ -164,7 +148,7 @@ export default function OpenPlanPage() {
                 ))}
               </div>
               <p className="mt-4 text-sm leading-relaxed text-white/72">
-                The product direction is intentionally operational: fewer broken handoffs, clearer state, and more honest evidence-to-action continuity.
+                The useful promise is not a locked subscription. It is a forkable operational spine with real support when your team needs production confidence.
               </p>
             </Card>
           </div>
@@ -191,13 +175,13 @@ export default function OpenPlanPage() {
         <Container>
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(320px,0.9fr)] lg:items-start">
             <div>
-              <span className="pill">Best Fit</span>
+              <span className="pill">Best fit</span>
               <h2 className="section-title mt-5 text-4xl text-[color:var(--ink)] md:text-5xl">
                 Built for lean teams that need continuity, not software sprawl.
               </h2>
               <p className="mt-4 max-w-2xl text-[color:var(--foreground)]/80">
-                The product is being designed around real planning delivery rhythm: a team needs to see what the project is, what changed,
-                what is blocked, what evidence supports the next move, and what still needs review.
+                OpenPlan is designed around real planning delivery rhythm: what is the project, what changed, what is blocked,
+                what evidence supports the next move, and what still needs review.
               </p>
               <div className="mt-6 grid gap-3 sm:grid-cols-2">
                 {fitProfiles.map((profile) => (
@@ -225,13 +209,13 @@ export default function OpenPlanPage() {
                 </div>
               </div>
               <ul className="mt-5 space-y-3 text-sm leading-relaxed text-[color:var(--foreground)]/82">
-                <li>• Do not present prelaunch access as a guaranteed pilot admission.</li>
-                <li>• Do not imply production readiness where hardening is still in progress.</li>
-                <li>• Do not use AI-replaces-planners rhetoric.</li>
-                <li>• Do not overstate mapping or data-readiness posture.</li>
+                <li>• Do not imply AI replaces planning judgment.</li>
+                <li>• Do not overstate data or mapping readiness.</li>
+                <li>• Do not publish client confidential information in open repos.</li>
+                <li>• Do not hide the fact that managed deployment/support is the paid path.</li>
               </ul>
               <p className="mt-5 rounded-2xl border border-[color:var(--pine)]/14 bg-white/70 px-4 py-4 text-sm text-[color:var(--foreground)]/78">
-                The useful promise is practical: less rework, better continuity, clearer handoffs, and more trustworthy evidence-to-action flow.
+                Open-source is the trust model. Human-reviewed planning, careful implementation, and support remain the operating model.
               </p>
             </Card>
           </div>
@@ -257,10 +241,10 @@ export default function OpenPlanPage() {
             </Card>
 
             <Card className="border-[color:var(--line)] bg-[color:var(--fog)]/55 p-6">
-              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--foreground)]/62">Probably wait or talk first</p>
-              <h2 className="mt-3 text-2xl font-semibold text-[color:var(--ink)]">Not ideal for teams expecting a finished enterprise platform today.</h2>
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--foreground)]/62">Paid support is for</p>
+              <h2 className="mt-3 text-2xl font-semibold text-[color:var(--ink)]">Teams that want the open-source base without carrying all the operations burden.</h2>
               <div className="mt-5 space-y-3">
-                {waitSignals.map((item) => (
+                {managedSupportSignals.map((item) => (
                   <div key={item} className="rounded-2xl border border-[color:var(--line)] bg-[color:var(--background)] px-4 py-4 text-sm text-[color:var(--foreground)]/82">
                     <span>{item}</span>
                   </div>
@@ -271,110 +255,31 @@ export default function OpenPlanPage() {
         </Container>
       </Section>
 
-      <Section id="pricing" spacing="xl" className="border-y border-[color:var(--line)] bg-[color:var(--fog)]/72">
+      <Section spacing="xl" className="border-y border-[color:var(--line)] bg-[color:var(--fog)]/72">
         <Container>
           <div className="max-w-4xl">
-            <span className="pill">Prelaunch Pricing</span>
-            <h2 className="section-title mt-5 text-4xl text-[color:var(--ink)] md:text-5xl">Choose the access path that matches your operating need.</h2>
+            <span className="pill">Managed OpenPlan support</span>
+            <h2 className="section-title mt-5 text-4xl text-[color:var(--ink)] md:text-5xl">
+              Use it free. Hire us when it needs to become your operating system.
+            </h2>
             <p className="mt-4 text-[color:var(--foreground)]/80">
-              OpenPlan is still in active buildout. Prelaunch pricing reflects early access and shaping feedback, with a 15% discount applied before launch.
-              If the right tier is not obvious yet, use the scoped discussion path first.
+              The public code is the base. The paid work is deployment, custom configuration, data migration, permissions,
+              onboarding, support, security patching, and keeping your fork moving with the mainline.
             </p>
           </div>
 
-          <div className="mt-8 grid gap-3 md:grid-cols-3">
-            {prelaunchNotes.map((note) => (
-              <div
-                key={note}
-                className="rounded-2xl border border-[color:var(--line)] bg-[color:var(--background)] px-4 py-4 text-sm leading-relaxed text-[color:var(--foreground)]/78"
-              >
-                {note}
-              </div>
+          <div className="mt-8 grid gap-4 md:grid-cols-2">
+            {implementationOffers.map((offer) => (
+              <Card key={offer.name} className="border-[color:var(--line)] bg-[color:var(--background)] p-6">
+                <div className="flex items-start gap-4">
+                  <Wrench className="mt-1 h-5 w-5 shrink-0 text-[color:var(--pine)]" />
+                  <div>
+                    <h3 className="text-xl font-semibold text-[color:var(--ink)]">{offer.name}</h3>
+                    <p className="mt-3 text-sm leading-6 text-[color:var(--foreground)]/76">{offer.summary}</p>
+                  </div>
+                </div>
+              </Card>
             ))}
-          </div>
-
-          <div className="mt-8 grid gap-4 md:grid-cols-3">
-            {openPlan?.tiers.map((tier) => {
-              const discountedPrice = Math.round(tier.monthlyUsd * (1 - OPENPLAN_PRELAUNCH_DISCOUNT))
-              const hasCheckout = hasPublishedStripeCheckout(tier.stripePaymentLinkEnv)
-              const ctaLabel = hasCheckout ? 'Start prelaunch access' : 'Request access'
-              const isRecommended = tier.id === 'openplan-professional'
-
-              return (
-                <Card
-                  key={tier.id}
-                  className={`p-5 ${isRecommended ? 'border-[color:var(--pine)] shadow-lg shadow-[color:var(--pine)]/10' : 'border-[color:var(--line)]'} bg-[color:var(--background)]`}
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <p className="text-xs font-semibold uppercase tracking-[0.13em] text-[color:var(--foreground)]/62">{tier.name}</p>
-                    {isRecommended ? (
-                      <span className="rounded-full bg-[color:var(--sand)] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-[color:var(--pine)]">
-                        Recommended
-                      </span>
-                    ) : null}
-                  </div>
-                  <p className="mt-3 text-3xl font-semibold text-[color:var(--ink)]">
-                    ${discountedPrice}
-                    <span className="text-base font-medium text-[color:var(--foreground)]/62"> /mo</span>
-                  </p>
-                  <p className="mt-1 text-xs text-[color:var(--foreground)]/68">
-                    <span className="line-through">${tier.monthlyUsd}/mo</span> standard price before launch
-                  </p>
-                  <p className="mt-3 text-sm text-[color:var(--foreground)]/78">{tier.summary}</p>
-                  <ul className="mt-4 space-y-1.5 text-sm text-[color:var(--foreground)]/78">
-                    {tier.features.map((feature) => (
-                      <li key={feature}>• {feature}</li>
-                    ))}
-                  </ul>
-                  <div className="mt-5">
-                    <Button asChild className="w-full" size="sm">
-                      <Link href={`/api/commerce/checkout?tier=${tier.id}`}>
-                        {ctaLabel} <ArrowRight className="ml-2 h-4 w-4" />
-                      </Link>
-                    </Button>
-                    {!hasCheckout ? (
-                      <p className="mt-2 text-xs text-[color:var(--foreground)]/65">
-                        This tier will route to scoped intake until the final checkout link is published.
-                      </p>
-                    ) : null}
-                    <p className="mt-2 text-xs text-[color:var(--foreground)]/65">
-                      Secure Stripe-hosted checkout. AI may accelerate drafting and data prep, but final analysis is human-reviewed. No guarantee of funding awards or regulatory approvals.
-                    </p>
-                  </div>
-                </Card>
-              )
-            })}
-          </div>
-        </Container>
-      </Section>
-
-      <Section spacing="lg" className="border-y border-[color:var(--line)] bg-[color:var(--background)]/88">
-        <Container>
-          <div className="grid gap-5 lg:grid-cols-[minmax(0,1.1fr)_minmax(320px,0.9fr)] lg:items-start">
-            <Card className="border-[color:var(--line)] bg-[color:var(--background)] p-6">
-              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--foreground)]/62">Not ready to subscribe?</p>
-              <h2 className="mt-3 text-2xl font-semibold text-[color:var(--ink)]">Use the softer path and stay in the loop.</h2>
-              <p className="mt-3 text-sm leading-relaxed text-[color:var(--foreground)]/80">
-                If your team is interested but not ready for prelaunch checkout, the right move is to ask for pilot updates or a fit conversation first. That keeps the process honest and prevents a forced purchase decision too early.
-              </p>
-              <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-                <Button asChild>
-                  <Link href="/contact/openplan-updates">Request pilot updates</Link>
-                </Button>
-                <Button asChild variant="outline">
-                  <Link href="/contact/openplan-fit">Discuss fit first</Link>
-                </Button>
-              </div>
-            </Card>
-
-            <Card className="border-[color:var(--pine)]/16 bg-[color:var(--sand)]/28 p-6">
-              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--pine)]/72">Best use of this page</p>
-              <ul className="mt-4 space-y-3 text-sm leading-relaxed text-[color:var(--foreground)]/82">
-                <li>• Read the fit guidance before treating pricing as the next automatic step.</li>
-                <li>• Use prelaunch checkout only if your team is ready for active usage and grounded feedback.</li>
-                <li>• Use the contact path if you want updates, scoping, or a cleaner fit decision first.</li>
-              </ul>
-            </Card>
           </div>
         </Container>
       </Section>
@@ -383,9 +288,9 @@ export default function OpenPlanPage() {
         <Container>
           <div className="max-w-4xl">
             <span className="pill">OpenPlan FAQ</span>
-            <h2 className="section-title mt-5 text-4xl text-[color:var(--ink)] md:text-5xl">Straight answers before anyone buys in.</h2>
+            <h2 className="section-title mt-5 text-4xl text-[color:var(--ink)] md:text-5xl">Straight answers before anyone commits.</h2>
             <p className="mt-4 max-w-3xl text-[color:var(--foreground)]/80">
-              This page is designed to keep the OpenPlan offer clear: what it is, who it fits, what stage it is in, and how we talk about AI and mapping without bluffing.
+              This page is designed to keep the OpenPlan offer clear: what it is, who it fits, what stage it is in, and how we talk about AI, mapping, support, and open source without bluffing.
             </p>
           </div>
 
@@ -413,13 +318,15 @@ export default function OpenPlanPage() {
             <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[color:var(--pine)] text-white shadow-lg shadow-[color:var(--pine)]/20">
               <Sparkles className="h-5 w-5" />
             </div>
-            <h2 className="section-title mt-5 text-4xl text-[color:var(--ink)] dark:text-white md:text-5xl">Want to pressure-test fit before subscribing?</h2>
+            <h2 className="section-title mt-5 text-4xl text-[color:var(--ink)] dark:text-white md:text-5xl">
+              Want OpenPlan without becoming the deployment team?
+            </h2>
             <p className="mt-4 text-lg text-[color:var(--foreground)]/82 dark:text-white/80">
-              That is the preferred move if your workflow is unusual, high-stakes, or still being defined. We can scope the right access path before asking you to commit.
+              We can run it, customize it, onboard your team, wire up your data, and keep the fork healthy while the open-source base keeps improving.
             </p>
             <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
               <Button asChild variant="secondary" size="lg">
-                <Link href="/contact/openplan-fit">Discuss OpenPlan</Link>
+                <Link href="/contact/openplan-fit">Request managed setup</Link>
               </Button>
               <Button
                 asChild
@@ -427,9 +334,9 @@ export default function OpenPlanPage() {
                 size="lg"
                 className="border-[color:var(--line)] text-[color:var(--ink)] hover:border-[color:var(--pine)] hover:bg-[color:var(--background)] hover:text-[color:var(--pine)] dark:border-white/35 dark:text-white dark:hover:bg-white/10 dark:hover:text-white"
               >
-                <Link href="/products#openplan">
-                  Compare all products <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
+                <a href={openPlanProject?.repoUrl ?? 'https://github.com/nfredmond/openplan'} target="_blank" rel="noopener noreferrer">
+                  View GitHub repo
+                </a>
               </Button>
             </div>
           </div>

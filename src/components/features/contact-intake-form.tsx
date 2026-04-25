@@ -16,6 +16,8 @@ declare global {
 }
 
 const inquiryTypes = [
+  'Open-source software support',
+  'Custom software development',
   'Planning support',
   'GIS / mapping',
   'Grant strategy',
@@ -71,11 +73,16 @@ export function ContactIntakeForm({
   const pilotUpdatesIntent = ['updates', 'pilot-updates', 'waitlist-updates'].includes(requestIntent)
   const fitConversationIntent = ['fit', 'discovery', 'discuss-fit'].includes(requestIntent)
   const fundingReadinessIntent = ['scorecard-review', 'funding-readiness-review'].includes(requestIntent) || requestTopic === 'funding-readiness-scorecard'
-  const openPlanIntent = requestTopic === 'openplan' || checkoutProduct === 'openplan'
+  const openPlanIntent = requestTopic === 'openplan' || requestTopic === 'open-source-support' || checkoutProduct === 'openplan'
+  const customSoftwareIntent = requestTopic === 'custom-software'
 
   const defaultInquiryType = fundingReadinessIntent
     ? 'Grant strategy'
-    : checkoutInquiryByProduct[checkoutProduct] || (openPlanIntent ? 'OpenPlan product' : '')
+    : customSoftwareIntent
+      ? 'Custom software development'
+      : requestTopic === 'open-source-support'
+        ? 'Open-source software support'
+        : checkoutInquiryByProduct[checkoutProduct] || (openPlanIntent ? 'OpenPlan product' : '')
   const defaultTimeline = checkoutIntent
     ? timelines[0]
     : pilotUpdatesIntent
@@ -85,27 +92,45 @@ export function ContactIntakeForm({
         : ''
   const checkoutLabel = checkoutProductLabel[checkoutProduct] || checkoutProduct
   const defaultDescription = checkoutIntent
-    ? ['Checkout request', `Product: ${checkoutLabel}`, checkoutTier ? `Tier: ${checkoutTier}` : null, '', 'Please share next steps and checkout/access availability.']
+    ? ['Access/support request', `Product: ${checkoutLabel}`, checkoutTier ? `Prior selected tier: ${checkoutTier}` : null, '', 'Please share the right open-source setup, managed deployment, support, or access next step.']
         .filter(Boolean)
         .join('\n')
     : pilotUpdatesIntent && openPlanIntent
-      ? ['OpenPlan pilot updates request', 'Product: OpenPlan Software', '', 'Please keep me informed about prelaunch availability, pilot timing, and major product updates.']
+      ? ['OpenPlan updates request', 'Product: OpenPlan Software', '', 'Please keep me informed about open-source releases, managed deployment availability, pilot timing, and major product updates.']
           .filter(Boolean)
           .join('\n')
       : fitConversationIntent && openPlanIntent
-        ? ['OpenPlan fit conversation request', 'Product: OpenPlan Software', '', 'Please help me assess whether OpenPlan is the right fit for our workflow and what the best next step would be.']
+        ? ['OpenPlan / open-source support request', 'Product: OpenPlan Software', '', 'Please help me assess whether OpenPlan, a custom fork, or managed open-source deployment is the right fit for our workflow.']
             .filter(Boolean)
             .join('\n')
-        : fundingReadinessIntent
+        : customSoftwareIntent
           ? [
-              'Funding readiness review request',
+              'Custom software / AI implementation request',
               '',
-              'If available, include your score band or current score from the Funding Readiness Scorecard.',
-              'Target funding window / program:',
-              'Top readiness gaps or concerns:',
-              'What outcome would be most helpful from a review?',
+              'Workflow or problem to solve:',
+              'Current tools or systems involved:',
+              'Users / roles who need access:',
+              'What would make this successful in the next 30-90 days?',
             ].join('\n')
-          : ''
+          : requestTopic === 'open-source-support'
+            ? [
+                'Open-source deployment/support request',
+                '',
+                'Project or repo of interest:',
+                'Do you need hosting, custom fork, onboarding, support, or all of the above?',
+                'Current data/systems involved:',
+                'Timeline or urgency:',
+              ].join('\n')
+            : fundingReadinessIntent
+              ? [
+                  'Funding readiness review request',
+                  '',
+                  'If available, include your score band or current score from the Funding Readiness Scorecard.',
+                  'Target funding window / program:',
+                  'Top readiness gaps or concerns:',
+                  'What outcome would be most helpful from a review?',
+                ].join('\n')
+              : ''
 
   React.useEffect(() => {
     if (!turnstileSiteKey) return
@@ -186,9 +211,9 @@ export function ContactIntakeForm({
       </p>
       {checkoutIntent ? (
         <div className="mb-6 rounded-xl border border-[color:var(--pine)]/25 bg-[color:var(--sand)]/35 px-4 py-3 text-sm text-[color:var(--foreground)]/85">
-          <p className="font-semibold text-[color:var(--pine)]">Checkout request detected</p>
+          <p className="font-semibold text-[color:var(--pine)]">Access/support request detected</p>
           <p className="mt-1">
-            We captured your selected product from the pricing page{checkoutTier ? ` (${checkoutTier})` : ''}. Complete the form and we’ll send scoped checkout/access next steps.
+            We captured your selected product context{checkoutTier ? ` (${checkoutTier})` : ''}. Complete the form and we’ll send the right open-source setup, managed deployment, or support next step.
           </p>
         </div>
       ) : null}
@@ -196,13 +221,13 @@ export function ContactIntakeForm({
         <div className="mb-6 rounded-xl border border-[color:var(--pine)]/25 bg-[color:var(--sand)]/35 px-4 py-3 text-sm text-[color:var(--foreground)]/85">
           <p className="font-semibold text-[color:var(--pine)]">OpenPlan pilot updates request</p>
           <p className="mt-1">
-            This intake will be labeled for OpenPlan update follow-up so it can be separated from immediate purchase requests.
+            This intake will be labeled for OpenPlan update follow-up so it can be separated from immediate managed-support requests.
           </p>
         </div>
       ) : null}
       {fitConversationIntent && openPlanIntent ? (
         <div className="mb-6 rounded-xl border border-[color:var(--pine)]/25 bg-[color:var(--sand)]/35 px-4 py-3 text-sm text-[color:var(--foreground)]/85">
-          <p className="font-semibold text-[color:var(--pine)]">OpenPlan fit conversation request</p>
+          <p className="font-semibold text-[color:var(--pine)]">OpenPlan / open-source support request</p>
           <p className="mt-1">We captured that you want a fit discussion first, not a forced checkout path.</p>
         </div>
       ) : null}

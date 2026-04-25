@@ -5,6 +5,18 @@
   "itemListElement": [
     {
       "@type": "Service",
+      "name": "Open-Source Software Support",
+      "areaServed": "United States",
+      "serviceType": "Managed deployments, custom forks, hosting, onboarding, support, and open-source stewardship"
+    },
+    {
+      "@type": "Service",
+      "name": "Custom Software Development",
+      "areaServed": "United States",
+      "serviceType": "Dashboards, portals, workflow automation, AI implementation, GIS/data systems, and internal tools"
+    },
+    {
+      "@type": "Service",
       "name": "Urban & Transportation Planning",
       "areaServed": "United States",
       "serviceType": "RTP/ATP, corridor strategies, speed management, safety analysis"
