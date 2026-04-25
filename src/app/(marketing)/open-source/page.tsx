@@ -51,7 +51,7 @@ const manifesto = [
 ]
 
 const featuredOpenSourceProjects = openSourceProjects.filter((project) =>
-  ['openplan', 'opengeo', 'aerial-intel-platform', 'clawmodeler', 'nat-ford-website'].includes(project.slug)
+  ['openplan', 'opengeo', 'aerial-intel-platform', 'clawmodeler'].includes(project.slug)
 )
 
 export default function OpenSourcePage() {
