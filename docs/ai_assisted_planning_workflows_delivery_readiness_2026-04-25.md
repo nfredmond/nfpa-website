@@ -40,6 +40,31 @@ It checks:
 - Checkout `client_reference_id` values infer the same product/tier pair the webhook writes to `customer_product_access`.
 - Prelaunch OpenPlan client reference inference remains compatible.
 
+## Live no-purchase dry-run
+
+Run from repo root:
+
+```bash
+npm run smoke:ai-planning-workflows-launch
+```
+
+This reads the public production readiness and checkout endpoints, but it does not follow Stripe redirects, create a checkout session, complete a purchase, write Supabase rows, send onboarding email, or read secrets.
+
+It checks:
+
+- production reports the three AI-Assisted Planning Workflows tiers as configured,
+- configured env keys are either the canonical `STRIPE_LINK_AI_ASSISTED_PLANNING_WORKFLOWS_*` names or the accepted legacy `STRIPE_LINK_VIBE_CODING_PLANNERS_*` fallbacks,
+- canonical checkout routes redirect to an allowed Stripe host,
+- legacy checkout aliases still redirect to the same canonical product/tier handoff,
+- redirect URLs carry `client_reference_id=planner-ai-workflow-guide-v2:<canonical-tier-id>`.
+
+To save a no-secret operator proof:
+
+```bash
+node scripts/ai-planning-workflows-launch-dry-run.mjs \
+  --proof-file docs/ai_assisted_planning_workflows_launch_dry_run_proof_2026-04-25.md
+```
+
 ## Customer delivery contract
 
 For a completed checkout, fulfillment must write:
@@ -63,9 +88,8 @@ node scripts/provision-product-access.mjs \
 
 ## Still blocking launch
 
-This artifact does not prove live customer delivery. Launch is still blocked until the live Stripe/customer-delivery path is wired and a real fulfillment smoke confirms:
+The local contract smoke and live dry-run do not prove live customer delivery. Launch is still blocked until an authorized real fulfillment smoke confirms:
 
-- production Stripe Payment Links point to the correct one-time products,
 - `checkout.session.completed` reaches `/api/commerce/webhook`,
 - `commerce_fulfillment_ledger` and `customer_product_access` receive the expected product/tier rows,
 - onboarding email or same-day manual delivery is operational,

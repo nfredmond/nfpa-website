@@ -37,6 +37,7 @@ node scripts/provision-product-access.mjs \
 - OpenPlan: `openplan` / `openplan-starter|openplan-professional|openplan-agency`
 - DroneOps: `drone-ops` / `drone-starter|drone-professional|drone-enterprise`
 - Marketing software: `ads-automation` / `ads-essentials|ads-growth|ads-scale`
+- AI-Assisted Planning Workflows: `planner-ai-workflow-guide-v2` / `planner-ai-workflow-guide-starter|planner-ai-workflow-guide-practitioner|planner-ai-workflow-guide-team`
 
 ## Immediate Delivery Promise
 For paid customers, the account access lane must be activated same-day via webhook or manual fallback.

@@ -63,3 +63,20 @@ Summary: PASS=12 FAIL=0 TOTAL=12
 ```
 
 If any tier fails, the script exits non-zero and prints the failing tier + redirect location.
+
+### AI-Assisted Planning Workflows launch dry-run
+
+For the AI-Assisted Planning Workflows launch, run the targeted no-purchase proof:
+
+```bash
+npm run smoke:ai-planning-workflows-launch
+```
+
+This verifies production readiness plus canonical and legacy checkout handoff metadata for the three AI-Assisted Planning Workflows tiers. It does not follow Stripe redirects, complete payment, write customer records, or read secrets.
+
+To archive a no-secret proof artifact:
+
+```bash
+node scripts/ai-planning-workflows-launch-dry-run.mjs \
+  --proof-file docs/ai_assisted_planning_workflows_launch_dry_run_proof_2026-04-25.md
+```
