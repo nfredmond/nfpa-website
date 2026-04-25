@@ -157,7 +157,7 @@ export const offerCatalog: OfferProduct[] = [
   },
   {
     id: "planner-ai-workflow-guide-v2",
-    name: "Planner AI Workflow Guide v2",
+    name: "AI-Assisted Planning Workflows",
     description: "Practical AI workflow guide for planners who need faster drafting, cleaner QA, and defensible deliverables.",
     priceSuffix: "one-time",
     checkoutCtaLabel: "Buy now",

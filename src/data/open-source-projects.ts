@@ -132,18 +132,18 @@ export const openSourceProjects: OpenSourceProject[] = [
     primitives: ['Agent control plane', 'bounded expert councils', 'workflow templates', 'simulation lanes', 'MCP/A2A integration'],
   },
   {
-    name: 'Planner AI Workflow Guide v2',
+    name: 'AI-Assisted Planning Workflows',
     slug: 'planner-ai-workflow-guide-v2',
     status: 'Commercial guide',
     category: 'Training product',
     summary:
-      'Practical planner-safe AI guide for using AI-assisted workflows in ATPs, RTPs, grant narratives, GIS summaries, outreach synthesis, and meeting prep.',
+      'Premium practical guide and template bundle for planner-led AI workflows across ATP/RTP content, grant criteria, GIS summaries, outreach synthesis, board materials, and QA.',
     licenseSpdx: 'Commercial guide',
-    licenseNote: 'Commercial educational product in release preparation; not a public code repository.',
+    licenseNote: 'Commercial educational product; release package is distributed as a paid PDF/HTML/template bundle, not as a public code repository.',
     contributionPath: 'Buyer feedback / implementation workshops',
     paidSupport:
-      'Team workshops, template rollout, AI-use policy setup, QA checklists, and implementation support for planning firms and agencies.',
-    primitives: ['Planner-safe prompts', 'QA checklists', 'rollout plans', 'disclosure language', 'workflow templates'],
+      'Team workshops, template rollout, AI-use policy setup, QA checklists, pilot workflow selection, and implementation support for planning firms and agencies.',
+    primitives: ['PDF guide', 'template bundle', 'pilot examples', 'QA checklists', 'disclosure language'],
   },
 ]
 

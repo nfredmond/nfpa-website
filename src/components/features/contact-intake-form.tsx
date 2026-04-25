@@ -41,7 +41,7 @@ const checkoutProductLabel: Record<string, string> = {
   openplan: 'OpenPlan Software',
   'ads-automation': 'Marketing & Planning Analytics Software',
   'drone-ops': 'DroneOps Intelligence',
-  'planner-ai-workflow-guide-v2': 'Planner AI Workflow Guide v2',
+  'planner-ai-workflow-guide-v2': 'AI-Assisted Planning Workflows',
 }
 
 const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ''
