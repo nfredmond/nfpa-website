@@ -65,6 +65,8 @@ node scripts/ai-planning-workflows-launch-dry-run.mjs \
   --proof-file docs/ai_assisted_planning_workflows_launch_dry_run_proof_2026-04-25.md
 ```
 
+The human-only fulfillment smoke checklist and sanitized proof template are in `docs/ai_assisted_planning_workflows_fulfillment_smoke_checklist_2026-04-25.md`.
+
 ## Customer delivery contract
 
 For a completed checkout, fulfillment must write:
