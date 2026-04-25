@@ -237,6 +237,9 @@ function runSelfTest() {
   assert.deepEqual(validateMarkdown(template), [])
   assert(validateMarkdown(template, { requireComplete: true }).some((error) => error.type === 'missing sanitized value for Smoke completed at UTC'))
 
+  const missingField = template.replace('| Ledger row present | `TBD` | yes or no |\n', '')
+  assert(validateMarkdown(missingField).some((error) => error.type === 'missing proof field: Ledger row present'))
+
   let complete = template
   for (const [label, value] of [
     ['Smoke completed at UTC', '2026-04-25T18:30:00Z'],
@@ -256,6 +259,28 @@ function runSelfTest() {
     complete = complete.replace(`| ${label} | \`TBD\` |`, `| ${label} | \`${value}\` |`)
   }
   assert.deepEqual(validateMarkdown(complete, { requireComplete: true }), [])
+
+  for (const [label, unsafeValue] of [
+    ['Smoke completed at UTC', '2026-04-25 18:30:00'],
+    ['Target mode', 'production'],
+    ['Tier ID', 'starter'],
+    ['Checkout route tier used', 'planner-ai-workflow-guide-enterprise'],
+    ['Stripe event ID suffix only', 'ABC'],
+    ['Stripe session ID suffix only', 'WXYZ-5678'],
+    ['Webhook delivery status', 'ok'],
+    ['Ledger row present', 'true'],
+    ['Access row active', 'active'],
+    ['Portal access visible', 'visible'],
+    ['Onboarding/email state', 'done'],
+    ['Operator', 'Authorized Operator With Full Name Too Long'],
+    ['External evidence reference', 'evidence reference with unsupported punctuation !'],
+  ]) {
+    const invalidField = template.replace(`| ${label} | \`TBD\` |`, `| ${label} | \`${unsafeValue}\` |`)
+    assert(
+      validateMarkdown(invalidField).some((error) => error.type === `unsafe value format for ${label}`),
+      `Expected unsafe format rejection for ${label}`,
+    )
+  }
 
   for (const [type, unsafeText] of [
     ['email address', 'Operator: buyer@example.com'],

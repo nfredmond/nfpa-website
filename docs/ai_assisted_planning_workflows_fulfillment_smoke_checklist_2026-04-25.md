@@ -81,23 +81,23 @@ The validator is a guardrail for obvious unsafe data such as emails, raw URLs, f
 
 ## Sanitized Proof Template
 
-Fill this section only after the human-only smoke is complete. Keep raw PII and screenshots out of git. Prefer the helper above so the final proof has safe-format prompts and a local sanitizer pass.
+Fill this section only after the human-only smoke is complete. Keep raw PII and screenshots out of git. Prefer the helper above so the final proof has safe-format prompts and a local sanitizer pass. If editing proof by hand, keep these field labels exactly; the validator matches them by label.
 
-| Field | Sanitized value |
-|---|---|
-| Smoke completed at UTC | `TBD` |
-| Target mode | `test` or `live` |
-| Tier ID | `planner-ai-workflow-guide-...` |
-| Checkout route tier used | `TBD` |
-| Stripe event ID suffix only | `TBD` |
-| Stripe session ID suffix only | `TBD` |
-| Webhook delivery status | `TBD` |
-| Ledger row present | `yes/no` |
-| Access row active | `yes/no` |
-| Portal access visible | `yes/no` |
-| Onboarding/email state | `sent/pending_email_config/email_failed/manual-delivery-ready/not-tested` |
-| Operator | `TBD` |
-| External evidence reference | `TBD` |
+| Field | Sanitized value | Required safe format |
+|---|---|---|
+| Smoke completed at UTC | `TBD` | ISO UTC timestamp, e.g. `2026-04-25T18:30:00Z` |
+| Target mode | `TBD` | `test` or `live` |
+| Tier ID | `TBD` | `planner-ai-workflow-guide-starter`, `planner-ai-workflow-guide-practitioner`, or `planner-ai-workflow-guide-team` |
+| Checkout route tier used | `TBD` | canonical tier ID or accepted legacy route alias |
+| Stripe event ID suffix only | `TBD` | last 4-12 alphanumeric chars only; no `evt_` prefix |
+| Stripe session ID suffix only | `TBD` | last 4-12 alphanumeric chars only; no `cs_` prefix |
+| Webhook delivery status | `TBD` | `succeeded`, `delivered`, `failed`, `not-found`, or `not-tested` |
+| Ledger row present | `TBD` | `yes` or `no` |
+| Access row active | `TBD` | `yes` or `no` |
+| Portal access visible | `TBD` | `yes` or `no` |
+| Onboarding/email state | `TBD` | `sent`, `pending_email_config`, `email_failed`, `manual-delivery-ready`, or `not-tested` |
+| Operator | `TBD` | role/name initials only; no email or buyer identity |
+| External evidence reference | `TBD` | approved evidence vault/ticket reference only; no URL or raw ID |
 
 ## Pass Criteria
 
