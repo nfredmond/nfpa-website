@@ -5,7 +5,14 @@ import { Container } from '@/components/layout/container'
 import { Section } from '@/components/layout/section'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { implementationOffers, openSourceProjects } from '@/data/open-source-projects'
+import {
+  implementationOffers,
+  implementationPackages,
+  licenseLabel,
+  openSourceProjects,
+  readinessLabel,
+  readinessNote,
+} from '@/data/open-source-projects'
 
 export const metadata: Metadata = {
   title: 'Open Source',
@@ -148,9 +155,10 @@ export default function OpenSourcePage() {
                 <CardContent className="p-6 md:p-7">
                   <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                     <div>
-                      <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--foreground)]/58">
-                        {project.category} · {project.status}
-                      </p>
+                      <div className="flex flex-wrap gap-x-3 gap-y-1 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--foreground)]/58">
+                        <span>{project.category}</span>
+                        <span>{readinessLabel(project.status)}</span>
+                      </div>
                       <h3 className="mt-2 text-2xl font-semibold text-[color:var(--ink)]">{project.name}</h3>
                     </div>
                     <a
@@ -164,6 +172,22 @@ export default function OpenSourcePage() {
                   </div>
 
                   <p className="mt-4 text-[0.98rem] leading-7 text-[color:var(--foreground)]/78">{project.summary}</p>
+
+                  <div className="mt-5 grid gap-3 rounded-2xl border border-[color:var(--line)] bg-[color:var(--fog)]/42 p-4 text-sm md:grid-cols-3">
+                    <div>
+                      <p className="text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--foreground)]/55">Readiness</p>
+                      <p className="mt-1 font-semibold text-[color:var(--ink)]">{readinessLabel(project.status)}</p>
+                    </div>
+                    <div>
+                      <p className="text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--foreground)]/55">License</p>
+                      <p className="mt-1 font-semibold text-[color:var(--ink)]">{licenseLabel(project)}</p>
+                    </div>
+                    <div>
+                      <p className="text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--foreground)]/55">Contribution path</p>
+                      <p className="mt-1 font-semibold text-[color:var(--ink)]">Issues / forks / pull requests</p>
+                    </div>
+                    <p className="md:col-span-3 text-[0.82rem] leading-5 text-[color:var(--foreground)]/70">{readinessNote(project.status)}</p>
+                  </div>
 
                   <div className="mt-5 grid gap-4 md:grid-cols-2">
                     <div>
@@ -187,6 +211,24 @@ export default function OpenSourcePage() {
                   <p className="mt-5 border-t border-[color:var(--line)] pt-4 text-xs leading-5 text-[color:var(--foreground)]/58">
                     {project.licenseNote}
                   </p>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    <a
+                      href={project.repoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center rounded-full border border-[color:var(--line)] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.1em] hover:border-[color:var(--pine)] hover:text-[color:var(--pine)]"
+                    >
+                      Inspect repo <ExternalLink className="ml-1.5 h-3.5 w-3.5" />
+                    </a>
+                    <a
+                      href={`${project.repoUrl}/issues`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center rounded-full border border-[color:var(--line)] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.1em] hover:border-[color:var(--pine)] hover:text-[color:var(--pine)]"
+                    >
+                      Issues / roadmap <ExternalLink className="ml-1.5 h-3.5 w-3.5" />
+                    </a>
+                  </div>
                 </CardContent>
               </Card>
             ))}
@@ -219,6 +261,29 @@ export default function OpenSourcePage() {
                 </ul>
               </Card>
             ))}
+          </div>
+
+          <div className="mt-10 rounded-[2rem] border border-[color:var(--line)] bg-[color:var(--fog)]/45 p-6 md:p-8">
+            <div className="max-w-3xl">
+              <p className="text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--foreground)]/58">How to engage</p>
+              <h3 className="mt-3 text-3xl font-semibold text-[color:var(--ink)]">Choose the smallest responsible support lane.</h3>
+              <p className="mt-3 text-[color:var(--foreground)]/76">
+                Open-source work should not force a giant procurement step. Start with the support shape that matches the risk.
+              </p>
+            </div>
+            <div className="mt-6 grid gap-4 lg:grid-cols-4">
+              {implementationPackages.map((pkg) => (
+                <div key={pkg.name} className="rounded-2xl border border-[color:var(--line)] bg-white/70 p-5 dark:bg-white/[0.03]">
+                  <h4 className="text-lg font-semibold text-[color:var(--ink)]">{pkg.name}</h4>
+                  <p className="mt-3 text-sm leading-6 text-[color:var(--foreground)]/74">{pkg.deliverable}</p>
+                  <ul className="mt-4 space-y-1.5 text-xs leading-5 text-[color:var(--foreground)]/66">
+                    {pkg.includes.slice(0, 3).map((item) => (
+                      <li key={item}>• {item}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
           </div>
         </Container>
       </Section>

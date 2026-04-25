@@ -12,6 +12,40 @@ export type OpenSourceProject = {
   primitives: string[]
 }
 
+export function readinessLabel(status: OpenSourceProject['status']) {
+  switch (status) {
+    case 'Production site':
+      return 'Production surface'
+    case 'Public alpha':
+      return 'Usable alpha'
+    case 'Active build':
+      return 'Active buildout'
+    case 'Utility':
+      return 'Specialized utility'
+    case 'Research lineage':
+      return 'Research / reference'
+  }
+}
+
+export function readinessNote(status: OpenSourceProject['status']) {
+  switch (status) {
+    case 'Production site':
+      return 'Live public surface; best used as a working reference or supported implementation pattern.'
+    case 'Public alpha':
+      return 'Installable or inspectable now, with scope and hardening still evolving.'
+    case 'Active build':
+      return 'Moving quickly; best for pilots, custom forks, and teams comfortable shaping the tool.'
+    case 'Utility':
+      return 'Narrow, practical tool; useful when the workflow matches the repo.'
+    case 'Research lineage':
+      return 'Reference code and product lineage; useful for audits, salvage, prototypes, and custom builds.'
+  }
+}
+
+export function licenseLabel(project: OpenSourceProject) {
+  return project.licenseNote.startsWith('Open-source project') ? 'Repo license governs reuse' : 'Verify repo license before reuse'
+}
+
 export const openSourceProjects: OpenSourceProject[] = [
   {
     name: 'OpenPlan',
@@ -220,5 +254,32 @@ export const implementationOffers = [
     name: '24-hour support and operations',
     summary: 'For teams that need confidence, we provide an operator lane for urgent fixes, QA, uptime checks, and release triage.',
     examples: ['priority response', 'bug triage', 'security patch support', 'monthly improvement review'],
+  },
+]
+
+export const implementationPackages = [
+  {
+    name: 'Open-source fit audit',
+    bestFor: 'Teams that want to know whether one of these repos can solve a real workflow before committing to a build.',
+    deliverable: 'A short recommendation memo: self-host, supported deployment, custom fork, or no-build/avoid.',
+    includes: ['repo/readiness review', 'workflow fit interview', 'risk and data gap list', 'recommended next scope'],
+  },
+  {
+    name: 'Managed deployment sprint',
+    bestFor: 'Agencies or companies that want a working hosted tool without becoming DevOps maintainers.',
+    deliverable: 'Configured deployment, environment setup, admin notes, smoke test, and handoff checklist.',
+    includes: ['Vercel/Supabase or equivalent setup', 'domain/env configuration', 'basic monitoring', 'staff handoff'],
+  },
+  {
+    name: 'Custom fork / internal edition',
+    bestFor: 'Teams whose workflow is too specific for generic software but too important for spreadsheets.',
+    deliverable: 'A supported fork with local data model, permissions, branding, workflows, and reporting outputs.',
+    includes: ['fork strategy', 'custom modules', 'data migration', 'merge-forward maintenance plan'],
+  },
+  {
+    name: 'Operator support lane',
+    bestFor: 'Teams running open-source tools in public, production, or deadline-sensitive environments.',
+    deliverable: 'Ongoing support lane for triage, upgrades, release notes, QA checks, and monthly improvement review.',
+    includes: ['priority response', 'bug triage', 'security/update review', 'monthly operations memo'],
   },
 ]

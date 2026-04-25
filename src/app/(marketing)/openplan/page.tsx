@@ -5,7 +5,7 @@ import { Container } from '@/components/layout/container'
 import { Section } from '@/components/layout/section'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { implementationOffers, openSourceProjects } from '@/data/open-source-projects'
+import { implementationOffers, licenseLabel, openSourceProjects, readinessLabel, readinessNote } from '@/data/open-source-projects'
 
 export const metadata: Metadata = {
   title: 'OpenPlan',
@@ -157,6 +157,27 @@ export default function OpenPlanPage() {
 
       <Section spacing="md" className="border-y border-[color:var(--line)] bg-[color:var(--background)]/85">
         <Container>
+          {openPlanProject ? (
+            <div className="mb-5 grid gap-3 rounded-[1.75rem] border border-[color:var(--line)] bg-[color:var(--fog)]/45 p-4 text-sm md:grid-cols-[0.8fr_0.8fr_1fr_auto] md:items-center">
+              <div>
+                <p className="text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--foreground)]/55">Readiness</p>
+                <p className="mt-1 font-semibold text-[color:var(--ink)]">{readinessLabel(openPlanProject.status)}</p>
+              </div>
+              <div>
+                <p className="text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--foreground)]/55">License</p>
+                <p className="mt-1 font-semibold text-[color:var(--ink)]">{licenseLabel(openPlanProject)}</p>
+              </div>
+              <p className="text-[color:var(--foreground)]/72">{readinessNote(openPlanProject.status)}</p>
+              <a
+                href={`${openPlanProject.repoUrl}/issues`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center rounded-full border border-[color:var(--line)] px-4 py-2 font-semibold hover:border-[color:var(--pine)] hover:text-[color:var(--pine)]"
+              >
+                Issues / roadmap <ExternalLink className="ml-2 h-4 w-4" />
+              </a>
+            </div>
+          ) : null}
           <div className="grid gap-4 md:grid-cols-3">
             {continuityLanes.map((lane) => (
               <Card key={lane.title} className="border-[color:var(--line)] bg-[color:var(--background)] p-6">

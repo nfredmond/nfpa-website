@@ -6,7 +6,14 @@ import { Section } from '@/components/layout/section'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { SectionEndCTA } from '@/components/features/section-end-cta'
-import { implementationOffers, openSourceProjects } from '@/data/open-source-projects'
+import {
+  implementationOffers,
+  implementationPackages,
+  licenseLabel,
+  openSourceProjects,
+  readinessLabel,
+  readinessNote,
+} from '@/data/open-source-projects'
 
 export const metadata: Metadata = {
   title: 'Open-Source Projects',
@@ -99,7 +106,7 @@ export default function ProductsPage() {
             </div>
             <p className="max-w-xl text-sm leading-6 text-[color:var(--foreground)]/72">
               Repository pages are the source of truth for licenses, install instructions, current readiness, and contribution status.
-              Some projects are early; that is intentional. Adoption starts with visibility.
+              The labels below are practical buyer guidance, not a substitute for reading the repo before reuse.
             </p>
           </div>
 
@@ -109,9 +116,10 @@ export default function ProductsPage() {
                 <CardContent className="p-6 md:p-7">
                   <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                     <div>
-                      <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--foreground)]/58">
-                        {project.category} · {project.status}
-                      </p>
+                      <div className="flex flex-wrap gap-x-3 gap-y-1 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--foreground)]/58">
+                        <span>{project.category}</span>
+                        <span>{readinessLabel(project.status)}</span>
+                      </div>
                       <h3 className="mt-2 text-2xl font-semibold text-[color:var(--ink)]">{project.name}</h3>
                     </div>
                     <div className="flex shrink-0 flex-wrap gap-2">
@@ -138,6 +146,22 @@ export default function ProductsPage() {
 
                   <p className="mt-4 text-[0.98rem] leading-7 text-[color:var(--foreground)]/78">{project.summary}</p>
 
+                  <div className="mt-5 grid gap-3 rounded-2xl border border-[color:var(--line)] bg-[color:var(--fog)]/42 p-4 text-sm md:grid-cols-3">
+                    <div>
+                      <p className="text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--foreground)]/55">Readiness</p>
+                      <p className="mt-1 font-semibold text-[color:var(--ink)]">{readinessLabel(project.status)}</p>
+                    </div>
+                    <div>
+                      <p className="text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--foreground)]/55">License</p>
+                      <p className="mt-1 font-semibold text-[color:var(--ink)]">{licenseLabel(project)}</p>
+                    </div>
+                    <div>
+                      <p className="text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--foreground)]/55">Contribution path</p>
+                      <p className="mt-1 font-semibold text-[color:var(--ink)]">Use GitHub issues / forks</p>
+                    </div>
+                    <p className="md:col-span-3 text-[0.82rem] leading-5 text-[color:var(--foreground)]/70">{readinessNote(project.status)}</p>
+                  </div>
+
                   <div className="mt-5 grid gap-4 md:grid-cols-2">
                     <div>
                       <p className="text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--foreground)]/58">
@@ -160,6 +184,32 @@ export default function ProductsPage() {
                   <p className="mt-5 border-t border-[color:var(--line)] pt-4 text-xs leading-5 text-[color:var(--foreground)]/58">
                     {project.licenseNote}
                   </p>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    <a
+                      href={project.repoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center rounded-full border border-[color:var(--line)] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.1em] hover:border-[color:var(--pine)] hover:text-[color:var(--pine)]"
+                    >
+                      Inspect repo <ExternalLink className="ml-1.5 h-3.5 w-3.5" />
+                    </a>
+                    <a
+                      href={`${project.repoUrl}/fork`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center rounded-full border border-[color:var(--line)] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.1em] hover:border-[color:var(--pine)] hover:text-[color:var(--pine)]"
+                    >
+                      Fork it <GitFork className="ml-1.5 h-3.5 w-3.5" />
+                    </a>
+                    <a
+                      href={`${project.repoUrl}/issues`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center rounded-full border border-[color:var(--line)] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.1em] hover:border-[color:var(--pine)] hover:text-[color:var(--pine)]"
+                    >
+                      Issues / roadmap <ExternalLink className="ml-1.5 h-3.5 w-3.5" />
+                    </a>
+                  </div>
                 </CardContent>
               </Card>
             ))}
@@ -178,6 +228,17 @@ export default function ProductsPage() {
               Most teams do not fail because the code was unavailable. They fail because nobody owned deployment,
               data quality, permissions, training, support, and the last-mile workflow. That is where we help.
             </p>
+          </div>
+
+          <div className="mb-10 grid gap-4 lg:grid-cols-4">
+            {implementationPackages.map((pkg) => (
+              <Card key={pkg.name} className="p-5">
+                <p className="text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--foreground)]/58">Engagement package</p>
+                <h3 className="mt-3 text-xl font-semibold text-[color:var(--ink)]">{pkg.name}</h3>
+                <p className="mt-3 text-sm leading-6 text-[color:var(--foreground)]/76">{pkg.bestFor}</p>
+                <p className="mt-4 border-t border-[color:var(--line)] pt-3 text-sm font-semibold text-[color:var(--pine)]">{pkg.deliverable}</p>
+              </Card>
+            ))}
           </div>
 
           <div className="grid gap-5 md:grid-cols-2">
