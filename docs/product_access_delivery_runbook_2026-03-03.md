@@ -53,9 +53,10 @@ node scripts/check-commerce-webhook-health.mjs --windowMinutes=120
 - Exit code `2` = alert condition (no successful deliveries in window)
 
 ## Post-Purchase Welcome Trigger
-- On `checkout.session.completed`, webhook automation now records onboarding state in `customer_onboarding_events`.
-- If `RESEND_API_KEY` and `ONBOARDING_FROM_EMAIL` are configured, a welcome/provisioning email is sent automatically.
-- If email provider config is missing, event status is still queued with actionable metadata.
+- On `checkout.session.completed`, webhook automation records onboarding state in `customer_onboarding_events`.
+- If `RESEND_API_KEY` and `ONBOARDING_FROM_EMAIL` are configured and the provider accepts the email, status is `sent`.
+- If email provider config is missing, status is `pending_email_config`; preserve the row as proof and use same-day manual delivery.
+- If the provider rejects the send, status is `email_failed`; preserve the provider error and use same-day manual delivery.
 
 ## Safety Notes
 - Never expose service-role keys client-side.

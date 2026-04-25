@@ -94,5 +94,5 @@ The local contract smoke and live dry-run do not prove live customer delivery. L
 
 - `checkout.session.completed` reaches `/api/commerce/webhook`,
 - `commerce_fulfillment_ledger` and `customer_product_access` receive the expected product/tier rows,
-- onboarding email or same-day manual delivery is operational,
+- onboarding records `sent`, `pending_email_config`, or `email_failed`, with same-day manual delivery ready for non-sent states,
 - the buyer can sign in and see active access in `/portal`.

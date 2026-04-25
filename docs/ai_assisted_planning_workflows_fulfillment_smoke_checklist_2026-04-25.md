@@ -56,7 +56,8 @@ Checkout and fulfillment:
 - [ ] `client_reference_id` equals `planner-ai-workflow-guide-v2:<canonical-tier-id>`.
 - [ ] `commerce_fulfillment_ledger` has the matching Stripe event recorded without duplicate-processing errors.
 - [ ] `customer_product_access` has one active row for `planner-ai-workflow-guide-v2` and the selected canonical tier.
-- [ ] `customer_onboarding_events` is recorded as sent, queued, or otherwise operational per the delivery runbook.
+- [ ] `customer_onboarding_events` is recorded with status `sent`, `pending_email_config`, or `email_failed` per the delivery runbook.
+- [ ] If onboarding status is `pending_email_config` or `email_failed`, same-day manual delivery owner and evidence are recorded outside this repo.
 - [ ] Smoke buyer can sign in to `/portal` and see active access for AI-Assisted Planning Workflows.
 
 ## Sanitized Proof Template
@@ -75,7 +76,7 @@ Fill this section only after the human-only smoke is complete. Keep raw PII and 
 | Ledger row present | `yes/no` |
 | Access row active | `yes/no` |
 | Portal access visible | `yes/no` |
-| Onboarding/email state | `sent/queued/manual-delivery-ready/not-tested` |
+| Onboarding/email state | `sent/pending_email_config/email_failed/manual-delivery-ready/not-tested` |
 | Operator | `TBD` |
 | External evidence reference | `TBD` |
 
