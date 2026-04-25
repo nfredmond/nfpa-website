@@ -13,9 +13,9 @@
 | `drone-starter` | DroneOps Intelligence | `STRIPE_LINK_DRONE_STARTER` |
 | `drone-professional` | DroneOps Intelligence | `STRIPE_LINK_DRONE_PROFESSIONAL` |
 | `drone-enterprise` | DroneOps Intelligence | `STRIPE_LINK_DRONE_ENTERPRISE` |
-| `vibe-coding-planners-starter` | Vibe Coding for Planners | `STRIPE_LINK_VIBE_CODING_PLANNERS_29` |
-| `vibe-coding-planners-practitioner` | Vibe Coding for Planners | `STRIPE_LINK_VIBE_CODING_PLANNERS_39` |
-| `vibe-coding-planners-team` | Vibe Coding for Planners | `STRIPE_LINK_VIBE_CODING_PLANNERS_49` |
+| `planner-ai-workflow-guide-starter` | Planner AI Workflow Guide v2 | `STRIPE_LINK_VIBE_CODING_PLANNERS_29` |
+| `planner-ai-workflow-guide-practitioner` | Planner AI Workflow Guide v2 | `STRIPE_LINK_VIBE_CODING_PLANNERS_39` |
+| `planner-ai-workflow-guide-team` | Planner AI Workflow Guide v2 | `STRIPE_LINK_VIBE_CODING_PLANNERS_49` |
 
 ---
 

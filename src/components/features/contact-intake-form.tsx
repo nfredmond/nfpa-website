@@ -34,14 +34,14 @@ const checkoutInquiryByProduct: Record<string, string> = {
   openplan: 'OpenPlan product',
   'ads-automation': 'Ads automation product',
   'drone-ops': 'General inquiry',
-  'vibe-coding-for-planners': 'General inquiry',
+  'planner-ai-workflow-guide-v2': 'General inquiry',
 }
 
 const checkoutProductLabel: Record<string, string> = {
   openplan: 'OpenPlan Software',
   'ads-automation': 'Marketing & Planning Analytics Software',
   'drone-ops': 'DroneOps Intelligence',
-  'vibe-coding-for-planners': 'Vibe Coding for Planners (PDF Guide)',
+  'planner-ai-workflow-guide-v2': 'Planner AI Workflow Guide v2',
 }
 
 const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ''

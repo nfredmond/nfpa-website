@@ -132,12 +132,12 @@ export const openSourceProjects: OpenSourceProject[] = [
     primitives: ['Agent control plane', 'bounded expert councils', 'workflow templates', 'simulation lanes', 'MCP/A2A integration'],
   },
   {
-    name: 'Vibe Coding for Planners',
-    slug: 'vibe-coding-for-planners',
+    name: 'Planner AI Workflow Guide v2',
+    slug: 'planner-ai-workflow-guide-v2',
     status: 'Commercial guide',
     category: 'Training product',
     summary:
-      'Practical planner-safe AI guide for using vibe coding in ATPs, RTPs, grant narratives, GIS summaries, outreach synthesis, and meeting prep.',
+      'Practical planner-safe AI guide for using AI-assisted workflows in ATPs, RTPs, grant narratives, GIS summaries, outreach synthesis, and meeting prep.',
     licenseSpdx: 'Commercial guide',
     licenseNote: 'Commercial educational product in release preparation; not a public code repository.',
     contributionPath: 'Buyer feedback / implementation workshops',

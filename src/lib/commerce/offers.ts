@@ -156,14 +156,14 @@ export const offerCatalog: OfferProduct[] = [
     ],
   },
   {
-    id: "vibe-coding-for-planners",
-    name: "Vibe Coding for Planners (PDF Guide)",
+    id: "planner-ai-workflow-guide-v2",
+    name: "Planner AI Workflow Guide v2",
     description: "Practical AI workflow guide for planners who need faster drafting, cleaner QA, and defensible deliverables.",
     priceSuffix: "one-time",
     checkoutCtaLabel: "Buy now",
     tiers: [
       {
-        id: "vibe-coding-planners-starter",
+        id: "planner-ai-workflow-guide-starter",
         name: "Starter",
         monthlyUsd: 29,
         summary: "Core guide + quick-start tools to begin AI-assisted planning workflows this week.",
@@ -176,7 +176,7 @@ export const offerCatalog: OfferProduct[] = [
         stripePaymentLinkEnv: "STRIPE_LINK_VIBE_CODING_PLANNERS_29",
       },
       {
-        id: "vibe-coding-planners-practitioner",
+        id: "planner-ai-workflow-guide-practitioner",
         name: "Pro",
         monthlyUsd: 39,
         summary: "Practical default for immediate implementation across consultant or agency workflows.",
@@ -189,7 +189,7 @@ export const offerCatalog: OfferProduct[] = [
         stripePaymentLinkEnv: "STRIPE_LINK_VIBE_CODING_PLANNERS_39",
       },
       {
-        id: "vibe-coding-planners-team",
+        id: "planner-ai-workflow-guide-team",
         name: "Team",
         monthlyUsd: 49,
         summary: "Built for team leads standardizing process, QA, and internal rollout.",
