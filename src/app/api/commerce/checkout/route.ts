@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { findTierById } from '@/lib/commerce/offers'
+import { resolveStripePaymentLinkEnv } from '@/lib/commerce/stripe-payment-links'
 
 const OPENPLAN_PRELAUNCH_END = process.env.OPENPLAN_PRELAUNCH_END ?? '2026-04-01T00:00:00-07:00'
 const OPENPLAN_PRELAUNCH_PROMO_CODE = process.env.OPENPLAN_PRELAUNCH_PROMO_CODE ?? 'OPENPLAN15'
@@ -15,15 +16,6 @@ function buildContactFallback(request: NextRequest, tier: ReturnType<typeof find
   fallback.searchParams.set('tier', tier?.id ?? 'unknown')
   fallback.searchParams.set('checkout', reason)
   return fallback
-}
-
-function resolveStripePaymentLink(envName: string): string | null {
-  const value = process.env[envName]
-  if (!value?.trim()) {
-    return null
-  }
-
-  return value.trim()
 }
 
 function isAllowedStripeHost(hostname: string): boolean {
@@ -88,18 +80,19 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Unknown tier' }, { status: 404 })
   }
 
-  const paymentLink = resolveStripePaymentLink(tier.stripePaymentLinkEnv)
+  const paymentLink = resolveStripePaymentLinkEnv(tier.stripePaymentLinkEnv)
 
-  if (!paymentLink) {
+  if (!paymentLink.paymentLink) {
     return NextResponse.redirect(buildContactFallback(request, tier, 'pending'), { status: 302 })
   }
 
-  const checkoutUrl = validateStripePaymentLink(paymentLink)
+  const checkoutUrl = validateStripePaymentLink(paymentLink.paymentLink)
 
   if (!checkoutUrl) {
     console.warn('Invalid Stripe payment link configured', {
       tierId: tier.id,
-      env: tier.stripePaymentLinkEnv,
+      env: paymentLink.configuredEnvKey ?? paymentLink.envKey,
+      canonicalEnv: paymentLink.envKey,
     })
 
     return NextResponse.redirect(buildContactFallback(request, tier, 'invalid'), { status: 302 })

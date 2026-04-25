@@ -35,9 +35,14 @@ NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN=<MAPBOX_PUBLIC_TOKEN>
 # (OpenClaw alias equivalent: openai-codex/gpt-5.3-instant)
 
 # Stripe checkout links used by /api/commerce/checkout routing
-STRIPE_LINK_VIBE_CODING_PLANNERS_29=<https://buy.stripe.com/...>
-STRIPE_LINK_VIBE_CODING_PLANNERS_39=<https://buy.stripe.com/...>
-STRIPE_LINK_VIBE_CODING_PLANNERS_49=<https://buy.stripe.com/...>
+STRIPE_LINK_AI_ASSISTED_PLANNING_WORKFLOWS_29=<https://buy.stripe.com/...>
+STRIPE_LINK_AI_ASSISTED_PLANNING_WORKFLOWS_39=<https://buy.stripe.com/...>
+STRIPE_LINK_AI_ASSISTED_PLANNING_WORKFLOWS_49=<https://buy.stripe.com/...>
+
+# Legacy fallback aliases still accepted for AI-Assisted Planning Workflows
+# STRIPE_LINK_VIBE_CODING_PLANNERS_29=<https://buy.stripe.com/...>
+# STRIPE_LINK_VIBE_CODING_PLANNERS_39=<https://buy.stripe.com/...>
+# STRIPE_LINK_VIBE_CODING_PLANNERS_49=<https://buy.stripe.com/...>
 
 # Stripe Price IDs for launch tracking / operations docs
 STRIPE_PRICE_VIBE_CODING_PLANNERS_29=<price_...>
@@ -53,7 +58,7 @@ STRIPE_PRICE_VIBE_CODING_PLANNERS_49=<price_...>
   - `https://<your-domain>/login`
   - `https://<your-domain>/auth/update-password`
   - local dev: `http://localhost:3000/login` and `http://localhost:3000/auth/update-password`
-- `STRIPE_LINK_VIBE_CODING_PLANNERS_*` values are required for live checkout redirects from `/api/commerce/checkout`.
+- `STRIPE_LINK_AI_ASSISTED_PLANNING_WORKFLOWS_*` values are the canonical checkout env names for AI-Assisted Planning Workflows. The legacy `STRIPE_LINK_VIBE_CODING_PLANNERS_*` aliases are still accepted as fallbacks when the canonical key is unset or blank.
 - `STRIPE_PRICE_VIBE_CODING_PLANNERS_*` values are documented for launch ops and reconciliation (not read by app runtime yet).
 - Optional prelaunch OpenPlan discount controls:
   - `OPENPLAN_PRELAUNCH_PROMO_CODE` (default: `OPENPLAN15`)

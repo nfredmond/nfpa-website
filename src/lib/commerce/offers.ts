@@ -1,5 +1,6 @@
 export type OfferTier = {
   id: string;
+  aliases?: string[];
   name: string;
   monthlyUsd: number;
   summary: string;
@@ -164,6 +165,7 @@ export const offerCatalog: OfferProduct[] = [
     tiers: [
       {
         id: "planner-ai-workflow-guide-starter",
+        aliases: ["vibe-coding-planners-starter"],
         name: "Starter",
         monthlyUsd: 29,
         summary: "Core guide + quick-start tools to begin AI-assisted planning workflows this week.",
@@ -173,10 +175,11 @@ export const offerCatalog: OfferProduct[] = [
           "Starter prompts",
           "Immediate digital access",
         ],
-        stripePaymentLinkEnv: "STRIPE_LINK_VIBE_CODING_PLANNERS_29",
+        stripePaymentLinkEnv: "STRIPE_LINK_AI_ASSISTED_PLANNING_WORKFLOWS_29",
       },
       {
         id: "planner-ai-workflow-guide-practitioner",
+        aliases: ["vibe-coding-planners-practitioner"],
         name: "Pro",
         monthlyUsd: 39,
         summary: "Practical default for immediate implementation across consultant or agency workflows.",
@@ -186,10 +189,11 @@ export const offerCatalog: OfferProduct[] = [
           "Decision-gate checklist",
           "Offline continuity SOP",
         ],
-        stripePaymentLinkEnv: "STRIPE_LINK_VIBE_CODING_PLANNERS_39",
+        stripePaymentLinkEnv: "STRIPE_LINK_AI_ASSISTED_PLANNING_WORKFLOWS_39",
       },
       {
         id: "planner-ai-workflow-guide-team",
+        aliases: ["vibe-coding-planners-team"],
         name: "Team",
         monthlyUsd: 49,
         summary: "Built for team leads standardizing process, QA, and internal rollout.",
@@ -199,7 +203,7 @@ export const offerCatalog: OfferProduct[] = [
           "QA logs",
           "Internal facilitation script",
         ],
-        stripePaymentLinkEnv: "STRIPE_LINK_VIBE_CODING_PLANNERS_49",
+        stripePaymentLinkEnv: "STRIPE_LINK_AI_ASSISTED_PLANNING_WORKFLOWS_49",
       },
     ],
   },
@@ -208,7 +212,7 @@ export const offerCatalog: OfferProduct[] = [
 export function findTierById(tierId: string): (OfferTier & { product: OfferProduct }) | null {
   for (const product of offerCatalog) {
     for (const tier of product.tiers) {
-      if (tier.id === tierId) {
+      if (tier.id === tierId || tier.aliases?.includes(tierId)) {
         return { ...tier, product };
       }
     }

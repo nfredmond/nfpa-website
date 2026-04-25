@@ -24,9 +24,9 @@ REQUIRED_KEYS=(
   STRIPE_LINK_DRONE_STARTER
   STRIPE_LINK_DRONE_PROFESSIONAL
   STRIPE_LINK_DRONE_ENTERPRISE
-  STRIPE_LINK_VIBE_CODING_PLANNERS_29
-  STRIPE_LINK_VIBE_CODING_PLANNERS_39
-  STRIPE_LINK_VIBE_CODING_PLANNERS_49
+  STRIPE_LINK_AI_ASSISTED_PLANNING_WORKFLOWS_29
+  STRIPE_LINK_AI_ASSISTED_PLANNING_WORKFLOWS_39
+  STRIPE_LINK_AI_ASSISTED_PLANNING_WORKFLOWS_49
 )
 
 read_value() {
@@ -41,11 +41,41 @@ read_value() {
   printf '%s' "$raw"
 }
 
+fallback_key() {
+  local key="$1"
+  case "$key" in
+    STRIPE_LINK_AI_ASSISTED_PLANNING_WORKFLOWS_29) printf '%s' "STRIPE_LINK_VIBE_CODING_PLANNERS_29" ;;
+    STRIPE_LINK_AI_ASSISTED_PLANNING_WORKFLOWS_39) printf '%s' "STRIPE_LINK_VIBE_CODING_PLANNERS_39" ;;
+    STRIPE_LINK_AI_ASSISTED_PLANNING_WORKFLOWS_49) printf '%s' "STRIPE_LINK_VIBE_CODING_PLANNERS_49" ;;
+    *) printf '%s' "" ;;
+  esac
+}
+
+read_required_value() {
+  local key="$1"
+  local fallback
+  local value
+
+  fallback="$(fallback_key "$key")"
+  value="$(read_value "$key")"
+
+  if [[ -z "$value" && -n "$fallback" ]]; then
+    value="$(read_value "$fallback")"
+  fi
+
+  printf '%s' "$value"
+}
+
 missing=()
 for key in "${REQUIRED_KEYS[@]}"; do
-  value="$(read_value "$key")"
+  value="$(read_required_value "$key")"
   if [[ -z "$value" ]]; then
-    missing+=("$key")
+    fallback="$(fallback_key "$key")"
+    if [[ -n "$fallback" ]]; then
+      missing+=("$key (or $fallback)")
+    else
+      missing+=("$key")
+    fi
   fi
 
 done
@@ -70,9 +100,9 @@ push_key() {
   )
 }
 
-echo "Wiring 12 STRIPE_LINK_* variables into Vercel (production, preview, development)..."
+echo "Wiring 12 canonical STRIPE_LINK_* variables into Vercel (production, preview, development)..."
 for key in "${REQUIRED_KEYS[@]}"; do
-  value="$(read_value "$key")"
+  value="$(read_required_value "$key")"
   push_key "$key" "$value" production
   push_key "$key" "$value" preview
   push_key "$key" "$value" development

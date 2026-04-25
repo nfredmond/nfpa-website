@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:commerce-env": "node scripts/test-commerce-env-resolution.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

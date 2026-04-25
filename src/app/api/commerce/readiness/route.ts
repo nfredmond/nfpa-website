@@ -1,20 +1,23 @@
 import { NextResponse } from 'next/server'
 import { offerCatalog } from '@/lib/commerce/offers'
+import { resolveStripePaymentLinkEnv } from '@/lib/commerce/stripe-payment-links'
 
 export const runtime = 'nodejs'
 
 export async function GET() {
   const tiers = offerCatalog.flatMap((product) =>
     product.tiers.map((tier) => {
-      const raw = process.env[tier.stripePaymentLinkEnv]
-      const configured = Boolean(raw && raw.trim())
+      const paymentLink = resolveStripePaymentLinkEnv(tier.stripePaymentLinkEnv)
+      const configured = Boolean(paymentLink.paymentLink)
 
       return {
         productId: product.id,
         productName: product.name,
         tierId: tier.id,
         tierName: tier.name,
-        envKey: tier.stripePaymentLinkEnv,
+        envKey: paymentLink.envKey,
+        envAliases: paymentLink.envAliases,
+        configuredEnvKey: paymentLink.configuredEnvKey,
         configured,
       }
     })

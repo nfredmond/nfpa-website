@@ -13,10 +13,18 @@ TIERS=(
   drone-starter
   drone-professional
   drone-enterprise
+  planner-ai-workflow-guide-starter
+  planner-ai-workflow-guide-practitioner
+  planner-ai-workflow-guide-team
+)
+
+if [[ "${CHECK_LEGACY_TIER_ALIASES:-0}" == "1" ]]; then
+  TIERS+=(
   vibe-coding-planners-starter
   vibe-coding-planners-practitioner
   vibe-coding-planners-team
-)
+  )
+fi
 
 pass_count=0
 fail_count=0
