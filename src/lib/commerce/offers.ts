@@ -226,6 +226,11 @@ export type CommerceProductTierReference = {
   tierId: string | null;
 };
 
+export type CommerceCheckoutReferenceInput = {
+  clientReferenceId?: unknown;
+  metadata?: Record<string, unknown> | null;
+};
+
 export function buildCheckoutClientReferenceId(productId: string, tierId: string): string {
   return `${productId}:${tierId}`;
 }
@@ -265,4 +270,27 @@ export function inferProductAndTierFromClientReference(
   }
 
   return normalizeCommerceProductTierReference(null, clientReferenceId);
+}
+
+function asNonEmptyString(value: unknown): string | null {
+  if (typeof value !== "string") return null;
+  const trimmed = value.trim();
+  return trimmed.length > 0 ? trimmed : null;
+}
+
+export function resolveCommerceCheckoutProductTierReference({
+  clientReferenceId,
+  metadata,
+}: CommerceCheckoutReferenceInput): CommerceProductTierReference {
+  const metadataProductId =
+    asNonEmptyString(metadata?.product_id) || asNonEmptyString(metadata?.productId);
+  const metadataTierId = asNonEmptyString(metadata?.tier_id) || asNonEmptyString(metadata?.tierId);
+
+  const inferred = inferProductAndTierFromClientReference(asNonEmptyString(clientReferenceId));
+  const metadataReference = normalizeCommerceProductTierReference(metadataProductId, metadataTierId);
+
+  return {
+    productId: metadataReference.productId || inferred.productId,
+    tierId: metadataReference.tierId || inferred.tierId,
+  };
 }

@@ -38,6 +38,7 @@ const {
   inferProductAndTierFromClientReference,
   normalizeCommerceProductTierReference,
   offerCatalog,
+  resolveCommerceCheckoutProductTierReference,
 } = loadTsModule('src/lib/commerce/offers.ts')
 const {
   getStripePaymentLinkEnvNames,
@@ -113,7 +114,48 @@ for (const expected of expectedTiers) {
     productId: product.id,
     tierId: expected.canonicalId,
   })
+
+  assert.deepEqual(plain(resolveCommerceCheckoutProductTierReference({
+    clientReferenceId: `${product.id}:${expected.legacyAlias}`,
+    metadata: {},
+  })), {
+    productId: product.id,
+    tierId: expected.canonicalId,
+  })
+
+  assert.deepEqual(plain(resolveCommerceCheckoutProductTierReference({
+    clientReferenceId: null,
+    metadata: {
+      product_id: product.id,
+      tier_id: expected.legacyAlias,
+    },
+  })), {
+    productId: product.id,
+    tierId: expected.canonicalId,
+  })
+
+  assert.deepEqual(plain(resolveCommerceCheckoutProductTierReference({
+    clientReferenceId: `${product.id}:${expected.canonicalId}`,
+    metadata: {
+      productId: product.id,
+      tierId: expected.legacyAlias,
+    },
+  })), {
+    productId: product.id,
+    tierId: expected.canonicalId,
+  })
 }
+
+assert.deepEqual(plain(resolveCommerceCheckoutProductTierReference({
+  clientReferenceId: `${product.id}:planner-ai-workflow-guide-starter`,
+  metadata: {
+    product_id: product.id,
+    tier_id: 'vibe-coding-planners-team',
+  },
+})), {
+  productId: product.id,
+  tierId: 'planner-ai-workflow-guide-team',
+})
 
 assert.deepEqual(plain(inferProductAndTierFromClientReference('openplan-starter-prelaunch')), {
   productId: 'openplan',

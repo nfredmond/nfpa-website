@@ -1,7 +1,7 @@
 import { createHmac, timingSafeEqual } from 'crypto'
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseAdminClient } from '@/lib/supabase/admin'
-import { inferProductAndTierFromClientReference, normalizeCommerceProductTierReference } from '@/lib/commerce/offers'
+import { resolveCommerceCheckoutProductTierReference } from '@/lib/commerce/offers'
 
 export const runtime = 'nodejs'
 
@@ -313,11 +313,6 @@ export async function POST(request: NextRequest) {
   const checkoutSessionId = asString(object.id)
   const clientReferenceId = asString(object.client_reference_id)
   const metadata = (object.metadata ?? {}) as Record<string, unknown>
-  const metadataTierId = asString(metadata.tier_id) || asString(metadata.tierId)
-  const metadataProductId = asString(metadata.product_id) || asString(metadata.productId)
-
-  const inferred = inferProductAndTierFromClientReference(clientReferenceId)
-  const metadataReference = normalizeCommerceProductTierReference(metadataProductId, metadataTierId)
 
   const customerEmail = normalizeEmail(
     asString(object.customer_email) ||
@@ -325,8 +320,10 @@ export async function POST(request: NextRequest) {
       asString(object.receipt_email)
   )
 
-  const productId = metadataReference.productId || inferred.productId
-  const tierId = metadataReference.tierId || inferred.tierId
+  const { productId, tierId } = resolveCommerceCheckoutProductTierReference({
+    clientReferenceId,
+    metadata,
+  })
 
   const row = {
     stripe_event_id: event.id,
