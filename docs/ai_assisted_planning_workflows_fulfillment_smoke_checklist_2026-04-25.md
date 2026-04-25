@@ -60,9 +60,28 @@ Checkout and fulfillment:
 - [ ] If onboarding status is `pending_email_config` or `email_failed`, same-day manual delivery owner and evidence are recorded outside this repo.
 - [ ] Smoke buyer can sign in to `/portal` and see active access for AI-Assisted Planning Workflows.
 
+## Sanitized Proof Helper
+
+After the human-only fulfillment smoke is complete, generate a local sanitized proof template:
+
+```bash
+npm run proof:ai-planning-workflows-fulfillment -- \
+  --proof-file /tmp/ai-assisted-planning-workflows-fulfillment-proof.md
+```
+
+Fill only the sanitized values in that file. Before sharing or committing any proof, run:
+
+```bash
+npm run proof:ai-planning-workflows-fulfillment -- \
+  --validate /tmp/ai-assisted-planning-workflows-fulfillment-proof.md \
+  --require-complete
+```
+
+The validator is a guardrail for obvious unsafe data such as emails, raw URLs, full Stripe IDs, card-like numbers, JWT-like tokens, and key-shaped secrets. With `--require-complete`, it also fails if any sanitized proof field still says `TBD`. It does not replace human review.
+
 ## Sanitized Proof Template
 
-Fill this section only after the human-only smoke is complete. Keep raw PII and screenshots out of git.
+Fill this section only after the human-only smoke is complete. Keep raw PII and screenshots out of git. Prefer the helper above so the final proof has safe-format prompts and a local sanitizer pass.
 
 | Field | Sanitized value |
 |---|---|

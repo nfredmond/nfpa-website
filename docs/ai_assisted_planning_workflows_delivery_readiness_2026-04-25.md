@@ -65,7 +65,15 @@ node scripts/ai-planning-workflows-launch-dry-run.mjs \
   --proof-file docs/ai_assisted_planning_workflows_launch_dry_run_proof_2026-04-25.md
 ```
 
-The human-only fulfillment smoke checklist and sanitized proof template are in `docs/ai_assisted_planning_workflows_fulfillment_smoke_checklist_2026-04-25.md`.
+The human-only fulfillment smoke checklist and sanitized proof template are in `docs/ai_assisted_planning_workflows_fulfillment_smoke_checklist_2026-04-25.md`. After the authorized human smoke, use the local no-secret proof helper to generate and validate sanitized evidence:
+
+```bash
+npm run proof:ai-planning-workflows-fulfillment -- \
+  --proof-file /tmp/ai-assisted-planning-workflows-fulfillment-proof.md
+npm run proof:ai-planning-workflows-fulfillment -- \
+  --validate /tmp/ai-assisted-planning-workflows-fulfillment-proof.md \
+  --require-complete
+```
 
 ## Customer delivery contract
 
