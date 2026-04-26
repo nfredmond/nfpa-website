@@ -37,6 +37,8 @@ const {
   readinessLabel,
   readinessNote,
   licenseLabel,
+  sourceAvailabilityLabel,
+  isFeaturedPublicRepo,
 } = loadTsModule('src/data/open-source-projects.ts')
 
 const expectedCatalogSlugs = [
@@ -85,6 +87,7 @@ assert.equal(aiWorkflows.category, 'Training product')
 assert.equal(aiWorkflows.repoUrl, undefined, 'Commercial guide should not pretend to be a public source repository.')
 assert.equal(licenseLabel(aiWorkflows), 'Commercial guide')
 assert.equal(readinessLabel(aiWorkflows.status), 'Commercial guide')
+assert.equal(sourceAvailabilityLabel(aiWorkflows), 'Paid guide bundle')
 assert.match(readinessNote(aiWorkflows.status), /Paid educational product/)
 assert.ok(!JSON.stringify(aiWorkflows).toLowerCase().includes('vibe coding'), 'Legacy casual product name leaked into the public catalog entry.')
 assert.ok(!JSON.stringify(aiWorkflows).toLowerCase().includes('vibe-coding'), 'Legacy route alias leaked into the public catalog entry.')
@@ -102,9 +105,13 @@ for (const stalePhrase of ['research lineage', 'archive projects']) {
 }
 
 const featuredRepoSlugs = openSourceProjects
-  .filter((project) => project.repoUrl && ['Public alpha', 'Active build'].includes(project.status))
+  .filter(isFeaturedPublicRepo)
   .map((project) => project.slug)
 assert.deepEqual(plain(featuredRepoSlugs), expectedFeaturedPublicRepoSlugs, 'Featured open-source repos should stay limited to true public repo lanes.')
+
+const clawChat = openSourceProjects.find((project) => project.slug === 'clawchat')
+assert.ok(clawChat, 'ClawChat release-track catalog entry is missing.')
+assert.equal(sourceAvailabilityLabel(clawChat), 'Source release pending')
 
 for (const project of openSourceProjects) {
   assert.ok(project.name.trim(), `${project.slug} is missing a name.`)

@@ -8,6 +8,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import {
   implementationOffers,
   implementationPackages,
+  isFeaturedPublicRepo,
   licenseLabel,
   openSourceProjects,
   readinessLabel,
@@ -50,9 +51,7 @@ const manifesto = [
   'Nat Ford will make money by being excellent stewards: setup, custom versions, hosting, support, training, integrations, and planning expertise — not by hiding useful code behind a tollbooth.',
 ]
 
-const featuredOpenSourceProjects = openSourceProjects.filter((project) =>
-  ['openplan', 'opengeo', 'aerial-intel-platform', 'clawmodeler', 'ads-chatbot'].includes(project.slug)
-)
+const featuredOpenSourceProjects = openSourceProjects.filter(isFeaturedPublicRepo)
 
 export default function OpenSourcePage() {
   return (

@@ -44,6 +44,26 @@ export function licenseLabel(project: OpenSourceProject) {
   return project.licenseSpdx
 }
 
+export function sourceAvailabilityLabel(project: OpenSourceProject) {
+  if (project.repoUrl && ['Active build', 'Public alpha'].includes(project.status)) {
+    return 'Public source'
+  }
+
+  if (project.status === 'Release track') {
+    return 'Source release pending'
+  }
+
+  if (project.status === 'Commercial guide') {
+    return 'Paid guide bundle'
+  }
+
+  return 'Source boundary pending'
+}
+
+export function isFeaturedPublicRepo(project: OpenSourceProject) {
+  return Boolean(project.repoUrl) && ['Active build', 'Public alpha'].includes(project.status)
+}
+
 export const openSourceProjects: OpenSourceProject[] = [
   {
     name: 'OpenPlan',

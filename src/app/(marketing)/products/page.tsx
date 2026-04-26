@@ -13,6 +13,7 @@ import {
   openSourceProjects,
   readinessLabel,
   readinessNote,
+  sourceAvailabilityLabel,
 } from '@/data/open-source-projects'
 
 export const metadata: Metadata = {
@@ -120,6 +121,7 @@ export default function ProductsPage() {
                       <div className="flex flex-wrap gap-x-3 gap-y-1 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--foreground)]/58">
                         <span>{project.category}</span>
                         <span>{readinessLabel(project.status)}</span>
+                        <span>{sourceAvailabilityLabel(project)}</span>
                       </div>
                       <h3 className="mt-2 text-2xl font-semibold text-[color:var(--ink)]">{project.name}</h3>
                     </div>
