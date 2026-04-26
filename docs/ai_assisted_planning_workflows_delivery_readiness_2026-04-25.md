@@ -28,17 +28,19 @@ Run from repo root:
 
 ```bash
 npm run test:commerce-delivery
+npm run test:public-catalog
 ```
 
-This validates the website/product handoff contract without reading `.env.local`, Stripe secrets, Supabase service-role keys, product distribution files, or live purchase state.
+These validate the website/product handoff and public catalog posture without reading `.env.local`, Stripe secrets, Supabase service-role keys, product distribution files, or live purchase state.
 
-It checks:
+They check:
 
 - AI-Assisted Planning Workflows product ID, tier IDs, prices, and one-time purchase labeling.
 - Legacy checkout aliases resolve to the canonical tier IDs.
 - Canonical Stripe env keys retain their legacy fallback aliases.
 - Checkout `client_reference_id` values infer the same product/tier pair the webhook writes to `customer_product_access`.
 - Prelaunch OpenPlan client reference inference remains compatible.
+- The public product catalog stays limited to the approved allowlist, labels AI-Assisted Planning Workflows as a commercial guide, and keeps legacy casual naming out of public catalog copy.
 
 ## Live no-purchase dry-run
 

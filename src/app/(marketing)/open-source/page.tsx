@@ -148,8 +148,8 @@ export default function OpenSourcePage() {
               </h2>
             </div>
             <p className="max-w-xl text-sm leading-6 text-[color:var(--foreground)]/72">
-              Featured active surfaces are shown here. The full catalog, including research lineage and archive projects,
-              lives on the project directory.
+              Featured active public repos are shown here. The selected product catalog lives on the project directory,
+              with release-track and commercial-guide entries labeled separately.
             </p>
           </div>
 

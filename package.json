@@ -9,6 +9,7 @@
     "lint": "eslint",
     "test:commerce-env": "node scripts/test-commerce-env-resolution.mjs",
     "test:commerce-delivery": "node scripts/test-commerce-delivery-contract.mjs",
+    "test:public-catalog": "node scripts/test-public-catalog-guardrail.mjs",
     "smoke:ai-planning-workflows-launch": "node scripts/ai-planning-workflows-launch-dry-run.mjs",
     "proof:ai-planning-workflows-fulfillment": "node scripts/ai-planning-workflows-fulfillment-proof.mjs"
   },
