@@ -87,3 +87,15 @@ To archive a no-secret proof artifact:
 node scripts/ai-planning-workflows-launch-dry-run.mjs \
   --proof-file docs/ai_assisted_planning_workflows_launch_dry_run_proof_2026-04-25.md
 ```
+
+To turn that dry-run proof into a cleaner launch approval packet without claiming fulfillment proof:
+
+```bash
+npm run packet:ai-planning-workflows-approval -- \
+  --dry-run-proof docs/ai_assisted_planning_workflows_launch_dry_run_proof_2026-04-25.md \
+  --proof-file /tmp/ai-assisted-planning-workflows-launch-approval-packet.md
+npm run packet:ai-planning-workflows-approval -- \
+  --validate /tmp/ai-assisted-planning-workflows-launch-approval-packet.md
+```
+
+The approval packet validator requires `Fulfillment proof status: not-claimed` and an `Actual fulfillment proof: NOT CLAIMED` boundary row. It does not replace the human-only fulfillment smoke.

@@ -30,6 +30,7 @@ Run from repo root:
 npm run test:commerce-delivery
 npm run test:public-catalog
 npm run test:ai-planning-workflows-launch-dry-run
+npm run test:ai-planning-workflows-approval-packet
 ```
 
 These validate the website/product handoff and public catalog posture without reading `.env.local`, Stripe secrets, Supabase service-role keys, product distribution files, or live purchase state.
@@ -43,6 +44,7 @@ They check:
 - Prelaunch OpenPlan client reference inference remains compatible.
 - The public product catalog stays limited to the approved allowlist, labels AI-Assisted Planning Workflows as a commercial guide, and keeps legacy casual naming out of public catalog copy.
 - The AI-Assisted Planning Workflows launch dry-run helper keeps its route validation, Stripe-host checks, canonical product naming, and no-fulfillment-proof disclaimer intact without making network requests.
+- The launch approval packet helper keeps dry-run readiness evidence separate from actual fulfillment proof and fails if the packet claims fulfillment proof.
 
 ## Live no-purchase dry-run
 
@@ -70,6 +72,20 @@ To save a no-secret operator proof:
 node scripts/ai-planning-workflows-launch-dry-run.mjs \
   --proof-file docs/ai_assisted_planning_workflows_launch_dry_run_proof_2026-04-25.md
 ```
+
+## Launch approval packet
+
+After saving the dry-run proof, generate a repo-safe approval packet that makes the proof boundary explicit:
+
+```bash
+npm run packet:ai-planning-workflows-approval -- \
+  --dry-run-proof docs/ai_assisted_planning_workflows_launch_dry_run_proof_2026-04-25.md \
+  --proof-file /tmp/ai-assisted-planning-workflows-launch-approval-packet.md
+npm run packet:ai-planning-workflows-approval -- \
+  --validate /tmp/ai-assisted-planning-workflows-launch-approval-packet.md
+```
+
+The packet may report dry-run readiness as `PASS`, but it must keep actual fulfillment proof as `NOT CLAIMED`. It is intended for an approval packet, not as customer delivery evidence.
 
 The human-only fulfillment smoke checklist and sanitized proof template are in `docs/ai_assisted_planning_workflows_fulfillment_smoke_checklist_2026-04-25.md`. After the authorized human smoke, use the local no-secret proof helper to generate and validate sanitized evidence:
 

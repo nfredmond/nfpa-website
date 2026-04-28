@@ -34,9 +34,14 @@ Optional no-secret proof capture:
 ```bash
 node scripts/ai-planning-workflows-launch-dry-run.mjs \
   --proof-file /tmp/ai-assisted-planning-workflows-launch-dry-run-proof.md
+npm run packet:ai-planning-workflows-approval -- \
+  --dry-run-proof /tmp/ai-assisted-planning-workflows-launch-dry-run-proof.md \
+  --proof-file /tmp/ai-assisted-planning-workflows-launch-approval-packet.md
+npm run packet:ai-planning-workflows-approval -- \
+  --validate /tmp/ai-assisted-planning-workflows-launch-approval-packet.md
 ```
 
-This preflight only reads public website endpoints, verifies readiness plus checkout handoff metadata, and does not follow Stripe redirects or create purchases.
+This preflight only reads public website endpoints, verifies readiness plus checkout handoff metadata, and does not follow Stripe redirects or create purchases. The approval packet may show dry-run readiness as `PASS`, but actual fulfillment proof must remain `NOT CLAIMED` until the human-only smoke below is complete.
 
 ## Human-Only Fulfillment Smoke
 

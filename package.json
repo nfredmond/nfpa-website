@@ -11,7 +11,9 @@
     "test:commerce-delivery": "node scripts/test-commerce-delivery-contract.mjs",
     "test:public-catalog": "node scripts/test-public-catalog-guardrail.mjs",
     "test:ai-planning-workflows-launch-dry-run": "node scripts/ai-planning-workflows-launch-dry-run.mjs --self-test",
+    "test:ai-planning-workflows-approval-packet": "node scripts/ai-planning-workflows-approval-packet.mjs --self-test",
     "smoke:ai-planning-workflows-launch": "node scripts/ai-planning-workflows-launch-dry-run.mjs",
+    "packet:ai-planning-workflows-approval": "node scripts/ai-planning-workflows-approval-packet.mjs",
     "proof:ai-planning-workflows-fulfillment": "node scripts/ai-planning-workflows-fulfillment-proof.mjs"
   },
   "dependencies": {
