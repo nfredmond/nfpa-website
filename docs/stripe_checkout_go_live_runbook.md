@@ -73,6 +73,13 @@ npm run smoke:ai-planning-workflows-launch
 ```
 
 This verifies production readiness plus canonical and legacy checkout handoff metadata for the three AI-Assisted Planning Workflows tiers. It does not follow Stripe redirects, complete payment, write customer records, or read secrets.
+It is not fulfillment proof: do not use the dry-run as evidence of live checkout completion, webhook delivery, fulfillment ledger writes, active customer access, portal visibility, onboarding email delivery, refunds, or cleanup.
+
+To validate the dry-run helper locally without network access:
+
+```bash
+npm run test:ai-planning-workflows-launch-dry-run
+```
 
 To archive a no-secret proof artifact:
 

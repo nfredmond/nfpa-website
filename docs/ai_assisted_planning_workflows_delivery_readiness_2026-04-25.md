@@ -29,6 +29,7 @@ Run from repo root:
 ```bash
 npm run test:commerce-delivery
 npm run test:public-catalog
+npm run test:ai-planning-workflows-launch-dry-run
 ```
 
 These validate the website/product handoff and public catalog posture without reading `.env.local`, Stripe secrets, Supabase service-role keys, product distribution files, or live purchase state.
@@ -41,6 +42,7 @@ They check:
 - Checkout `client_reference_id` values infer the same product/tier pair the webhook writes to `customer_product_access`.
 - Prelaunch OpenPlan client reference inference remains compatible.
 - The public product catalog stays limited to the approved allowlist, labels AI-Assisted Planning Workflows as a commercial guide, and keeps legacy casual naming out of public catalog copy.
+- The AI-Assisted Planning Workflows launch dry-run helper keeps its route validation, Stripe-host checks, canonical product naming, and no-fulfillment-proof disclaimer intact without making network requests.
 
 ## Live no-purchase dry-run
 
@@ -51,6 +53,8 @@ npm run smoke:ai-planning-workflows-launch
 ```
 
 This reads the public production readiness and checkout endpoints, but it does not follow Stripe redirects, create a checkout session, complete a purchase, write Supabase rows, send onboarding email, or read secrets.
+
+The dry-run proof is a handoff/readiness artifact only. It must not be used as proof of live checkout completion, webhook delivery, fulfillment ledger writes, active customer access, portal visibility, onboarding email delivery, refunds, or cleanup.
 
 It checks:
 

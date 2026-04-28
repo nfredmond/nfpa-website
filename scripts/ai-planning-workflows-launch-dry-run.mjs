@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import assert from 'node:assert/strict'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
@@ -39,6 +40,7 @@ Options:
   --base-url <url>       Website origin to test. Default: ${DEFAULT_BASE_URL}
   --canonical-only       Check only canonical tier routes, not legacy aliases.
   --proof-file <path>    Write a no-secret Markdown proof artifact.
+  --self-test            Run local validation tests without network access.
   --json                Print JSON instead of human-readable output.
   --help                Show this help.
 `)
@@ -49,6 +51,7 @@ function parseArgs(argv) {
     baseUrl: process.env.LAUNCH_SMOKE_BASE_URL || DEFAULT_BASE_URL,
     includeLegacyAliases: true,
     proofFile: null,
+    selfTest: false,
     json: false,
   }
 
@@ -84,6 +87,11 @@ function parseArgs(argv) {
 
     if (arg.startsWith('--proof-file=')) {
       options.proofFile = arg.slice('--proof-file='.length)
+      continue
+    }
+
+    if (arg === '--self-test') {
+      options.selfTest = true
       continue
     }
 
@@ -267,6 +275,10 @@ function buildProofMarkdown(result) {
     '',
     'This proof is no-secret and no-purchase: it reads public website endpoints, does not follow Stripe redirects, and does not write customer records.',
     '',
+    '## What This Does Not Prove',
+    '',
+    'This dry-run does not prove live checkout completion, Stripe webhook delivery, fulfillment ledger writes, active customer access, portal visibility, onboarding email delivery, refunds, or cleanup. Do not use it as customer fulfillment proof.',
+    '',
     '## Readiness',
     '',
     `- Result: ${result.readiness.ok ? 'PASS' : 'FAIL'}`,
@@ -338,6 +350,7 @@ function printHuman(result) {
   console.log(`Base URL: ${result.baseUrl}`)
   console.log(`Generated: ${result.generatedAt}`)
   console.log('Mode: no purchase, no Stripe redirect follow, no customer writes')
+  console.log('Limit: does not prove live checkout completion, webhook delivery, customer access, portal visibility, email delivery, refunds, or cleanup')
   console.log('')
 
   console.log(`Readiness: ${result.readiness.ok ? 'PASS' : 'FAIL'}`)
@@ -378,8 +391,104 @@ function printHuman(result) {
   console.log(`Result: ${result.ok ? 'PASS' : 'FAIL'}`)
 }
 
+function cloneJson(value) {
+  return JSON.parse(JSON.stringify(value))
+}
+
+function syntheticReadiness() {
+  return {
+    summary: {
+      configuredTiers: EXPECTED_TIERS.length,
+      totalTiers: EXPECTED_TIERS.length,
+    },
+    tiers: EXPECTED_TIERS.map((tier) => ({
+      tierId: tier.canonicalId,
+      productId: PRODUCT_ID,
+      productName: PRODUCT_NAME,
+      envKey: tier.envKey,
+      configured: true,
+      configuredEnvKey: tier.envKey,
+    })),
+  }
+}
+
+function syntheticCheckoutLocation(route) {
+  const location = new URL('https://buy.stripe.com/test_123')
+  location.searchParams.set('client_reference_id', `${PRODUCT_ID}:${route.canonicalTierId}`)
+  location.searchParams.set('utm_campaign', `checkout-${PRODUCT_ID}`)
+  return location.toString()
+}
+
+function runSelfTest() {
+  const readiness = syntheticReadiness()
+  const readinessResult = validateReadiness(readiness)
+  assert.equal(readinessResult.ok, true)
+  assert.deepEqual(readinessResult.failures, [])
+  assert.equal(readinessResult.tiers.length, EXPECTED_TIERS.length)
+
+  const legacyReadiness = cloneJson(readiness)
+  legacyReadiness.tiers[0].configuredEnvKey = EXPECTED_TIERS[0].legacyEnvKey
+  const legacyResult = validateReadiness(legacyReadiness)
+  assert.equal(legacyResult.ok, true)
+  assert.match(legacyResult.warnings[0], /legacy fallback/)
+
+  const staleNameReadiness = cloneJson(readiness)
+  staleNameReadiness.tiers[0].productName = 'Vibe Coding'
+  assert(
+    validateReadiness(staleNameReadiness).failures.some((failure) => failure.includes('productName')),
+    'expected stale product naming to fail readiness validation',
+  )
+
+  const firstTierRoutes = routeIdsForTier(EXPECTED_TIERS[0], true)
+  assert.deepEqual(
+    firstTierRoutes.map((route) => route.routeTierId),
+    [EXPECTED_TIERS[0].canonicalId, EXPECTED_TIERS[0].legacyAlias],
+  )
+
+  const checkoutResult = validateCheckoutRedirect(
+    {
+      status: 302,
+      location: syntheticCheckoutLocation(firstTierRoutes[0]),
+    },
+    firstTierRoutes[0],
+  )
+  assert.equal(checkoutResult.ok, true)
+  assert.equal(checkoutResult.stripeHost, 'buy.stripe.com')
+  assert.equal(checkoutResult.clientReferenceId, `${PRODUCT_ID}:${EXPECTED_TIERS[0].canonicalId}`)
+
+  const badHostResult = validateCheckoutRedirect(
+    {
+      status: 302,
+      location: 'https://example.com/checkout',
+    },
+    firstTierRoutes[0],
+  )
+  assert.equal(badHostResult.ok, false)
+  assert(badHostResult.failures.some((failure) => failure.includes('allowed Stripe host')))
+
+  const proof = buildProofMarkdown({
+    ok: true,
+    generatedAt: '2026-04-25T18:30:00.000Z',
+    baseUrl: DEFAULT_BASE_URL,
+    readiness: readinessResult,
+    checkout: [checkoutResult],
+    failures: [],
+  })
+  assert.match(proof, /What This Does Not Prove/)
+  assert.match(proof, /does not prove live checkout completion/)
+  assert.match(proof, /active customer access/)
+  assert.doesNotMatch(proof, /Vibe Coding/i)
+
+  console.log('ai-planning-workflows launch dry-run self-test passed')
+}
+
 async function main() {
   const options = parseArgs(process.argv)
+  if (options.selfTest) {
+    runSelfTest()
+    return
+  }
+
   const baseUrl = normalizeOrigin(options.baseUrl)
   const readinessUrl = makeUrl(baseUrl, '/api/commerce/readiness')
   const readiness = await fetchJson(readinessUrl)
