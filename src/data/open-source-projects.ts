@@ -71,14 +71,14 @@ export const openSourceProjects: OpenSourceProject[] = [
     status: 'Active build',
     category: 'Planning OS',
     summary:
-      'Free, open-source AI-powered transportation planning intelligence for agencies, consultants, and public-interest planning teams.',
+      'Free, open-source planning operating system for rural RTPAs, counties, agencies, consultants, and public-interest planning teams — with projects, funding, maps, reports, evidence, and implementation work kept in one spine.',
     repoUrl: 'https://github.com/nfredmond/openplan',
     licenseSpdx: 'Apache-2.0',
     demoUrl: 'https://openplan-natford.vercel.app',
     licenseNote: 'Source code is licensed under Apache-2.0 unless the repository marks a specific file or asset otherwise; see LICENSE-NOTICE for exclusions.',
     paidSupport:
-      'Managed deployment, custom forks, enterprise SSO, role design, and staff onboarding, GIS/data setup, agency-specific templates, and priority support.',
-    primitives: ['Planning workspace', 'project and program records', 'GIS/data context', 'grant/report workflows', 'AI-assisted drafting with review gates'],
+      'Managed deployment, custom county/RTPA/agency editions, hosting/admin, role design, staff onboarding, GIS/data setup, agency-specific RTP/ATP/grant templates, support, and planning services.',
+    primitives: ['Planning workspace', 'shared project spine', 'funding and program records', 'GIS/data context', 'grant/report workflows', 'evidence packets', 'AI-assisted drafting with review gates'],
   },
   {
     name: 'OpenGeo',

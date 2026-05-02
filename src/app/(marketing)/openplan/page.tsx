@@ -31,8 +31,8 @@ const continuityLanes = [
 ]
 
 const fitProfiles = [
-  'Small and mid-sized public agencies',
-  'Transportation planning teams',
+  'Rural RTPAs, counties, tribes, and transportation commissions',
+  'Small and mid-sized public agencies with real delivery pressure',
   'Consultants supporting county, regional, rural, or tribal planning work',
   'Lean teams that need better continuity, auditability, and follow-through',
 ]
@@ -53,17 +53,17 @@ const faqItems = [
   {
     question: 'Is OpenPlan free?',
     answer:
-      'Yes. The OpenPlan codebase is public and intended for open-source reuse once license terms are declared. Teams can inspect, fork, or self-host under the repo license. Nat Ford charges only for managed deployment, custom forks, onboarding, support, and surrounding planning services.',
+      'Yes. The OpenPlan codebase is public and licensed for open-source reuse under the repository license. Teams can inspect, fork, or self-host it. Nat Ford charges for managed deployment, custom county/RTPA/agency editions, hosting/admin, onboarding, support, and surrounding planning services.',
   },
   {
     question: 'What is OpenPlan?',
     answer:
-      'OpenPlan is a modular planning operating system designed to keep projects, decisions, risks, datasets, map-based analysis, grants, programs, and reports in one operational thread.',
+      'OpenPlan is a modular planning operating system designed to keep projects, decisions, risks, datasets, map-based analysis, funding, grants, programs, engagement, evidence packets, and reports in one operational thread.',
   },
   {
     question: 'Who is it for?',
     answer:
-      'The strongest fit today is lean public-sector and transportation planning teams, plus consultants supporting rural, county, regional, or tribal planning work.',
+      'The strongest fit today is rural RTPAs, counties, tribes, transportation commissions, lean public-sector planning teams, and consultants supporting regional planning work.',
   },
   {
     question: 'How is this different from a normal dashboard?',
